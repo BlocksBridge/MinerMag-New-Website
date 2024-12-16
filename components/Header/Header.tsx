@@ -13,7 +13,7 @@ export default function Header() {
       <header className="bg-white border-b sticky top-0 z-10">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
-            <Link href="#" className="flex items-center space-x-2">
+            <Link href="/" className="flex items-center space-x-2">
               <div className=" text-white p-2 rounded">
                 <Image src={"/logo.png"} width={150} height={150} alt="logo" />
               </div>
