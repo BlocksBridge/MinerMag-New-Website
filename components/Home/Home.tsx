@@ -9,6 +9,7 @@ export default async function HomePage({ getPosts }: { getPosts: [any] }) {
       date: item.date,
       title: item.title.rendered,
       excerpt: item.acf.sub_title,
+      link: item.link,
     };
   });
   console.log(three);
@@ -179,25 +180,27 @@ export default async function HomePage({ getPosts }: { getPosts: [any] }) {
             </div>
             <div className="grid md:grid-cols-3 gap-6">
               {three.map((article, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-lg shadow overflow-hidden">
-                  <div className="relative h-48">
-                    <Image
-                      alt={article.title}
-                      className="object-cover"
-                      fill
-                      src={article.image}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <div className="text-sm text-gray-500 mb-2">
-                      {article.date}
+                <Link href={article.link.split(".com")[1]}>
+                  <div
+                    key={index}
+                    className="bg-white rounded-lg shadow overflow-hidden">
+                    <div className="relative h-48">
+                      <Image
+                        alt={article.title}
+                        className="object-cover"
+                        fill
+                        src={article.image}
+                      />
                     </div>
-                    <h3 className="font-semibold mb-2">{article.title}</h3>
-                    <p className="text-sm text-gray-600">{article.excerpt}</p>
+                    <div className="p-4">
+                      <div className="text-sm text-gray-500 mb-2">
+                        {article.date}
+                      </div>
+                      <h3 className="font-semibold mb-2">{article.title}</h3>
+                      <p className="text-sm text-gray-600">{article.excerpt}</p>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </section>
