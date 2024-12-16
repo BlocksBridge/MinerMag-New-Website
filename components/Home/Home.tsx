@@ -1,87 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
-export const revalidate = 0;
 
-export default async function HomePage() {
-  const getPosts = await fetch(`https://theminermag.com/wp-json/wp/v2/posts`, {
-    cache: "no-store",
-    next: { tags: ["posts"] },
-  }).then((res) => res.json());
-  console.log(Object.keys(getPosts[0].acf));
+export default async function HomePage({ getPosts }: { getPosts: [any] }) {
+  const three = getPosts.slice(1, 4).map((item) => {
+    return {
+      //   image: "/placeholder.svg?height=200&width=400",
+      image: item.acf.main_image,
+      date: item.date,
+      title: item.title.rendered,
+      excerpt: item.acf.sub_title,
+    };
+  });
+  console.log(three);
   return (
     <div
       className={`min-h-screen bg-gray-100 flex flex-col font-[family-name:var(--font-geist-sans)`}>
       {/* Top Banner */}
-      <div className="bg-blue-600 text-white py-2 text-center text-sm">
-        <Link href="#" className="hover:underline">
-          Announcing TheMinerMag's Stolen Mining Machines Database →
-        </Link>
-      </div>
-
-      {/* Header */}
-      <header className="bg-white border-b sticky top-0 z-10">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center justify-between">
-            <Link href="#" className="flex items-center space-x-2">
-              <div className=" text-white p-2 rounded">
-                <Image src={"/logo.png"} width={150} height={150} alt="logo" />
-              </div>
-            </Link>
-            <nav className="hidden md:flex items-center space-x-6">
-              <Link
-                className="text-sm font-medium hover:text-blue-600"
-                href="#">
-                NEWS
-              </Link>
-              <Link
-                className="text-sm font-medium hover:text-blue-600"
-                href="#">
-                DATA
-              </Link>
-              <Link
-                className="text-sm font-medium hover:text-blue-600"
-                href="#">
-                LEARN
-              </Link>
-              <div className="relative">
-                <input
-                  className="pl-8 pr-2 py-1 border border-zinc-200 rounded-full text-sm dark:border-zinc-800"
-                  placeholder="Search here..."
-                  type="search"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-gray-400 absolute left-2 top-2"
-                  fill="none"
-                  viewBox="0 24"
-                  stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0114 0z"
-                  />
-                </svg>
-              </div>
-            </nav>
-            <button className="md:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 24"
-                stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </header>
 
       {/* Main Content */}
       <div className="flex-1 container mx-auto px-4 py-8 flex gap-8">
@@ -209,12 +143,12 @@ export default async function HomePage() {
           <div className="bg-white overflow-hidden rounded-lg shadow">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="relative h-[300px] md:h-auto">
-                {/* <Image
+                <Image
                   alt="Mining Facility"
                   className="object-cover"
                   fill
-                  src="/placeholder.svg?height=400&width=600"
-                /> */}
+                  src={getPosts[0].acf.main_image}
+                />
               </div>
               <div className="p-6">
                 <div className="text-sm text-gray-500 mb-2">
@@ -226,9 +160,11 @@ export default async function HomePage() {
                 <p className="text-gray-600 mb-4">
                   {getPosts[0].acf.sub_title}
                 </p>
-                <button className="px-4 py-2 border border-zinc-200 border-blue-600 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors dark:border-zinc-800">
-                  Read More
-                </button>
+                <Link href={getPosts[0].link.split(".com")[1]}>
+                  <button className="px-4 py-2 border border-zinc-200 border-blue-600 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors dark:border-zinc-800">
+                    Read More
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -242,39 +178,17 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="grid md:grid-cols-3 gap-6">
-              {[
-                {
-                  //   image: "/placeholder.svg?height=200&width=400",
-                  date: "November 13, 2024",
-                  title: "Bitcoin Mining Hashrate Reaches New All-Time High",
-                  excerpt:
-                    "Network difficulty adjusts as global hashrate continues its upward trend...",
-                },
-                {
-                  //   image: "/placeholder.svg?height=200&width=400",
-                  date: "November 12, 2024",
-                  title: "New Mining Facility Opens in Texas",
-                  excerpt:
-                    "State-of-the-art facility adds 1.2 EH/s to the Bitcoin network...",
-                },
-                {
-                  //   image: "/placeholder.svg?height=200&width=400",
-                  date: "November 11, 2024",
-                  title: "Mining Stocks Rally Amid Bitcoin Surge",
-                  excerpt:
-                    "Public mining companies see significant gains as Bitcoin price rises...",
-                },
-              ].map((article, index) => (
+              {three.map((article, index) => (
                 <div
                   key={index}
                   className="bg-white rounded-lg shadow overflow-hidden">
                   <div className="relative h-48">
-                    {/* <Image
+                    <Image
                       alt={article.title}
                       className="object-cover"
                       fill
                       src={article.image}
-                    /> */}
+                    />
                   </div>
                   <div className="p-4">
                     <div className="text-sm text-gray-500 mb-2">
