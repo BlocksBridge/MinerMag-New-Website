@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description:
+    " We're here to help and answer any questions you might have. We\
+                look forward to hearing from you.",
+};
 export default function AboutUs() {
   return (
     <>
