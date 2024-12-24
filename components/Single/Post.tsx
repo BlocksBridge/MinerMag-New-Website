@@ -86,65 +86,6 @@ export default function NewsArticle({ post }) {
           </div>
         </div>
       </main>
-
-      <footer className="bg-gray-100 border-t">
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="font-bold mb-4">About Us</h3>
-              <p className="text-sm text-gray-600">
-                TheMinerMag provides the latest news and insights in the
-                cryptocurrency mining industry.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-bold mb-4">Navigation</h3>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="/news" className="hover:text-blue-600">
-                    News
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/data" className="hover:text-blue-600">
-                    Data
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/about" className="hover:text-blue-600">
-                    About
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-bold mb-4">Follow Us</h3>
-              <div className="flex space-x-4">
-                <button variant="ghost" size="icon">
-                  <Twitter className="h-4 w-4" />
-                </button>
-                <button variant="ghost" size="icon">
-                  <Linkedin className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-            <div>
-              <h3 className="font-bold mb-4">Newsletter</h3>
-              <form className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="flex-grow"
-                />
-                <button type="submit">Sign Up</button>
-              </form>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t text-center text-sm text-gray-500">
-            © 2024 TheMinerMag. All rights reserved.
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

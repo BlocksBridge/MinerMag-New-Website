@@ -4,19 +4,8 @@ import "./globals.css";
 import { revalidateTag } from "next/cache";
 import Header from "@/components/Header/Header";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-  display: "swap",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-
-  display: "swap",
-});
+import Footer from "@/components/Footer/Footer";
+import { geistMono, geistSans } from "./fonts/fonts";
 
 export const metadata: Metadata = {
   title: "theMinerMag",
@@ -34,6 +23,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
