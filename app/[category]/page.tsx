@@ -29,8 +29,10 @@ export default async function Category({
     if (getPostsByCategory.code) {
       redirect("/404");
     } else {
-      console.log(process.env.NEXT_PUBLIC_backend_url);
-
+      let checkIfNextPageExists = await PaginationProtection(
+        Number(pageQuery.page) + 1,
+        checkCategory[0].id
+      );
       return (
         <div className="flex flex-col w-5/6 m-auto items-center justify-center my-10">
           <h1 className="text-3xl font-bold mb-8">{checkCategory[0].name}</h1>
@@ -54,13 +56,15 @@ export default async function Category({
               className="bg-blue-600 font-bold px-3 py-2 rounded-md text-white">
               Prev
             </Link>
-            <Link
-              href={`${category.category}?page=${
-                pageQuery.page ? Number(pageQuery.page) + 1 : 2
-              }`}
-              className="bg-blue-600 font-bold px-3 py-2 rounded-md text-white">
-              Next
-            </Link>
+            {checkIfNextPageExists && (
+              <Link
+                href={`${category.category}?page=${
+                  pageQuery.page ? Number(pageQuery.page) + 1 : 2
+                }`}
+                className="bg-blue-600 font-bold px-3 py-2 rounded-md text-white">
+                Next
+              </Link>
+            )}
           </div>
         </div>
       );
@@ -117,4 +121,20 @@ export interface Cury {
   name: string;
   href: string;
   templated: boolean;
+}
+
+async function PaginationProtection(nextPage, categoryId) {
+  const checkNextPage = await fetch(
+    `${
+      process.env.NEXT_PUBLIC_backend_url
+    }/wp-json/wp/v2/posts?categories=${categoryId}&per_page=12&${`page=${
+      nextPage ? nextPage : 1
+    }`}&order=desc&orderby=date&acf_format=standard`
+  ).then((res) => res.json());
+  console.log(checkNextPage);
+  if (checkNextPage.code) {
+    return false;
+  } else {
+    return true;
+  }
 }
