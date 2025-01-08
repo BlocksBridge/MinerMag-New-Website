@@ -13,7 +13,14 @@ export default function NewsArticle({ post, relatedPosts }) {
           <h1
             dangerouslySetInnerHTML={{ __html: post.title.rendered }}
             className="text-3xl font-bold mb-2"></h1>
-          <div className="text-sm text-gray-500 mb-6">{post.date}</div>
+          <div className="text-sm text-gray-500 mb-6">
+            {" "}
+            {new Date(post.date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </div>
 
           <Image
             src={post.acf.main_image}
@@ -71,23 +78,22 @@ export default function NewsArticle({ post, relatedPosts }) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {relatedPosts.map((post) => (
-              <Link key={post.id} href="#" className="group">
-                {/* <Image
+            {relatedPosts.length &&
+              relatedPosts.map((post) => (
+                <Link key={post.id} href="#" className="group">
+                  {/* <Image
                   src={`https://sjc.microlink.io/Iz0t8yZa6uZKG4JvmMRI1csrWcWhLbtEufg59sQu0bdc0mVXsiLurAon24cRp2rJlRuOGJat_PHjEJ9EsXqOPQ.jpeg`}
                   alt={`Latest news ${i}`}
                   width={400}
                   height={200}
                   className="w-full h-48 object-cover rounded-lg mb-3"
                 /> */}
-                <h3 className="font-medium group-hover:text-blue-600">
-                  {post.title}
-                </h3>
-                <p className="text-sm text-gray-500">
-                  November {post.date}, 2024
-                </p>
-              </Link>
-            ))}
+                  <h3 className="font-medium group-hover:text-blue-600">
+                    {post.title}
+                  </h3>
+                  <p className="text-sm text-gray-500">{post.date}</p>
+                </Link>
+              ))}
           </div>
         </div>
       </main>

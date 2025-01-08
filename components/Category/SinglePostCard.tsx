@@ -50,8 +50,13 @@ import Link from "next/link";
 //   );
 // }
 
-export default function SinglePostCard({ article }: { article: any }) {
-  console.log("inside", article.acf.main_image, "outside");
+export default function SinglePostCard({
+  article,
+  category,
+}: {
+  article: any;
+  category: string;
+}) {
   return (
     <Link href={article.link.split(".com")[1]}>
       <div
@@ -66,7 +71,7 @@ export default function SinglePostCard({ article }: { article: any }) {
         />
         <div className="p-4">
           <span className="inline-block px-2 py-1 text-xs font-semibold text-white bg-blue-500 rounded-full mb-2">
-            {article.category}NEWS
+            {category.toUpperCase()}
           </span>
           <h2
             className="text-xl font-semibold mb-2"
