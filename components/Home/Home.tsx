@@ -12,7 +12,7 @@ export default async function HomePage({ getPosts }: { getPosts: [any] }) {
       link: item.link,
     };
   });
-  console.log(three);
+  //console.log(three);
   return (
     <div className={`min-h-screen bg-gray-100 flex flex-col font-sans `}>
       {/* Top Banner */}
@@ -173,7 +173,9 @@ export default async function HomePage({ getPosts }: { getPosts: [any] }) {
           <section>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold">Latest News</h2>
-              <Link className="text-sm text-blue-600 hover:underline" href="#">
+              <Link
+                className="text-sm text-blue-600 hover:underline"
+                href="/news">
                 View All
               </Link>
             </div>

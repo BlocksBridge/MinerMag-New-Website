@@ -21,17 +21,17 @@ export default function Header() {
             <nav className="hidden md:flex items-center space-x-6">
               <Link
                 className="text-sm font-medium hover:text-blue-600"
-                href="#">
+                href="/news">
                 NEWS
               </Link>
               <Link
                 className="text-sm font-medium hover:text-blue-600"
-                href="#">
+                href="https://pro.theminermag.com/">
                 DATA
               </Link>
               <Link
                 className="text-sm font-medium hover:text-blue-600"
-                href="#">
+                href="/learn">
                 LEARN
               </Link>
               <div className="relative">
