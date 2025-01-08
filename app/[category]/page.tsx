@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import SinglePostCard from "@/components/Category/SinglePostCard";
-
+import Link from "next/link";
 export default async function Category({
   searchParams,
   params,
@@ -20,7 +20,7 @@ export default async function Category({
     const getPostsByCategory = await fetch(
       `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?categories=${
         checkCategory[0].id
-      }&per_page=10&${
+      }&per_page=12&${
         pageQuery.page && `page=${pageQuery.page}`
       }&order=desc&orderby=date&acf_format=standard`
     ).then((res) => res.json());
@@ -42,6 +42,25 @@ export default async function Category({
                 category={category.category}
               />
             ))}
+          </div>
+          <div className="flex justify-center gap-5 mt-10">
+            {" "}
+            <Link
+              href={`${category.category}?page=${
+                pageQuery.page && Number(pageQuery.page) !== 1
+                  ? Number(pageQuery.page) - 1
+                  : 1
+              }`}
+              className="bg-blue-600 font-bold px-3 py-2 rounded-md text-white">
+              Prev
+            </Link>
+            <Link
+              href={`${category.category}?page=${
+                pageQuery.page ? Number(pageQuery.page) + 1 : 2
+              }`}
+              className="bg-blue-600 font-bold px-3 py-2 rounded-md text-white">
+              Next
+            </Link>
           </div>
         </div>
       );
