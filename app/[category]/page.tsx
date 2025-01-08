@@ -12,13 +12,13 @@ export default async function Category({
   const pageQuery = await searchParams;
   const category = await params;
   const checkCategory: [SingleCategory] = await fetch(
-    `${process.env.backend_url}/wp-json/wp/v2/categories?slug=${category.category}`
+    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/categories?slug=${category.category}`
   ).then((res) => res.json());
 
   if (checkCategory.length) {
     console.log(checkCategory);
     const getPostsByCategory = await fetch(
-      `${process.env.backend_url}/wp-json/wp/v2/posts?categories=${
+      `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?categories=${
         checkCategory[0].id
       }&per_page=10&${
         pageQuery.page && `page=${pageQuery.page}`
@@ -29,7 +29,8 @@ export default async function Category({
     if (getPostsByCategory.code) {
       redirect("/404");
     } else {
-      console.log(process.env.backend_url);
+      console.log(process.env.NEXT_PUBLIC_backend_url);
+
       return (
         <div className="flex flex-col w-5/6 m-auto items-center justify-center my-10">
           <h1 className="text-3xl font-bold mb-8">{checkCategory[0].name}</h1>

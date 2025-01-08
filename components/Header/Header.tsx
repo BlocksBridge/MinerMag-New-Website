@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import Search from "./Search";
 export default function Header() {
   return (
     <>
@@ -34,26 +35,7 @@ export default function Header() {
                 href="/learn">
                 LEARN
               </Link>
-              <div className="relative">
-                <input
-                  className="pl-8 pr-2 py-1 border border-zinc-200 rounded-full text-sm dark:border-zinc-800"
-                  placeholder="Search here..."
-                  type="search"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-gray-400 absolute left-2 top-2"
-                  fill="none"
-                  viewBox="0 24"
-                  stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0114 0z"
-                  />
-                </svg>
-              </div>
+              <Search />
             </nav>
             <button className="md:hidden">
               <svg
