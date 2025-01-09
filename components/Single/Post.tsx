@@ -79,28 +79,36 @@ export default function NewsArticle({ post, relatedPosts }) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {relatedPosts.length &&
-              relatedPosts.map(async (post) => {
+              relatedPosts.map(async (localPost, index) => {
+                if (localPost.post_title == post.title.rendered) {
+                  return null;
+                }
                 let getImage = await fetch(
-                  `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts/${post.ID}?acf_format=standard`
+                  `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts/${localPost.ID}?acf_format=standard`
                 ).then((res) => res.json());
-                console.log(getImage, "getImage");
-                console.log(post, "post", post.asp_guid);
+
                 return (
                   <Link
-                    key={post.ID}
-                    href={`${post.asp_guid.split(".com")[1]}`}
+                    key={localPost.ID}
+                    href={`${localPost.asp_guid.split(".com")[1]}`}
                     className="group">
                     <Image
                       src={getImage.acf.main_image}
-                      alt={`Latest news ${post.post_title}`}
+                      alt={`Latest news ${localPost.post_title}`}
                       width={400}
                       height={200}
                       className="w-full h-48 object-cover rounded-lg mb-3"
                     />
                     <h3 className="font-medium group-hover:text-blue-600">
-                      {post.post_title}
+                      {localPost.post_title}
                     </h3>
-                    <p className="text-sm text-gray-500">{post.date}</p>
+                    <p className="text-sm text-gray-500">
+                      {/* {localPost.post_modified.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })} */}
+                    </p>
                   </Link>
                 );
               })}

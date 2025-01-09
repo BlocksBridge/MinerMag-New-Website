@@ -22,8 +22,8 @@ export default async function Page({
     messages: [
       {
         role: "system",
-        content: `You are Search Assistant, Your Job is to find the company name from the Article Headline which will be used as Search Query in JSON, If there is no company then suggest relevant search query with same schema
-       \n The JSON object must use the schema: ${JSON.stringify({
+        content: `You are Search Assistant, Your Task is to find the company name from the Article Headline which will be used as Search Query, If there is no company then suggest short search query with same schema
+       Use JSON \n The JSON object must use the schema: ${JSON.stringify({
          company: "string",
        })}  `,
       },
@@ -36,18 +36,19 @@ export default async function Page({
 
   let formattedQuery = JSON.parse(generateQuery.choices[0].message.content);
   let finalQuery = Object.values(formattedQuery).reduce((acc, val) => {
-    return acc + val;
+    return val + " " + acc;
   }, "");
+  console.log(finalQuery, "final");
 
   let RelatedPosts: [any] = await fetch(
-    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/ajax-search-pro/v0/search?s=${finalQuery}`
+    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/ajax-search-pro/v0/search?s=${finalQuery}&id=3`
   ).then((res) => res.json());
-
+  console.log("relatedss", RelatedPosts.length);
   if (!getPost.length) {
     return <div>Post not found</div>;
   } else {
     return (
-      <NewsArticle post={getPost[0]} relatedPosts={RelatedPosts.slice(0, 3)} />
+      <NewsArticle post={getPost[0]} relatedPosts={RelatedPosts.slice(0, 6)} />
     );
   }
 }
