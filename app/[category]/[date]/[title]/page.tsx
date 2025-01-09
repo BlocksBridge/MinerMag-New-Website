@@ -1,6 +1,7 @@
 import NewsArticle from "@/components/Single/Post";
 // import OpenAI from "openai";
 import Groq from "groq-sdk";
+import { Metadata } from "next";
 export default async function Page({
   params,
 }: {
@@ -51,4 +52,9 @@ export default async function Page({
       <NewsArticle post={getPost[0]} relatedPosts={RelatedPosts.slice(0, 6)} />
     );
   }
+}
+
+export async function generateMetadata({ params, searchParams }) {
+  const param = await params;
+  return { title: param.title.split("-").join(" ") + " By TheMinerMag" };
 }
