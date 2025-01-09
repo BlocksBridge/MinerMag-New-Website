@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function NewsArticle({ post, relatedPosts }) {
-  console.log(relatedPosts, "redlatwe");
+  // console.log(relatedPosts, "redlatwe");
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1">
@@ -79,21 +79,31 @@ export default function NewsArticle({ post, relatedPosts }) {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {relatedPosts.length &&
-              relatedPosts.map((post) => (
-                <Link key={post.id} href="#" className="group">
-                  {/* <Image
-                  src={`https://sjc.microlink.io/Iz0t8yZa6uZKG4JvmMRI1csrWcWhLbtEufg59sQu0bdc0mVXsiLurAon24cRp2rJlRuOGJat_PHjEJ9EsXqOPQ.jpeg`}
-                  alt={`Latest news ${i}`}
-                  width={400}
-                  height={200}
-                  className="w-full h-48 object-cover rounded-lg mb-3"
-                /> */}
-                  <h3 className="font-medium group-hover:text-blue-600">
-                    {post.title}
-                  </h3>
-                  <p className="text-sm text-gray-500">{post.date}</p>
-                </Link>
-              ))}
+              relatedPosts.map(async (post) => {
+                let getImage = await fetch(
+                  `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts/${post.ID}?acf_format=standard`
+                ).then((res) => res.json());
+                console.log(getImage, "getImage");
+                console.log(post, "post", post.asp_guid);
+                return (
+                  <Link
+                    key={post.ID}
+                    href={`${post.asp_guid.split(".com")[1]}`}
+                    className="group">
+                    <Image
+                      src={getImage.acf.main_image}
+                      alt={`Latest news ${post.post_title}`}
+                      width={400}
+                      height={200}
+                      className="w-full h-48 object-cover rounded-lg mb-3"
+                    />
+                    <h3 className="font-medium group-hover:text-blue-600">
+                      {post.post_title}
+                    </h3>
+                    <p className="text-sm text-gray-500">{post.date}</p>
+                  </Link>
+                );
+              })}
           </div>
         </div>
       </main>
