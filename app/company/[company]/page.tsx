@@ -139,3 +139,7 @@ export default async function CompanyPage({
     </div>
   );
 }
+export async function generateMetadata({ params, searchParams }) {
+  const param = await params;
+  return { title: param.company.split("-").join(" ") + " By TheMinerMag" };
+}
