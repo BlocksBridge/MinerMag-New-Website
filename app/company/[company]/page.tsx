@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Groq from "groq-sdk";
 // This would typically come from a database or API
-
+import parse from "rss-to-json";
 export default async function CompanyPage({
   params,
   searchParams,
@@ -16,7 +16,10 @@ export default async function CompanyPage({
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?search=${param.company}&acf_format=standard`
   ).then((res) => res.json());
   console.log(getCompanyArticles, "getCompanyArticles");
-
+  let getNewswire = await parse(
+    "https://ir.mara.com/news-events/press-releases/rss"
+  );
+  console.log(getNewswire, "getNewswire");
   const groq = new Groq({ apiKey: process.env.GROQ_KEY });
   let generateQuery = await groq.chat.completions.create({
     response_format: { type: "json_object" },
@@ -102,13 +105,38 @@ export default async function CompanyPage({
               <p
                 className="text-gray-700"
                 dangerouslySetInnerHTML={{
-                  __html: article.excerpt.rendered.slice(0, 200),
+                  __html: article.excerpt.rendered.slice(0, 200) + "...",
                 }}></p>
             </div>
           ))}
           <button className="border-black px-3 py-2 shadow m-auto rounded">
             Load More
           </button>
+        </div>
+      </div>
+
+      <div className="shadow rounded-lg py-6 px-4 ">
+        <h3 className="text-xl font-semibold mb-4">Newswire</h3>
+        <div className="space-y-6">
+          {getNewswire.items.slice(0, 5).map((article) => (
+            <div key={article.title} className="border-b pb-4 last:border-b-0">
+              <h4 className="text-lg font-semibold mb-2">
+                <Link
+                  href={article.link}
+                  className="text-blue-600 hover:underline">
+                  {article.title}
+                </Link>
+              </h4>
+              <p className="text-sm text-gray-500 mb-2">
+                Published on{" "}
+                {new Date(article.published).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
