@@ -56,7 +56,12 @@ export default async function CompanyPage({
           ← Back to Companies
         </Link>
       </div>
-
+      <div className="shadow py-6 px-4  my-2 flex flex-col gap-3 mb-8">
+        <p className="text-gray-600"></p>
+        <div className="">
+          <TradingView symbol={param.company} />
+        </div>
+      </div>
       {/* Company Summary */}
       <div className="bg-white shadow rounded-lg p-6 mb-8">
         <h3 className="text-xl font-semibold mb-4">Company Summary</h3>
@@ -71,16 +76,6 @@ export default async function CompanyPage({
               );
             })}
           </div>
-        </div>
-      </div>
-      <div className="shadow py-6 px-4  my-2 flex flex-col gap-3 mb-8">
-        <h3 className="text-xl font-semibold capitalize">
-          Market Trends ( IN PROGRESS )
-        </h3>
-        <p className="text-gray-600"></p>
-        <div className="">
-          <h3 className="text-xl font-semibold mb-4">NASDAQ</h3>
-          <TradingView symbol={param.company} />
         </div>
       </div>
 
