@@ -6,6 +6,7 @@ import Header from "@/components/Header/Header";
 
 import Footer from "@/components/Footer/Footer";
 import { geistMono, geistSans } from "./fonts/fonts";
+import TopHeader from "@/components/Header/TopHeader";
 
 export const metadata: Metadata = {
   title: "theMinerMag",
@@ -21,6 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
+        <TopHeader />
         <Header />
         <div className="flex-grow">{children}</div>
         <Footer />
