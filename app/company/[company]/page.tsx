@@ -3,6 +3,8 @@ import Link from "next/link";
 import Groq from "groq-sdk";
 // This would typically come from a database or API
 import parse from "rss-to-json";
+import TradingView from "./tradingView";
+import { SingleTicker } from "react-ts-tradingview-widgets";
 export default async function CompanyPage({
   params,
   searchParams,
@@ -76,9 +78,9 @@ export default async function CompanyPage({
           Market Trends ( IN PROGRESS )
         </h3>
         <p className="text-gray-600"></p>
-        <div>
+        <div className="">
           <h3 className="text-xl font-semibold mb-4">NASDAQ</h3>
-          {/* <StockPrice symbol={company.stockSymbol} /> */}4032
+          <TradingView symbol={param.company} />
         </div>
       </div>
 
