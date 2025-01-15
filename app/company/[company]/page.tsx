@@ -17,11 +17,11 @@ export default async function CompanyPage({
   let getCompanyArticles = await fetch(
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?search=${param.company}&acf_format=standard`
   ).then((res) => res.json());
-  console.log(getCompanyArticles, "getCompanyArticles");
+  // console.log(getCompanyArticles, "getCompanyArticles");
   let getNewswire = await parse(
     "https://ir.mara.com/news-events/press-releases/rss"
   );
-  console.log(getNewswire, "getNewswire");
+  // console.log(getNewswire, "getNewswire");
   const groq = new Groq({ apiKey: process.env.GROQ_KEY });
   let generateQuery = await groq.chat.completions.create({
     response_format: { type: "json_object" },
@@ -39,7 +39,7 @@ export default async function CompanyPage({
   });
 
   let formattedQuery = JSON.parse(generateQuery.choices[0].message.content);
-  console.log(formattedQuery);
+  // console.log(formattedQuery);
 
   return (
     <div className="w-10/12 m-auto py-6 px-4 sm:px-6 lg:px-8 ">
@@ -59,23 +59,7 @@ export default async function CompanyPage({
       <div className="shadow py-6 px-4  my-2 flex flex-col gap-3 mb-8">
         <p className="text-gray-600"></p>
         <div className="">
-          <TradingView symbol={param.company} />
-        </div>
-      </div>
-      {/* Company Summary */}
-      <div className="bg-white shadow rounded-lg p-6 mb-8">
-        <h3 className="text-xl font-semibold mb-4">Company Summary</h3>
-        <div className="gap-4 ">
-          <div className="flex flex-col gap-2">
-            {Object.keys(formattedQuery).map((item) => {
-              return (
-                <p>
-                  <strong className="capitalize">{item}:</strong>{" "}
-                  {formattedQuery[item]}
-                </p>
-              );
-            })}
-          </div>
+          <TradingView symbol={param.company} formattedQuery={formattedQuery} />
         </div>
       </div>
 
@@ -142,4 +126,35 @@ export default async function CompanyPage({
 export async function generateMetadata({ params, searchParams }) {
   const param = await params;
   return { title: param.company.split("-").join(" ") + " By TheMinerMag" };
+}
+
+export async function generateStaticParams() {
+  const companies = [
+    "MARA",
+    "RIOT",
+    "CORZ",
+    "BTDR",
+    "CLSK",
+    "IREN",
+    "HUT",
+    "WULF",
+    "PHX.AE",
+    "CIFR",
+    "FUFU",
+    "BITF",
+    "BTBT",
+    "CAN",
+    "HIVE",
+    "SDIG",
+    "ARBK",
+    "BTCM",
+    "GRYP",
+    "SOS",
+    "SLNH",
+    "GREE",
+    "LMFA",
+    "GRDI.NE",
+  ];
+
+  return companies.map((company) => ({ company }));
 }
