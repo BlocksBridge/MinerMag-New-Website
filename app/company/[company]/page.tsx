@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Groq from "groq-sdk";
+import OpenAI from "openai";
 // This would typically come from a database or API
 import parse from "rss-to-json";
 import TradingView from "./tradingView";
@@ -22,10 +23,29 @@ export default async function CompanyPage({
     "https://ir.mara.com/news-events/press-releases/rss"
   );
   // console.log(getNewswire, "getNewswire");
-  const groq = new Groq({ apiKey: process.env.GROQ_KEY });
-  let generateQuery = await groq.chat.completions.create({
+  // const groq = new Groq({ apiKey: process.env.GROQ_KEY });
+  // let generateQuery = await groq.chat.completions.create({
+  //   response_format: { type: "json_object" },
+  //   model: "mixtral-8x7b-32768",
+  //   messages: [
+  //     {
+  //       role: "system",
+  //       content: `Your Task is to find information about the Listed Company Name which i'll give you, there should be only string and no other datatypes. the company is in bitcoin mining industry, you should provide information about what it does, headquarters, revenue and all of the details in JSON format with following keys : [company, about, description, revenue, headquater, goals, market trends] `,
+  //     },
+  //     {
+  //       role: "user",
+  //       content: `Here is the company name: ${param.company}`,
+  //     },
+  //   ],
+  // });
+
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_KEY,
+    organization: process.env.OPENAI_ORG,
+  });
+  let generateQuery = await openai.chat.completions.create({
     response_format: { type: "json_object" },
-    model: "mixtral-8x7b-32768",
+    model: "gpt-3.5-turbo",
     messages: [
       {
         role: "system",
@@ -39,7 +59,6 @@ export default async function CompanyPage({
   });
 
   let formattedQuery = JSON.parse(generateQuery.choices[0].message.content);
-  // console.log(formattedQuery);
 
   return (
     <div className="w-10/12 m-auto py-6 px-4 sm:px-6 lg:px-8 ">
