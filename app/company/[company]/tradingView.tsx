@@ -22,8 +22,10 @@ export default function TradingView({ symbol, formattedQuery }) {
         </div>
         <div className="bg-white border-l-2 rounded-lg p-6 mb-8 ">
           <h3 className="text-xl font-semibold mb-4">Company Summary</h3>
+
           <div className="gap-4 ">
-            <div className="flex flex-col gap-2">
+            <CompanyProfile symbol={symbol}></CompanyProfile>
+            {/* <div className="flex flex-col gap-2">
               {Object.keys(formattedQuery).map((item) => {
                 return (
                   <p>
@@ -32,7 +34,7 @@ export default function TradingView({ symbol, formattedQuery }) {
                   </p>
                 );
               })}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

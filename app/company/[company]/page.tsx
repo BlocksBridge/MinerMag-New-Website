@@ -157,14 +157,15 @@ export async function generateStaticParams() {
     "IREN",
     "HUT",
     "WULF",
-    "PHX.AE",
+    "PHX",
     "CIFR",
     "FUFU",
     "BITF",
     "BTBT",
     "CAN",
+    "CANG",
     "HIVE",
-    "SDIG",
+    "SDIG", // To be removed once merger with Bitfarms is complete
     "ARBK",
     "BTCM",
     "GRYP",
@@ -172,7 +173,12 @@ export async function generateStaticParams() {
     "SLNH",
     "GREE",
     "LMFA",
-    "GRDI.NE",
+    "MIGI",
+    "BTOG",
+    "DGHI",
+    "DMGI",
+    "ANY",
+    "NB2",
   ];
 
   return companies.map((company) => ({ company }));
