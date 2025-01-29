@@ -3,10 +3,14 @@
 import { useEffect, useState } from "react";
 import "./[company]/tradingView.css";
 import Link from "next/link";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import EnterpriseTable from "./enterpriseTable";
 import CompanyTable from "./companyTable";
+import { TabsContent } from "@radix-ui/react-tabs";
 export default function ConsolidatedCompanies() {
   const [currentTab, setCurrentTab] = useState("");
   const [MarketData, setMarketData] = useState([]);
+  const [EnterpriseData, setEnterpriseData] = useState([]);
   const [loading, setLoading] = useState(true);
   const companies = [
     "MARA",
@@ -44,7 +48,7 @@ export default function ConsolidatedCompanies() {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      let getIndivisualData = await Promise.all(
+      let getIndividualMarketData = await Promise.all(
         companies.map(async (i) => {
           let call = await fetch(
             `https://financialmodelingprep.com/api/v3/quote-order/${i}?apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
@@ -53,7 +57,18 @@ export default function ConsolidatedCompanies() {
           return call[0];
         })
       );
-      setMarketData(getIndivisualData);
+      let getIndividualEnterpriseData = await Promise.all(
+        companies.map(async (i) => {
+          let call = await fetch(
+            `      https://financialmodelingprep.com/api/v3/enterprise-values/${i}/?period=quarter&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb
+`
+          ).then((res) => res.json());
+
+          return call[0];
+        })
+      );
+      setMarketData(getIndividualMarketData);
+      setEnterpriseData(getIndividualEnterpriseData);
       setLoading(false);
     })();
   }, []);
@@ -77,8 +92,19 @@ export default function ConsolidatedCompanies() {
           },
         ]}></MarketData> */}
         <h1 className="font-bold"> Bitcoin Mining Companies Stats</h1>
-
-        <CompanyTable data={MarketData} />
+        <Tabs className="w-full" defaultValue="index">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="index">Market Cap</TabsTrigger>
+            <TabsTrigger value="enterprise">Enterprise Value</TabsTrigger>
+          </TabsList>
+          <TabsContent value="index">
+            <CompanyTable data={MarketData} companies={companies} />
+          </TabsContent>
+          <TabsContent value="enterprise">
+            {" "}
+            <EnterpriseTable data={MarketData} companies={companies} />
+          </TabsContent>{" "}
+        </Tabs>
       </div>
     );
   }
