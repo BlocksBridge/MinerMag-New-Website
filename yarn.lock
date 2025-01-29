@@ -2516,6 +2516,11 @@ react-is@^16.13.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-resizable-panels@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/react-resizable-panels/-/react-resizable-panels-2.1.7.tgz#afd29d8a3d708786a9f95183a38803c89f13c2e7"
+  integrity sha512-JtT6gI+nURzhMYQYsx8DKkx6bSoOGFp7A3CwMrOb8y5jFHFyqwo9m68UhmXRw57fRVJksFn1TSlm3ywEQ9vMgA==
+
 react-ts-tradingview-widgets@^1.2.6:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/react-ts-tradingview-widgets/-/react-ts-tradingview-widgets-1.2.6.tgz#eb76b9c25ec21f20787518da4bc2830bb0d70606"

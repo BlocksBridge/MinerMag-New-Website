@@ -11,11 +11,12 @@ import {
 import "./tradingView.css";
 export default function TradingView({ symbol, formattedQuery }) {
   return (
-    <div className="flex flex-col gap-2">
-      <SymbolInfo
+    <div className="p-2 flex flex-col gap-2 h-full">
+      <MiniChart
         symbol={symbol}
         colorTheme="light"
-        autosize={true}></SymbolInfo>{" "}
+        height={"100%"}
+        autosize={true}></MiniChart>{" "}
     </div>
   );
 }

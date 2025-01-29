@@ -5,6 +5,21 @@ import OpenAI from "openai";
 // This would typically come from a database or API
 import parse from "rss-to-json";
 import TradingView from "./tradingView";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { SingleTicker } from "react-ts-tradingview-widgets";
 export default async function CompanyPage({
   params,
@@ -17,6 +32,10 @@ export default async function CompanyPage({
   //   let getCompanyInfoThroughAI = await
   let getCompanyArticles = await fetch(
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?search=${param.company}&acf_format=standard`
+  ).then((res) => res.json());
+
+  let getCompanyDetails = await fetch(
+    `https://financialmodelingprep.com/api/v3/profile/${param.company}?apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
   ).then((res) => res.json());
 
   // console.log(getCompanyArticles, "getCompanyArticles");
@@ -60,7 +79,7 @@ export default async function CompanyPage({
   });
 
   let formattedQuery = JSON.parse(generateQuery.choices[0].message.content);
-
+  console.log(getCompanyDetails);
   return (
     <div className="w-10/12 m-auto py-6 px-4 sm:px-6 lg:px-8 ">
       {/* Subheader */}
@@ -74,11 +93,44 @@ export default async function CompanyPage({
           ← Back to Companies
         </Link>
       </div>
-      <div className="shadow py-6 px-4  my-2 flex flex-col gap-3 mb-8">
+      <div className="shadow   my-2 flex flex-col gap-3 mb-8">
         <p className="text-gray-600"></p>
-        <div className="">
-          <TradingView symbol={param.company} formattedQuery={formattedQuery} />
-        </div>
+
+        <ResizablePanelGroup direction="horizontal">
+          <ResizablePanel>
+            <div className="flex flex-col">
+              <div className="flex  gap-4 justify-evenly text-lg">
+                <p>Price</p>
+                <p>
+                  {getCompanyDetails[0].price.toLocaleString("en-us", {
+                    minimumFractionDigits: 2,
+                  })}
+                  $
+                </p>
+              </div>
+              <div className="flex  p-1 gap-4 justify-evenly text-lg">
+                <p>Market Cap</p>
+                <p>{getCompanyDetails[0].mktCap}$</p>
+              </div>
+              <div className="flex   gap-4 justify-evenly text-lg">
+                <p>Exchange</p>
+                <p>{getCompanyDetails[0].exchangeShortName}</p>
+              </div>
+              <div className="flex   gap-4 justify-evenly text-lg">
+                <p>Employees</p>
+                <p>{getCompanyDetails[0].fullTimeEmployees}</p>
+              </div>
+            </div>
+          </ResizablePanel>
+          <ResizableHandle />
+          <ResizablePanel>
+            {" "}
+            <TradingView
+              symbol={param.company}
+              formattedQuery={formattedQuery}
+            />
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
 
       <div className="shadow rounded-lg py-6 px-4 ">
