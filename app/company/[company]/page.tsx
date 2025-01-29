@@ -76,7 +76,9 @@ export default async function CompanyPage({
       </div>
       <div className="shadow py-6 px-4  my-2 flex flex-col gap-3 mb-8">
         <p className="text-gray-600"></p>
-        <div className=""></div>
+        <div className="">
+          <TradingView symbol={param.company} formattedQuery={formattedQuery} />
+        </div>
       </div>
 
       <div className="shadow rounded-lg py-6 px-4 ">
