@@ -18,6 +18,7 @@ export default async function CompanyPage({
   let getCompanyArticles = await fetch(
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?search=${param.company}&acf_format=standard`
   ).then((res) => res.json());
+
   // console.log(getCompanyArticles, "getCompanyArticles");
   let getNewswire = await parse(
     "https://ir.mara.com/news-events/press-releases/rss"
@@ -69,17 +70,13 @@ export default async function CompanyPage({
             {param.company.split("-").join(" ")}
           </h2>
         </div>
-        <Link
-          href="/companies"
-          className="text-sm text-blue-600 hover:underline">
+        <Link href="/company" className="text-sm text-blue-600 hover:underline">
           ← Back to Companies
         </Link>
       </div>
       <div className="shadow py-6 px-4  my-2 flex flex-col gap-3 mb-8">
         <p className="text-gray-600"></p>
-        <div className="">
-          <TradingView symbol={param.company} formattedQuery={formattedQuery} />
-        </div>
+        <div className=""></div>
       </div>
 
       <div className="shadow rounded-lg py-6 px-4 ">
