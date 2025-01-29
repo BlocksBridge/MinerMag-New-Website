@@ -69,7 +69,7 @@ export default function CompanyTable({ data, companies }) {
                     {company.enterpriseValue.toLocaleString("en-us", {
                       minimumFractionDigits: 2,
                     })}
-                    %
+                    $
                   </TableCell>
 
                   <TableCell className="text-center">
