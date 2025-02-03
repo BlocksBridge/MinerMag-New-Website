@@ -1,5 +1,4 @@
-"use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   Building2,
   TrendingUp,
@@ -11,47 +10,38 @@ import {
   ChevronDown,
   Activity,
 } from "lucide-react";
+import TradingView from "./tradingView";
+import Link from "next/link";
 
-// Simulated data - in a real app this would come from an API
-const companyData = {
-  name: "Marathon Digital Holdings, Inc.",
-  ticker: "MARA",
-  price: 122.45,
-  change: 3.5,
-  marketCap: "21.5B",
-  employees: "50-200",
-  founded: 2010,
-  website: "https://marathondh.com",
-  headquarters: "Las Vegas, Nevada",
-  description:
-    "Marathon Digital Holdings (NASDAQ:MARA) is a digital asset technology company that mines cryptocurrencies with a focus on the blockchain ecosystem and the generation of digital assets.",
-};
+export default async function CompanyPage({
+  params,
+}: {
+  params: { company: string };
+}) {
+  const param = await params;
 
-const news = [
-  {
-    date: "March 1, 2024",
-    title: "Marathon Digital announces expansion of mining operations",
-  },
-  {
-    date: "March 2, 2024",
-    title: "Q4 Earnings exceed analyst expectations",
-  },
-  {
-    date: "March 3, 2024",
-    title: "New partnership announced with renewable energy provider",
-  },
-];
+  // const [selectedPeriod, setSelectedPeriod] = useState("1M");
+  let getCompanyArticles = await fetch(
+    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?search=${param.company}&acf_format=standard`
+  ).then((res) => res.json());
 
-const timePeriods = ["1D", "1W", "1M", "1Y", "ALL"];
-
-function App() {
-  const [selectedPeriod, setSelectedPeriod] = useState("1M");
-
+  let getCompanyInfo = await fetch(
+    `https://sandbox.financialmodelingprep.com/stable/profile?symbol=${param.company}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
+  ).then((res) => res.json());
+  console.log(getCompanyArticles, getCompanyInfo);
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-      {/* Header */}
+      {/* Header */}{" "}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="mb-8 flex items-center justify-between">
+            <div className="flex items-center"></div>
+            <Link
+              href="/company"
+              className="text-sm text-blue-600 hover:underline">
+              ← Back to Companies
+            </Link>
+          </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="bg-blue-600 p-4 rounded-lg">
@@ -59,10 +49,12 @@ function App() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                  {companyData.name}
+                  {getCompanyInfo[0].companyName}
                 </h1>
                 <div className="flex items-center space-x-2 mt-1">
-                  <span className="text-gray-500">${companyData.ticker}</span>
+                  <span className="text-gray-500">
+                    ${getCompanyInfo[0].symbol}
+                  </span>
                   <span className="text-sm px-2 py-1 bg-gray-100 rounded-full">
                     NASDAQ
                   </span>
@@ -71,26 +63,27 @@ function App() {
             </div>
             <div className="text-right">
               <div className="text-3xl font-bold text-gray-900">
-                ${companyData.price}
+                ${getCompanyInfo[0].price}
               </div>
               <div
                 className={`flex items-center justify-end space-x-1 ${
-                  companyData.change >= 0 ? "text-green-600" : "text-red-600"
+                  getCompanyInfo[0].change >= 0
+                    ? "text-green-600"
+                    : "text-red-600"
                 }`}>
-                {companyData.change >= 0 ? (
+                {getCompanyInfo[0].change >= 0 ? (
                   <ChevronUp className="h-4 w-4" />
                 ) : (
                   <ChevronDown className="h-4 w-4" />
                 )}
                 <span className="font-semibold">
-                  {Math.abs(companyData.change)}%
+                  {Math.abs(getCompanyInfo[0].change)}%
                 </span>
               </div>
             </div>
           </div>
         </div>
       </header>
-
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -100,7 +93,7 @@ function App() {
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-semibold mb-4">Company Overview</h2>
               <p className="text-gray-600 leading-relaxed">
-                {companyData.description}
+                {getCompanyInfo[0].description}
               </p>
 
               {/* Key Stats Grid */}
@@ -111,7 +104,11 @@ function App() {
                   </div>
                   <div>
                     <div className="text-sm text-gray-500">Market Cap</div>
-                    <div className="font-semibold">{companyData.marketCap}</div>
+                    <div className="font-semibold">
+                      {getCompanyInfo[0].marketCap.toLocaleString("en-us", {
+                        minimumFractionDigits: 2,
+                      })}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -120,7 +117,9 @@ function App() {
                   </div>
                   <div>
                     <div className="text-sm text-gray-500">Employees</div>
-                    <div className="font-semibold">{companyData.employees}</div>
+                    <div className="font-semibold">
+                      {getCompanyInfo[0].fullTimeEmployees}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -128,8 +127,17 @@ function App() {
                     <Activity className="h-5 w-5 text-purple-600" />
                   </div>
                   <div>
-                    <div className="text-sm text-gray-500">Founded</div>
-                    <div className="font-semibold">{companyData.founded}</div>
+                    <div className="text-sm text-gray-500">IPO</div>
+                    <div className="font-semibold">
+                      {new Date(getCompanyInfo[0].ipoDate).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -139,7 +147,7 @@ function App() {
             <div className="bg-white rounded-xl shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold">Price History</h2>
-                <div className="flex space-x-2">
+                {/* <div className="flex space-x-2">
                   {timePeriods.map((period) => (
                     <button
                       key={period}
@@ -152,12 +160,10 @@ function App() {
                       {period}
                     </button>
                   ))}
-                </div>
+                </div> */}
               </div>
-              <div className="h-64 flex items-center justify-center bg-gray-50 rounded-lg">
-                <span className="text-gray-400">
-                  Chart visualization would go here
-                </span>
+              <div className="h-96 w-full flex items-center justify-center bg-gray-50 rounded-lg">
+                <TradingView symbol={param.company} />
               </div>
             </div>
           </div>
@@ -175,7 +181,7 @@ function App() {
                   <div>
                     <div className="text-sm text-gray-500">Website</div>
                     <a
-                      href={companyData.website}
+                      href={getCompanyInfo[0].website}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-600 hover:text-blue-700 flex items-center space-x-1 group">
@@ -188,7 +194,15 @@ function App() {
                   <MapPin className="h-5 w-5 text-gray-400 mt-1" />
                   <div>
                     <div className="text-sm text-gray-500">Headquarters</div>
-                    <div>{companyData.headquarters}</div>
+                    <div>
+                      {getCompanyInfo[0].address +
+                        ", " +
+                        getCompanyInfo[0].city +
+                        " "}
+                      {getCompanyInfo[0]?.state
+                        ? getCompanyInfo[0]?.state
+                        : null}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -198,22 +212,26 @@ function App() {
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-semibold mb-4">Latest News</h2>
               <div className="space-y-4">
-                {news.map((item, index) => (
+                {getCompanyArticles.slice(0, 4).map((item, index) => (
                   <div
                     key={index}
                     className={`${
-                      index !== news.length - 1
+                      index !== getCompanyArticles.length - 1
                         ? "border-b border-gray-100"
                         : ""
                     } pb-4`}>
                     <div className="text-sm text-gray-400 mb-1">
-                      {item.date}
+                      {new Date(item.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
                     </div>
                     <a
-                      href="#"
-                      className="font-medium hover:text-blue-600 transition-colors">
-                      {item.title}
-                    </a>
+                      target="_blank"
+                      href={`${item.link.split(".com")[1]}`}
+                      dangerouslySetInnerHTML={{ __html: item.title.rendered }}
+                      className="font-medium hover:text-blue-600 transition-colors"></a>
                   </div>
                 ))}
               </div>
@@ -224,5 +242,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

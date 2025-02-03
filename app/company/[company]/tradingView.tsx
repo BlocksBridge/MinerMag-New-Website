@@ -1,22 +1,20 @@
 "use client";
-
-import {
-  CompanyProfile,
-  FundamentalData,
-  MiniChart,
-  SingleTicker,
-  SymbolInfo,
-  TechnicalAnalysis,
-} from "react-ts-tradingview-widgets";
+import { AdvancedRealTimeChart } from "react-ts-tradingview-widgets";
+import { useState } from "react";
 import "./tradingView.css";
-export default function TradingView({ symbol, formattedQuery }) {
+export default function TradingView({ symbol }) {
+  const [ge, set] = useState("");
   return (
-    <div className="p-2 flex flex-col gap-2 h-full">
-      <MiniChart
+    <div className="p-2  w-full h-full">
+      <AdvancedRealTimeChart
+        hide_side_toolbar={true}
+        allow_symbol_change={false}
+        // hide_legend={true}
+        range="6M"
         symbol={symbol}
-        colorTheme="light"
+        theme="light"
         height={"100%"}
-        autosize={true}></MiniChart>{" "}
+        width={"100%"}></AdvancedRealTimeChart>
     </div>
   );
 }
