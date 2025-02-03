@@ -210,7 +210,7 @@ export default async function CompanyPage({
                 </div> */}
               </div>
               <div className="h-96 w-full flex items-center justify-center bg-gray-50 rounded-lg">
-                <TradingView symbol={param.company} />
+                <TradingView />
               </div>
             </div>
           </div>
