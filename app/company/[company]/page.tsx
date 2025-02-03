@@ -53,7 +53,7 @@ export default async function CompanyPage({
                 </h1>
                 <div className="flex items-center space-x-2 mt-1">
                   <span className="text-gray-500">
-                    ${getCompanyInfo[0].symbol}
+                    {getCompanyInfo[0].symbol}
                   </span>
                   <span className="text-sm px-2 py-1 bg-gray-100 rounded-full">
                     NASDAQ

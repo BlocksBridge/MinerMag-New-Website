@@ -95,7 +95,7 @@ export default function ConsolidatedCompanies() {
         <Tabs className="w-full" defaultValue="index">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="index">Market Cap</TabsTrigger>
-            <TabsTrigger value="enterprise">Enterprise Value</TabsTrigger>
+            <TabsTrigger value="enterprise">Operations Metrics</TabsTrigger>
           </TabsList>
           <TabsContent value="index">
             <CompanyTable data={MarketData} companies={companies} />
