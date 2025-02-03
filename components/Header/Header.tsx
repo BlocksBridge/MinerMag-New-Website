@@ -32,6 +32,11 @@ export default function Header() {
               </Link>
               <Link
                 className="text-sm font-medium hover:text-blue-600"
+                href="/company">
+                COMPANIES
+              </Link>
+              <Link
+                className="text-sm font-medium hover:text-blue-600"
                 href="/learn">
                 LEARN
               </Link>

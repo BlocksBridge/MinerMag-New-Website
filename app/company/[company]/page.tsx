@@ -106,7 +106,7 @@ export default async function CompanyPage({
                     <div className="text-sm text-gray-500">Market Cap</div>
                     <div className="font-semibold">
                       {getCompanyInfo[0].marketCap.toLocaleString("en-us", {
-                        minimumFractionDigits: 2,
+                        minimumFractionDigits: 0,
                       })}
                     </div>
                   </div>
