@@ -64,10 +64,20 @@ export default async function CompanyPage({
   ];
 
   // const [selectedPeriod, setSelectedPeriod] = useState("1M");
-  let getCompanyArticles = await fetch(
-    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?search=${param.company}&acf_format=standard`
+  let getAllTags = await fetch(
+    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/tags`
   ).then((res) => res.json());
-
+  let companyTag = null;
+  console.log(getAllTags);
+  let findCorrectTag = getAllTags.forEach((i) => {
+    if (i.slug == param.company) {
+      companyTag = i.id;
+    }
+  });
+  let getCompanyArticles = await fetch(
+    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?tags=${companyTag}&acf_format=standard`
+  ).then((res) => res.json());
+  console.log(getCompanyArticles, "articles");
   let getCompanyInfo = await fetch(
     `https://sandbox.financialmodelingprep.com/stable/profile?symbol=${param.company}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
   ).then((res) => res.json());
@@ -75,7 +85,7 @@ export default async function CompanyPage({
   let getCompanyNews = await fetch(
     `https://sandbox.financialmodelingprep.com/stable/news/stock?symbols=${param.company.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
   ).then((res) => res.json());
-  console.log(getCompanyNews, "news");
+  // console.log(getCompanyNews, "news");
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       {/* Header */}{" "}
