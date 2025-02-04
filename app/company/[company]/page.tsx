@@ -380,3 +380,45 @@ export default async function CompanyPage({
     </div>
   );
 }
+
+export async function generateMetadata({ params, searchParams }) {
+  const param = await params;
+  return { title: param.company.split("-").join(" ") + " By TheMinerMag" };
+}
+
+export async function generateStaticParams() {
+  const companies = [
+    "MARA",
+    "RIOT",
+    "CORZ",
+    "BTDR",
+    "CLSK",
+    "IREN",
+    "HUT",
+    "WULF",
+    "PHX",
+    "CIFR",
+    "FUFU",
+    "BITF",
+    "BTBT",
+    "CAN",
+    "CANG",
+    "HIVE",
+    "SDIG", // To be removed once merger with Bitfarms is complete
+    "ARBK",
+    "BTCM",
+    "GRYP",
+    "SOS",
+    "SLNH",
+    "GREE",
+    "LMFA",
+    "MIGI",
+    "BTOG",
+    "DGHI",
+    "DMGI",
+    "ANY",
+    "NB2",
+  ];
+
+  return companies.map((company) => ({ company }));
+}
