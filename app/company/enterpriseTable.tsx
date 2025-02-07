@@ -24,15 +24,34 @@ export default function CompanyTable({ data, companies }) {
             `      https://financialmodelingprep.com/api/v3/enterprise-values/${i}/?period=quarter&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb
 `
           ).then((res) => res.json());
+          let getRealizedData = await fetch("/api/statistics").then((res) =>
+            res.json()
+          );
 
-          return call[0];
+          let realizedHashMonth = getRealizedData.realizedHashrate[i]
+            ? String(Object.keys(getRealizedData.realizedHashrate[i])[0])
+            : null;
+          if (realizedHashMonth == null) {
+            return call[0];
+          } else {
+            let realizedHashData =
+              getRealizedData.realizedHashrate[i][String(realizedHashMonth)];
+
+            return {
+              ...call[0],
+              realizedHash: {
+                month: String(realizedHashMonth),
+                price: realizedHashData,
+              },
+            };
+          }
         })
       );
       setData(getIndividualEnterpriseData);
     })();
   }, []);
   if (getData.length) {
-    console.log(getData);
+    console.log(getData, "dta", getData.length);
     return (
       <Table>
         <TableCaption>Bitcoin Mining Companies Stat</TableCaption>
@@ -40,46 +59,48 @@ export default function CompanyTable({ data, companies }) {
           <TableRow>
             <TableHead className="w-[300px]">Name</TableHead>
             <TableHead>Market Cap</TableHead>
-
-            <TableHead className="text-center">Enterprise Value</TableHead>
+            <TableHead className="text-center">Enterprise Value</TableHead>{" "}
+            <TableHead className="text-center">
+              Realized Hashrate ({getData[0].realizedHash.month})
+            </TableHead>
             <TableHead className="text-center">No. of Shares</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {getData.map((company) => {
-            if (company) {
-              return (
-                <TableRow
-                  key={company.symbol}
-                  onClick={() => {
-                    console.log("clicked");
-                    redirect(`/company/${company.symbol}`);
-                  }}>
-                  <TableCell className="font-medium">
-                    {company.symbol}
-                  </TableCell>
+          {getData.map((company, index) => {
+            return (
+              <TableRow
+                key={company.symbol}
+                onClick={() => {
+                  console.log("clicked");
+                  redirect(`/company/${company.symbol}`);
+                }}>
+                <TableCell className="font-medium">{company.symbol}</TableCell>
 
-                  <TableCell>
-                    {company.marketCapitalization.toLocaleString("en-us", {
-                      minimumFractionDigits: 2,
-                    })}
-                    $
-                  </TableCell>
-                  <TableCell className="text-center">
-                    {company.enterpriseValue.toLocaleString("en-us", {
-                      minimumFractionDigits: 2,
-                    })}
-                    $
-                  </TableCell>
-
-                  <TableCell className="text-center">
-                    {company.numberOfShares.toLocaleString("en-us", {
-                      minimumFractionDigits: 2,
-                    })}
-                  </TableCell>
-                </TableRow>
-              );
-            }
+                <TableCell>
+                  {company.marketCapitalization.toLocaleString("en-us", {
+                    minimumFractionDigits: 2,
+                  })}
+                  $
+                </TableCell>
+                <TableCell className="text-center">
+                  {company.enterpriseValue.toLocaleString("en-us", {
+                    minimumFractionDigits: 2,
+                  })}
+                  $
+                </TableCell>
+                <TableCell className="text-center">
+                  {company?.realizedHash?.price
+                    ? company?.realizedHash?.price
+                    : 0}
+                </TableCell>
+                <TableCell className="text-center">
+                  {company.numberOfShares.toLocaleString("en-us", {
+                    minimumFractionDigits: 2,
+                  })}
+                </TableCell>
+              </TableRow>
+            );
           })}
           {/* {invoices.map((invoice) => (
           <TableRow key={invoice.invoice}>

@@ -21,7 +21,6 @@ export default async function Page() {
     "https://api.hashrateindex.com/v1/hashrateindex/network/block-reward",
     { headers: { "X-Hi-Api-Key": "hi.72efa27d0f82a2541260cfb351e3adc7" } }
   ).then((res) => res.json());
-  console.log(getBitcoinPrice.data[0], "btc");
   //console.log(Object.keys(getPosts[0]), getPosts[0]);
   return (
     <HomePage

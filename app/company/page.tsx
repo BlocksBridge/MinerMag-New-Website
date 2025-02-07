@@ -5,7 +5,7 @@ import "./[company]/tradingView.css";
 import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EnterpriseTable from "./enterpriseTable";
-import CompanyTable from "./companyTable";
+import CompanyTable from "./CompanyTable";
 import { companies } from "../companiesData";
 import { TabsContent } from "@radix-ui/react-tabs";
 export default function ConsolidatedCompanies() {
@@ -17,35 +17,32 @@ export default function ConsolidatedCompanies() {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      let getIndividualMarketData = await Promise.all(
-        companies.map(async (i) => {
-          let call = await fetch(
-            `https://financialmodelingprep.com/api/v3/quote-order/${i}?apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
-          ).then((res) => res.json());
+      // let getIndividualMarketData = await Promise.all(
+      //   companies.map(async (i) => {
+      //     let call = await fetch(
+      //       `https://financialmodelingprep.com/api/v3/quote-order/${i}?apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
+      //     ).then((res) => res.json());
 
-          return call[0];
-        })
-      );
-      let getIndividualEnterpriseData = await Promise.all(
-        companies.map(async (i) => {
-          let call = await fetch(
-            `      https://financialmodelingprep.com/api/v3/enterprise-values/${i}/?period=quarter&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb
-`
-          ).then((res) => res.json());
+      //     return call[0];
+      //   })
+      // );
+      //       let getIndividualEnterpriseData = await Promise.all(
+      //         companies.map(async (i) => {
+      //           let call = await fetch(
+      //             `      https://financialmodelingprep.com/api/v3/enterprise-values/${i}/?period=quarter&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb
+      // `
+      //           ).then((res) => res.json());
 
-          return call[0];
-        })
-      );
-      setMarketData(getIndividualMarketData);
-      setEnterpriseData(getIndividualEnterpriseData);
+      //           return call[0];
+      //         })
+      //       );
+      // setMarketData(getIndividualMarketData);
+      // setEnterpriseData(getIndividualEnterpriseData);
       setLoading(false);
     })();
   }, []);
 
-  if (!loading && MarketData.length) {
-    console.log(MarketData);
-    console.log("called");
-
+  if (!loading) {
     return (
       <div className="my-10 m-auto flex justify-center flex-col items-center gap-8 w-5/6">
         {/* <MarketData
@@ -67,11 +64,11 @@ export default function ConsolidatedCompanies() {
             <TabsTrigger value="enterprise">Operations Metrics</TabsTrigger>
           </TabsList>
           <TabsContent value="index">
-            <CompanyTable data={MarketData} companies={companies} />
+            <CompanyTable data={[]} companies={companies} />
           </TabsContent>
           <TabsContent value="enterprise">
             {" "}
-            <EnterpriseTable data={MarketData} companies={companies} />
+            <EnterpriseTable data={[]} companies={companies} />
           </TabsContent>{" "}
         </Tabs>
       </div>
