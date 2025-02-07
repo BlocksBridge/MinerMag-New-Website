@@ -6,44 +6,13 @@ import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EnterpriseTable from "./enterpriseTable";
 import CompanyTable from "./companyTable";
+import { companies } from "../companiesData";
 import { TabsContent } from "@radix-ui/react-tabs";
 export default function ConsolidatedCompanies() {
   const [currentTab, setCurrentTab] = useState("");
   const [MarketData, setMarketData] = useState([]);
   const [EnterpriseData, setEnterpriseData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const companies = [
-    "MARA",
-    "RIOT",
-    "CORZ",
-    "BTDR",
-    "CLSK",
-    "IREN",
-    "HUT",
-    "WULF",
-    "PHX",
-    "CIFR",
-    "FUFU",
-    "BITF",
-    "BTBT",
-    "CAN",
-    "CANG",
-    "HIVE",
-    "SDIG", // To be removed once merger with Bitfarms is complete
-    "ARBK",
-    "BTCM",
-    "GRYP",
-    "SOS",
-    "SLNH",
-    "GREE",
-    "LMFA",
-    "MIGI",
-    "BTOG",
-    "DGHI",
-    "DMGI",
-    "ANY",
-    "NB2",
-  ];
 
   useEffect(() => {
     (async () => {
