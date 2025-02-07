@@ -8,6 +8,11 @@ export default async function Page() {
       next: { tags: ["posts"] },
     }
   ).then((res) => res.json());
+  const getBitcoinPrice = await fetch(
+    "https://api.hashrateindex.com/v1/hashrateindex/coin/bitcoin/price",
+    { headers: { "X-Hi-Api-Key": "hi.72efa27d0f82a2541260cfb351e3adc7" } }
+  ).then((res) => res.json());
+  console.log(getBitcoinPrice, btc);
   //console.log(Object.keys(getPosts[0]), getPosts[0]);
   return <HomePage getPosts={getPosts} />;
 }
