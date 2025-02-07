@@ -2,8 +2,38 @@ import Link from "next/link";
 import Image from "next/image";
 import { companies } from "@/app/companiesData";
 import Search from "./Search";
-import { ChevronDown, Building2 } from "lucide-react";
-export default function Header() {
+import { ChevronDown, Building2, ChevronUp } from "lucide-react";
+export default async function Header() {
+  let companyWithPrices = await Promise.all(
+    companies.map(async (i) => {
+      let getStockPrice = await fetch(
+        `https://financialmodelingprep.com/stable/profile?symbol=${i.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
+      ).then((res) => res.json());
+      console.log(getStockPrice);
+      return {
+        company: i.toUpperCase(),
+        stockPrice: getStockPrice[0].price,
+        marketCap: getStockPrice[0].marketCap,
+        priceChange: getStockPrice[0].change,
+      };
+    })
+  ).then((i) => {
+    return i;
+  });
+  let currentdate = new Date();
+  let datetime =
+    "Last Sync: " +
+    currentdate.getDate() +
+    "/" +
+    (currentdate.getMonth() + 1) +
+    "/" +
+    currentdate.getFullYear() +
+    " @ " +
+    currentdate.getHours() +
+    ":" +
+    currentdate.getMinutes() +
+    ":" +
+    currentdate.getSeconds();
   return (
     <>
       {" "}
@@ -42,20 +72,51 @@ export default function Header() {
                 </Link>
                 <div className="hidden group-hover:block hover:block absolute bg-white shadow-lg rounded-lg  w-5/6 left-0 right-0 top-15 h-auto m-auto p-2 z-50 ">
                   <ul className="grid grid-cols-5 gap-2 justify-center items-center overflow-hidden  ">
-                    {companies.map((company, index) => (
-                      <Link
-                        key={index}
-                        href={`/company/${company}`}
-                        className="rounded-lg border   p-4 hover:bg-gray-200">
-                        <div className="flex flex-col w-full">
-                          <span className="font-bold text-gray-900">
-                            {company}
-                          </span>
-                          <span className="text-gray-600">Stock Price</span>
-                        </div>
-                      </Link>
-                    ))}
+                    {companyWithPrices.map((company, index) => {
+                      return (
+                        <Link
+                          key={index}
+                          href={`/company/${company.company}`}
+                          className="rounded-lg border   p-4 hover:bg-gray-200">
+                          <div className="flex flex-col w-full">
+                            <span className="font-bold text-gray-900 flex">
+                              {company.company}
+                              {"  "}
+                              <div
+                                className={`flex ${
+                                  company.priceChange >= 0
+                                    ? "text-green-600"
+                                    : "text-red-600"
+                                }`}>
+                                {company.priceChange >= 0 ? (
+                                  <ChevronUp className="h-4 w-4" />
+                                ) : (
+                                  <ChevronDown className="h-4 w-4" />
+                                )}
+                                <span className="font-semibold">
+                                  {Math.abs(company.priceChange)}%
+                                </span>
+                              </div>
+                            </span>
+                            <span className="text-gray-600">
+                              Stock Price:{" "}
+                              {company.stockPrice.toLocaleString("en-us", {
+                                minimumFractionDigits: 2,
+                              })}
+                              $
+                            </span>
+                            <span className="text-gray-600">
+                              Market Cap:{" "}
+                              {company.marketCap.toLocaleString("en-us", {
+                                minimumFractionDigits: 0,
+                              })}
+                            </span>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </ul>
+                  <p className="p-2 text-black">{datetime}</p>
                 </div>
               </div>
               <Link
