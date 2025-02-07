@@ -3,6 +3,7 @@ import Image from "next/image";
 import { companies } from "@/app/companiesData";
 import Search from "./Search";
 import { ChevronDown, Building2, ChevronUp } from "lucide-react";
+import "@/app/company/[company]/tradingView.css";
 import TickerTape from "./StockTicker";
 export default async function Header() {
   let companyWithPrices = await Promise.all(

@@ -1,7 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { geistSans } from "@/app/fonts/fonts";
-export default async function HomePage({ getPosts }: { getPosts: [any] }) {
+export default async function HomePage({
+  getPosts,
+  BitcoinData,
+  NetworkOverview,
+  BlockReward,
+}: {
+  getPosts: [any];
+  BitcoinData: [any];
+  NetworkOverview: [any];
+  BlockReward: [any];
+}) {
   const three = getPosts.slice(1, 4).map((item) => {
     return {
       //   image: "/placeholder.svg?height=200&width=400",
@@ -213,15 +223,54 @@ export default async function HomePage({ getPosts }: { getPosts: [any] }) {
               {[
                 {
                   title: "Bitcoin Price",
-                  value: "$89,277.00",
-                  change: "-1.77% (24h)",
-                  changeColor: "text-red-500",
+                  value: `${BitcoinData[
+                    BitcoinData.length - 1
+                  ].closePrice.toLocaleString("en-us", {
+                    minimumFractionDigits: 2,
+                  })}`,
+                  change: `${
+                    (
+                      ((BitcoinData[BitcoinData.length - 1].closePrice -
+                        BitcoinData[BitcoinData.length - 1].openPrice) /
+                        BitcoinData[BitcoinData.length - 1].openPrice) *
+                      100
+                    ).toFixed(2) + "%"
+                  } (24h)`,
+                  lastUpdated: ` ${`Last Updated: ${
+                    new Date(
+                      BitcoinData[BitcoinData.length - 1].closeTime
+                    ).getDate() +
+                    "/" +
+                    new Date(
+                      BitcoinData[BitcoinData.length - 1].closeTime
+                    ).getMonth() +
+                    "/" +
+                    new Date(
+                      BitcoinData[BitcoinData.length - 1].closeTime
+                    ).getFullYear()
+                  }`}`,
+                  changeColor: `${
+                    Number(
+                      ((BitcoinData[BitcoinData.length - 1].closePrice -
+                        BitcoinData[BitcoinData.length - 1].openPrice) /
+                        BitcoinData[BitcoinData.length - 1].openPrice) *
+                        100
+                    ) > 0
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`,
                 },
                 {
                   title: "Network Hashrate",
-                  value: "512 EH/s",
-                  change: "+2.3% (24h)",
-                  changeColor: "text-green-500",
+                  value: `${NetworkOverview.networkHashrate7d.toLocaleString(
+                    "en-us",
+                    {
+                      minimumFractionDigits: 0,
+                    }
+                  )} TH/s`,
+                  change: `Fees in Blocks (24h): ${NetworkOverview.feesBlocks24h} BTC`,
+                  additional: `Est. Difficulty Adjustment: ${NetworkOverview.estDiffAdj}%`,
+                  changeColor: "text-gray-500",
                 },
                 {
                   title: "Mining Difficulty",
@@ -231,8 +280,14 @@ export default async function HomePage({ getPosts }: { getPosts: [any] }) {
                 },
                 {
                   title: "Block Reward",
-                  value: "6.25 BTC",
-                  change: "Next halving in 298 days",
+                  value: `${BlockReward[0].blockReward} BTC`,
+                  change: `Last Updated: ${
+                    new Date(BlockReward[0].timestamp).getDate() +
+                    "/" +
+                    new Date(BlockReward[0].timestamp).getMonth() +
+                    "/" +
+                    new Date(BlockReward[0].timestamp).getFullYear()
+                  }`,
                   changeColor: "text-gray-500",
                 },
               ].map((item, index) => (
@@ -242,6 +297,16 @@ export default async function HomePage({ getPosts }: { getPosts: [any] }) {
                   <div className={`text-sm ${item.changeColor}`}>
                     {item.change}
                   </div>
+                  {item.additional ? (
+                    <div className={`text-sm ${item.changeColor}`}>
+                      {item.additional}
+                    </div>
+                  ) : null}
+                  {item.lastUpdated ? (
+                    <div className={`text-sm text-gray-700`}>
+                      {item.lastUpdated}
+                    </div>
+                  ) : null}
                 </div>
               ))}
             </div>
