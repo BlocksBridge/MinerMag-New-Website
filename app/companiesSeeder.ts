@@ -29,5 +29,32 @@ async function seedEnterprise() {
     
         
         }
-seedMarket()
-seedEnterprise()
+
+        async function seedCompanyProfile() {
+            // `https://financialmodelingprep.com/stable/profile?symbol=${i.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb
+            let seedMarketData = await Promise.all(
+                companies.map(async (companySymbol) => {
+                  let call = await fetch(
+                    `https://financialmodelingprep.com/stable/profile?symbol=${companySymbol.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
+                  ).then((res) => res.json());
+                  let pushData = await supabase.from("marketdata").insert({name: `companyprofile/${companySymbol.toUpperCase()}`, slug: `companyprofile/${companySymbol.toUpperCase()}`, data_points: JSON.stringify(call), last_updated: new Date().getTime()})
+                  console.log(pushData.status, pushData.data, pushData)
+                }))
+        }
+
+        async function removeCompanyProfile() {
+            // `https://financialmodelingprep.com/stable/profile?symbol=${i.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb
+            let seedMarketData = await Promise.all(
+                companies.map(async (companySymbol) => {
+                //   let call = await fetch(
+                //     `https://financialmodelingprep.com/stable/profile?symbol=${companySymbol.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
+                //   ).then((res) => res.json());
+                  let pushData = await supabase.from("marketdata").delete().eq('slug', `companyprofile/${companySymbol.toUpperCase()}`)
+                  console.log(pushData.status, pushData.data, pushData)
+                }))
+        }
+  seedCompanyProfile()      
+// seedMarket()
+// seedEnterprise()
+
+// removeCompanyProfile()
