@@ -58,7 +58,12 @@ export default function SinglePostCard({
   category: string;
 }) {
   return (
-    <Link href={article.link.split(".com")[1]}>
+    <Link
+      target="_blank"
+      href={article.link
+        .split(".com")[1]
+        .replace("/learn", "")
+        .replace("/home", "/learn")}>
       <div
         key={article.id}
         className="bg-white rounded-lg shadow-md overflow-hidden">

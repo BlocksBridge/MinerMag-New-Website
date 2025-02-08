@@ -166,7 +166,9 @@ export default async function HomePage({
             </div>
             <div className="grid md:grid-cols-3 gap-6">
               {three.map((article, index) => (
-                <Link href={article.link.split(".com")[1]} key={index}>
+                <Link
+                  href={article.link.split(".com")[1].replace("/home", "")}
+                  key={index}>
                   <div
                     key={index}
                     className="bg-white rounded-lg shadow overflow-hidden">

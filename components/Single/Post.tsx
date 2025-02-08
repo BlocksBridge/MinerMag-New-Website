@@ -56,15 +56,12 @@ export default function NewsArticle({ post, relatedPosts }) {
             <h2 className="text-2xl font-semibold mb-4">
               Subscribe to Our Newsletter
             </h2>
-            <form className="flex gap-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-grow"
-                required
-              />
-              <button type="submit">Subscribe</button>
-            </form>
+            <Link
+              href={"https://substack.com/@blocksbridge"}
+              target="_blank"
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+              Subscribe To Newsletter
+            </Link>
           </section>
         </article>
 

@@ -140,7 +140,7 @@ export default async function CompanyPage({
             <div key={article.id} className="border-b pb-4 last:border-b-0">
               <h4 className="text-lg font-semibold mb-2">
                 <Link
-                  href={article.link.split(".com")[1]}
+                  href={article.link.split(".com")[1].replace("/home", "")}
                   className="text-blue-600 hover:underline">
                   {article.title.rendered}
                 </Link>
