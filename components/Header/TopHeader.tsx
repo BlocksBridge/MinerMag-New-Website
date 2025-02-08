@@ -5,7 +5,7 @@ export default async function TopHeader() {
   ).then((res) => res.json());
 
   return (
-    <div className="w-6/12 mx-auto bg-white p-4 rounded-lg ">
+    <div className="w-10/12 md:w-6/12 mx-auto bg-white p-4 rounded-lg ">
       <Image
         src={getLeaderBoard[0].acf.banner}
         alt="Banner"
