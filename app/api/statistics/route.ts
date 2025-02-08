@@ -8,9 +8,12 @@ export  async function GET(req: NextRequest, res: NextResponse) {
     let getRealizedData  = await supabase.from("statistics").select("").eq("slug", "bitcoin-realized-hashrate-public-mining")
     let getPriceHashRatio =  await supabase.from("statistics").select("").eq("slug", "price-hash-ratio-bitcoin-mining")
     let getBitcoinHoldings =  await supabase.from("statistics").select("").eq("slug", "bitcoin-mining-company-month-recap")
+    let getRealizationRate =  await supabase.from("statistics").select("").eq("slug", "bitcoin-hashrate-realization-rate")
     let realizedData = NormaliseMinerMagData(getRealizedData)
     let PriceHashRatio = NormaliseMinerMagData(getPriceHashRatio)
     let bitcoinHoldings = NormaliseMinerMagData(getBitcoinHoldings)
+    let realizationRate = NormaliseMinerMagData(getRealizationRate)
+    console.log(realizationRate)
     
-  return NextResponse.json({ realizedHashrate: realizedData, priceHashratio: PriceHashRatio, bitcoinHoldings: bitcoinHoldings});
+  return NextResponse.json({ realizedHashrate: realizedData, priceHashratio: PriceHashRatio, bitcoinHoldings: bitcoinHoldings, realizationRate:realizationRate});
 }

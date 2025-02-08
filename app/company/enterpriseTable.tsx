@@ -16,6 +16,7 @@ export default async function CompanyTable() {
     realizedHashrate: any;
     priceHashratio: any;
     bitcoinHoldings: { "Holdings (BTC)": any };
+    realizationRate: any;
   } = await fetch(`${process.env.NEXT_PUBLIC_website_url}/api/statistics`).then(
     (res) => res.json()
   );
@@ -36,6 +37,11 @@ export default async function CompanyTable() {
       let priceHashRatioMonth = MinerMagData.priceHashratio[companySymbol]
         ? String(Object.keys(MinerMagData.priceHashratio[companySymbol])[0])
         : null;
+
+      let realizedRateMonth = MinerMagData.realizationRate[companySymbol]
+        ? String(Object.keys(MinerMagData.realizationRate[companySymbol])[0])
+        : null;
+
       if (realizedHashMonth !== null) {
         let realizedHashData =
           MinerMagData.realizedHashrate[companySymbol][
@@ -56,6 +62,17 @@ export default async function CompanyTable() {
           price: priceHashratioPrice,
         };
       }
+      if (realizedRateMonth !== null) {
+        let realizedRateData =
+          MinerMagData.realizationRate[companySymbol][
+            String(realizedRateMonth)
+          ];
+        finalData["realizationRate"] = {
+          month: String(realizedRateMonth),
+          price: realizedRateData,
+        };
+      }
+
       console.log(
         MinerMagData.bitcoinHoldings["Holdings (BTC)"][companySymbol],
         companySymbol
@@ -87,6 +104,9 @@ export default async function CompanyTable() {
               Price Hashratio ({getData[0].priceHashratio.month})
             </TableHead>
             <TableHead className="text-center">Holdings (BTC)</TableHead>
+            <TableHead className="text-center">
+              Realization Rate ({getData[0].realizationRate.month})
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -125,6 +145,11 @@ export default async function CompanyTable() {
                 </TableCell>
                 <TableCell className="text-center">
                   {company?.bitcoinHolding ? company?.bitcoinHolding : "TBD"}
+                </TableCell>
+                <TableCell className="text-center">
+                  {company?.realizationRate?.price
+                    ? company?.realizationRate?.price
+                    : "TBD"}
                 </TableCell>
               </TableRow>
             );
