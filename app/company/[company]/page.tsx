@@ -300,7 +300,16 @@ export default async function CompanyPage({
                           className="font-medium hover:text-blue-600 transition-colors"></a>
                       </div>
                     ))}
-                </div>
+                </div>{" "}
+                <Link
+                  target="_blank"
+                  href={`${
+                    process.env.NEXT_PUBLIC_website_url
+                  }/company/${param.company.toUpperCase()}/news`}
+                  className="mt-6 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800">
+                  View all news
+                  <ArrowUpRight className="ml-1 w-4 h-4" />
+                </Link>
               </div>
             </div>
           </div>
@@ -344,12 +353,15 @@ export default async function CompanyPage({
                   </Link>
                 ))}
               </div>
-              <a
-                href="#"
+              <Link
+                target="_blank"
+                href={`${
+                  process.env.NEXT_PUBLIC_website_url
+                }/company/${param.company.toUpperCase()}/news`}
                 className="mt-6 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800">
                 View all press releases
                 <ArrowUpRight className="ml-1 w-4 h-4" />
-              </a>
+              </Link>
             </section>
 
             {/* Social Media Section */}
