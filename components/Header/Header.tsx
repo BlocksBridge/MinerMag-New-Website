@@ -7,35 +7,42 @@ import { ChevronDown, Building2, ChevronUp } from "lucide-react";
 import "@/app/company/[company]/tradingView.css";
 import TickerTape from "./StockTicker";
 export default async function Header() {
-  // let companyWithPrices = await Promise.all(
-  //   companies.map(async (i) => {
-  //     let getStockPrice = await fetch(
-  //       `https://financialmodelingprep.com/stable/profile?symbol=${i.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
-  //     ).then((res) => res.json());
-  //     return {
-  //       company: i.toUpperCase(),
-  //       stockPrice: getStockPrice[0].price,
-  //       marketCap: getStockPrice[0].marketCap,
-  //       priceChange: getStockPrice[0].change,
-  //     };
-  //   })
-  // ).then((i) => {
-  //   return i;
-  // });
-  // let currentdate = new Date();
-  // let datetime =
-  //   "Last Sync: " +
-  //   currentdate.getDate() +
-  //   "/" +
-  //   (currentdate.getMonth() + 1) +
-  //   "/" +
-  //   currentdate.getFullYear() +
-  //   " @ " +
-  //   currentdate.getHours() +
-  //   ":" +
-  //   currentdate.getMinutes() +
-  //   ":" +
-  //   currentdate.getSeconds();
+  let companyWithPrices = await Promise.all(
+    companies.map(async (i) => {
+      // let getStockPrice = await fetch(
+      //   `https://financialmodelingprep.com/stable/profile?symbol=${i.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
+      // ).then((res) => res.json());
+
+      let getStockPrice = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_website_url
+        }/api/companyprofile?company=${i.toUpperCase()}`
+      ).then((res) => res.json());
+      console.log(getStockPrice, "stock");
+      return {
+        company: i.toUpperCase(),
+        stockPrice: getStockPrice.data[0].price,
+        marketCap: getStockPrice.data[0].marketCap,
+        priceChange: getStockPrice.data[0].change,
+      };
+    })
+  ).then((i) => {
+    return i;
+  });
+  let currentdate = new Date();
+  let datetime =
+    "Last Sync: " +
+    currentdate.getDate() +
+    "/" +
+    (currentdate.getMonth() + 1) +
+    "/" +
+    currentdate.getFullYear() +
+    " @ " +
+    currentdate.getHours() +
+    ":" +
+    currentdate.getMinutes() +
+    ":" +
+    currentdate.getSeconds();
   return (
     <>
       {" "}
@@ -75,7 +82,7 @@ export default async function Header() {
                   COMPANIES
                   <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
                 </Link>
-                {/* <div className="hidden group-hover:block hover:block absolute bg-white shadow-lg rounded-lg  w-5/6 left-0 right-0 top-15 h-auto m-auto p-2 z-50 ">
+                <div className="hidden group-hover:block hover:block absolute bg-white shadow-lg rounded-lg  w-5/6 left-0 right-0 top-15 h-auto m-auto p-2 z-50 ">
                   <ul className="grid grid-cols-5 gap-2 justify-center items-center overflow-hidden  ">
                     {companyWithPrices.map((company, index) => {
                       return (
@@ -122,7 +129,7 @@ export default async function Header() {
                     })}
                   </ul>
                   <p className="p-2 text-black">{datetime}</p>
-                </div> */}
+                </div>
               </div>
               <Link
                 className="text-sm font-medium hover:text-blue-600"
