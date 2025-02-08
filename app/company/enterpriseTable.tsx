@@ -107,15 +107,15 @@ export default async function CompanyTable() {
                 <TableCell className="text-center">
                   {company?.realizedHash?.price
                     ? company?.realizedHash?.price
-                    : 0}
+                    : "TBD"}
                 </TableCell>{" "}
                 <TableCell className="text-center">
                   {company?.priceHashratio?.price
                     ? company?.priceHashratio?.price
-                    : 0}
+                    : "TBD"}
                 </TableCell>
                 <TableCell className="text-center">
-                  {company?.bitcoinHolding ? company?.bitcoinHolding : 0}
+                  {company?.bitcoinHolding ? company?.bitcoinHolding : "TBD"}
                 </TableCell>
               </TableRow>
             );
