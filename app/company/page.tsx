@@ -22,3 +22,5 @@ export default function ConsolidatedCompanies() {
     </div>
   );
 }
+
+export const dynamic = "force-dynamic";
