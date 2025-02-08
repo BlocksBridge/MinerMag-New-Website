@@ -1,14 +1,9 @@
-// "use client";
-// import { MarketData, MarketOverview } from "react-ts-tradingview-widgets";
-
 import "./[company]/tradingView.css";
-import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EnterpriseTable from "./enterpriseTable";
 import CompanyTable from "./companyTable";
-import { companies } from "../companiesData";
 import { TabsContent } from "@radix-ui/react-tabs";
-export default async function ConsolidatedCompanies() {
+export default function ConsolidatedCompanies() {
   return (
     <div className="my-10 m-auto flex justify-center flex-col items-center gap-8 w-5/6">
       <h1 className="font-bold"> Bitcoin Mining Companies Stats</h1>
@@ -21,9 +16,8 @@ export default async function ConsolidatedCompanies() {
           <CompanyTable />
         </TabsContent>
         <TabsContent value="enterprise">
-          {" "}
           <EnterpriseTable />
-        </TabsContent>{" "}
+        </TabsContent>
       </Tabs>
     </div>
   );
