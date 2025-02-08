@@ -5,7 +5,7 @@ import { useState } from "react";
 export default function MobileHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
-    <div className="">
+    <div className="md:hidden">
       {" "}
       {/* Mobile Menu Button */}
       <label
