@@ -93,7 +93,14 @@ export default async function CompanyTable() {
           {getData.map((company, index) => {
             return (
               <TableRow key={company.symbol}>
-                <TableCell className="font-medium">{company.symbol}</TableCell>
+                <TableCell className="font-medium">
+                  {" "}
+                  <Link
+                    target="_blank"
+                    href={`/company/${company.symbol.toUpperCase()}`}>
+                    {company.symbol}
+                  </Link>
+                </TableCell>
                 <TableCell>
                   {company.marketCapitalization.toLocaleString("en-us", {
                     minimumFractionDigits: 2,

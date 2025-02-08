@@ -80,14 +80,16 @@ export default async function CompanyPage({
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?tags=${companyTag}&acf_format=standard`
   ).then((res) => res.json());
   let getCompanyInfo = await fetch(
-    `https://sandbox.financialmodelingprep.com/stable/profile?symbol=${param.company.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
+    `${
+      process.env.NEXT_PUBLIC_website_url
+    }/api/companyprofile?company=${param.company.toUpperCase()}`
   ).then((res) => res.json());
   console.log(getCompanyInfo);
   let getCompanyNews = await fetch(
     `https://sandbox.financialmodelingprep.com/stable/news/stock?symbols=${param.company.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
   ).then((res) => res.json());
   // console.log(getCompanyNews, "news");
-  if (getCompanyInfo.length) {
+  if (getCompanyInfo.data.length) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
         {/* Header */}{" "}
@@ -108,11 +110,11 @@ export default async function CompanyPage({
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900">
-                    {getCompanyInfo[0]?.companyName}
+                    {getCompanyInfo.data[0]?.companyName}
                   </h1>
                   <div className="flex items-center space-x-2 mt-1">
                     <span className="text-gray-500">
-                      {getCompanyInfo[0]?.symbol}
+                      {getCompanyInfo.data[0]?.symbol}
                     </span>
                     <span className="text-sm px-2 py-1 bg-gray-100 rounded-full">
                       NASDAQ
@@ -122,21 +124,21 @@ export default async function CompanyPage({
               </div>
               <div className="text-right">
                 <div className="text-3xl font-bold text-gray-900">
-                  ${getCompanyInfo[0].price}
+                  ${getCompanyInfo.data[0].price}
                 </div>
                 <div
                   className={`flex items-center justify-end space-x-1 ${
-                    getCompanyInfo[0].change >= 0
+                    getCompanyInfo.data[0].change >= 0
                       ? "text-green-600"
                       : "text-red-600"
                   }`}>
-                  {getCompanyInfo[0].change >= 0 ? (
+                  {getCompanyInfo.data[0].change >= 0 ? (
                     <ChevronUp className="h-4 w-4" />
                   ) : (
                     <ChevronDown className="h-4 w-4" />
                   )}
                   <span className="font-semibold">
-                    {Math.abs(getCompanyInfo[0].change)}%
+                    {Math.abs(getCompanyInfo.data[0].change)}%
                   </span>
                 </div>
               </div>
@@ -152,7 +154,7 @@ export default async function CompanyPage({
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h2 className="text-xl font-semibold mb-4">Company Overview</h2>
                 <p className="text-gray-600 leading-relaxed">
-                  {getCompanyInfo[0].description}
+                  {getCompanyInfo.data[0].description}
                 </p>
 
                 {/* Key Stats Grid */}
@@ -164,9 +166,12 @@ export default async function CompanyPage({
                     <div>
                       <div className="text-sm text-gray-500">Market Cap</div>
                       <div className="font-semibold">
-                        {getCompanyInfo[0].marketCap.toLocaleString("en-us", {
-                          minimumFractionDigits: 0,
-                        })}
+                        {getCompanyInfo.data[0].marketCap.toLocaleString(
+                          "en-us",
+                          {
+                            minimumFractionDigits: 0,
+                          }
+                        )}
                       </div>
                     </div>
                   </div>
@@ -177,7 +182,7 @@ export default async function CompanyPage({
                     <div>
                       <div className="text-sm text-gray-500">Employees</div>
                       <div className="font-semibold">
-                        {getCompanyInfo[0].fullTimeEmployees}
+                        {getCompanyInfo.data[0].fullTimeEmployees}
                       </div>
                     </div>
                   </div>
@@ -188,14 +193,13 @@ export default async function CompanyPage({
                     <div>
                       <div className="text-sm text-gray-500">IPO</div>
                       <div className="font-semibold">
-                        {new Date(getCompanyInfo[0].ipoDate).toLocaleDateString(
-                          "en-US",
-                          {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          }
-                        )}
+                        {new Date(
+                          getCompanyInfo.data[0].ipoDate
+                        ).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
                       </div>
                     </div>
                   </div>
@@ -240,7 +244,7 @@ export default async function CompanyPage({
                     <div>
                       <div className="text-sm text-gray-500">Website</div>
                       <a
-                        href={getCompanyInfo[0].website}
+                        href={getCompanyInfo.data[0].website}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:text-blue-700 flex items-center space-x-1 group">
@@ -254,12 +258,12 @@ export default async function CompanyPage({
                     <div>
                       <div className="text-sm text-gray-500">Headquarters</div>
                       <div>
-                        {getCompanyInfo[0].address +
+                        {getCompanyInfo.data[0].address +
                           ", " +
-                          getCompanyInfo[0].city +
+                          getCompanyInfo.data[0].city +
                           " "}
-                        {getCompanyInfo[0]?.state
-                          ? getCompanyInfo[0]?.state
+                        {getCompanyInfo.data[0]?.state
+                          ? getCompanyInfo.data[0]?.state
                           : null}
                       </div>
                     </div>

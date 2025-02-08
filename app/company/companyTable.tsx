@@ -42,7 +42,13 @@ export default async function CompanyTable() {
             if (company) {
               return (
                 <TableRow key={company.name}>
-                  <TableCell className="font-medium">{company.name}</TableCell>
+                  <TableCell className="font-medium">
+                    <Link
+                      target="_blank"
+                      href={`/company/${company.symbol.toUpperCase()}`}>
+                      {company.name}
+                    </Link>
+                  </TableCell>
                   <TableCell>
                     {company.price.toLocaleString("en-us", {
                       minimumFractionDigits: 2,
