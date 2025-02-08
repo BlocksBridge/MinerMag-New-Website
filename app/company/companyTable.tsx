@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import {
   Table,
@@ -10,26 +9,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { redirect } from "next/navigation";
-import { useState, useEffect } from "react";
+import { companies } from "../companiesData";
 
-export default function CompanyTable({ data, companies }) {
-  const [getData, setData] = useState([]);
-  useEffect(() => {
-    (async () => {
-      let getIndividualMarketData = await Promise.all(
-        companies.map(async (i) => {
-          let call = await fetch(
-            `https://financialmodelingprep.com/api/v3/quote-order/${i}?apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
-          ).then((res) => res.json());
+export default async function CompanyTable() {
+  let getData = await Promise.all(
+    companies.map(async (i) => {
+      let call = await fetch(
+        `https://financialmodelingprep.com/api/v3/quote-order/${i}?apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
+      ).then((res) => res.json());
 
-          return call[0];
-        })
-      );
+      return call[0];
+    })
+  );
 
-      setData(getIndividualMarketData);
-    })();
-  }, []);
   if (getData.length) {
     return (
       <Table>
@@ -45,15 +37,10 @@ export default function CompanyTable({ data, companies }) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((company) => {
+          {getData.map((company) => {
             if (company) {
               return (
-                <TableRow
-                  key={company.name}
-                  onClick={() => {
-                    console.log("clicked");
-                    redirect(`/company/${company.symbol}`);
-                  }}>
+                <TableRow key={company.name}>
                   <TableCell className="font-medium">{company.name}</TableCell>
                   <TableCell>
                     {company.price.toLocaleString("en-us", {
@@ -107,3 +94,5 @@ export default function CompanyTable({ data, companies }) {
     );
   }
 }
+
+export const dynamicParams = false;

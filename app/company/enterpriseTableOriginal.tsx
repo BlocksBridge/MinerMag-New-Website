@@ -1,5 +1,6 @@
+"use client";
 import Link from "next/link";
-
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -10,38 +11,45 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { companies } from "../companiesData";
-export default async function CompanyTable() {
-  let getData = await Promise.all(
-    companies.map(async (i) => {
-      let call = await fetch(
-        `      https://financialmodelingprep.com/api/v3/enterprise-values/${i}/?period=quarter&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb
+import { redirect } from "next/navigation";
+
+export default function CompanyTable({ companies }) {
+  const [getData, setData] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      let getIndividualEnterpriseData = await Promise.all(
+        companies.map(async (i) => {
+          let call = await fetch(
+            `      https://financialmodelingprep.com/api/v3/enterprise-values/${i}/?period=quarter&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb
 `
-      ).then((res) => res.json());
-      let getRealizedData = await fetch(
-        `${process.env.NEXT_PUBLIC_website_url}/api/statistics`
-      ).then((res) => res.json());
+          ).then((res) => res.json());
+          let getRealizedData = await fetch("/api/statistics").then((res) =>
+            res.json()
+          );
 
-      let realizedHashMonth = getRealizedData.realizedHashrate[i]
-        ? String(Object.keys(getRealizedData.realizedHashrate[i])[0])
-        : null;
-      if (realizedHashMonth == null) {
-        return call[0];
-      } else {
-        let realizedHashData =
-          getRealizedData.realizedHashrate[i][String(realizedHashMonth)];
+          let realizedHashMonth = getRealizedData.realizedHashrate[i]
+            ? String(Object.keys(getRealizedData.realizedHashrate[i])[0])
+            : null;
+          if (realizedHashMonth == null) {
+            return call[0];
+          } else {
+            let realizedHashData =
+              getRealizedData.realizedHashrate[i][String(realizedHashMonth)];
 
-        return {
-          ...call[0],
-          realizedHash: {
-            month: String(realizedHashMonth),
-            price: realizedHashData,
-          },
-        };
-      }
-    })
-  );
-
+            return {
+              ...call[0],
+              realizedHash: {
+                month: String(realizedHashMonth),
+                price: realizedHashData,
+              },
+            };
+          }
+        })
+      );
+      setData(getIndividualEnterpriseData);
+    })();
+  }, []);
   if (getData.length) {
     console.log(getData, "dta", getData.length);
     return (
@@ -61,7 +69,12 @@ export default async function CompanyTable() {
         <TableBody>
           {getData.map((company, index) => {
             return (
-              <TableRow key={company.symbol}>
+              <TableRow
+                key={company.symbol}
+                onClick={() => {
+                  console.log("clicked");
+                  redirect(`/company/${company.symbol}`);
+                }}>
                 <TableCell className="font-medium">{company.symbol}</TableCell>
 
                 <TableCell>
