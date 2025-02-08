@@ -9,16 +9,11 @@ import TickerTape from "./StockTicker";
 export default async function Header() {
   let companyWithPrices = await Promise.all(
     companies.map(async (i) => {
-      // let getStockPrice = await fetch(
-      //   `https://financialmodelingprep.com/stable/profile?symbol=${i.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
-      // ).then((res) => res.json());
-
       let getStockPrice = await fetch(
         `${
           process.env.NEXT_PUBLIC_website_url
         }/api/companyprofile?company=${i.toUpperCase()}`
       ).then((res) => res.json());
-      console.log(getStockPrice, "stock");
       return {
         company: i.toUpperCase(),
         stockPrice: getStockPrice.data[0].price,
