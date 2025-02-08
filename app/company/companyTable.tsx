@@ -13,12 +13,13 @@ import { companies } from "../companiesData";
 
 export default async function CompanyTable() {
   let getData = await Promise.all(
-    companies.map(async (i) => {
+    companies.map(async (companySymbol) => {
       let call = await fetch(
-        `https://financialmodelingprep.com/api/v3/quote-order/${i}?apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
+        `${
+          process.env.NEXT_PUBLIC_website_url
+        }/api/marketdata?company=${companySymbol.toUpperCase()}`
       ).then((res) => res.json());
-
-      return call[0];
+      return call.data[0];
     })
   );
 

@@ -22,10 +22,12 @@ export default async function CompanyTable() {
   let getData = await Promise.all(
     companies.map(async (companySymbol) => {
       let call = await fetch(
-        `https://financialmodelingprep.com/api/v3/enterprise-values/${companySymbol}/?period=quarter&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
+        `${
+          process.env.NEXT_PUBLIC_website_url
+        }/api/enterprisedata?company=${companySymbol.toUpperCase()}`
       ).then((res) => res.json());
 
-      let finalData = { ...call[0] };
+      let finalData = { ...call.data[0] };
       // This Formats and Normalises Realized Hash Rate Data and Includes it in Object
       let realizedHashMonth = MinerMagData.realizedHashrate[companySymbol]
         ? String(Object.keys(MinerMagData.realizedHashrate[companySymbol])[0])
