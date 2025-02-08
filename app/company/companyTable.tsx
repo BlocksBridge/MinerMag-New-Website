@@ -28,7 +28,7 @@ export default async function CompanyTable() {
         <TableCaption>Bitcoin Mining Companies Stat</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[300px]">Name</TableHead>
+            <TableHead className="w-[200px]">Name</TableHead>
             <TableHead>Price</TableHead>
             <TableHead>Market Cap</TableHead>
             <TableHead className="text-center">1D H</TableHead>

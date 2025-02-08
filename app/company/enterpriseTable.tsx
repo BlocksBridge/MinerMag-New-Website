@@ -12,50 +12,79 @@ import {
 } from "@/components/ui/table";
 import { companies } from "../companiesData";
 export default async function CompanyTable() {
+  let MinerMagData: {
+    realizedHashrate: any;
+    priceHashratio: any;
+    bitcoinHoldings: { "Holdings (BTC)": any };
+  } = await fetch(`${process.env.NEXT_PUBLIC_website_url}/api/statistics`).then(
+    (res) => res.json()
+  );
   let getData = await Promise.all(
-    companies.map(async (i) => {
+    companies.map(async (companySymbol) => {
       let call = await fetch(
-        `      https://financialmodelingprep.com/api/v3/enterprise-values/${i}/?period=quarter&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb
-`
-      ).then((res) => res.json());
-      let getRealizedData = await fetch(
-        `${process.env.NEXT_PUBLIC_website_url}/api/statistics`
+        `https://financialmodelingprep.com/api/v3/enterprise-values/${companySymbol}/?period=quarter&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
       ).then((res) => res.json());
 
-      let realizedHashMonth = getRealizedData.realizedHashrate[i]
-        ? String(Object.keys(getRealizedData.realizedHashrate[i])[0])
+      let finalData = { ...call[0] };
+      // This Formats and Normalises Realized Hash Rate Data and Includes it in Object
+      let realizedHashMonth = MinerMagData.realizedHashrate[companySymbol]
+        ? String(Object.keys(MinerMagData.realizedHashrate[companySymbol])[0])
         : null;
-      if (realizedHashMonth == null) {
-        return call[0];
-      } else {
-        let realizedHashData =
-          getRealizedData.realizedHashrate[i][String(realizedHashMonth)];
 
-        return {
-          ...call[0],
-          realizedHash: {
-            month: String(realizedHashMonth),
-            price: realizedHashData,
-          },
+      let priceHashRatioMonth = MinerMagData.priceHashratio[companySymbol]
+        ? String(Object.keys(MinerMagData.priceHashratio[companySymbol])[0])
+        : null;
+      if (realizedHashMonth !== null) {
+        let realizedHashData =
+          MinerMagData.realizedHashrate[companySymbol][
+            String(realizedHashMonth)
+          ];
+        finalData["realizedHash"] = {
+          month: String(realizedHashMonth),
+          price: realizedHashData,
         };
       }
+      if (priceHashRatioMonth !== null) {
+        let priceHashratioPrice =
+          MinerMagData.realizedHashrate[companySymbol][
+            String(priceHashRatioMonth)
+          ];
+        finalData["priceHashratio"] = {
+          month: String(priceHashRatioMonth),
+          price: priceHashratioPrice,
+        };
+      }
+      console.log(
+        MinerMagData.bitcoinHoldings["Holdings (BTC)"][companySymbol],
+        companySymbol
+      );
+      if (
+        MinerMagData.bitcoinHoldings["Holdings (BTC)"][companySymbol] !=
+        undefined
+      ) {
+        finalData["bitcoinHolding"] =
+          MinerMagData.bitcoinHoldings["Holdings (BTC)"][companySymbol];
+      }
+      return finalData;
     })
   );
 
   if (getData.length) {
-    console.log(getData, "dta", getData.length);
     return (
       <Table>
         <TableCaption>Bitcoin Mining Companies Stat</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[300px]">Name</TableHead>
+            <TableHead className="w-[200px]">Name</TableHead>
             <TableHead>Market Cap</TableHead>
             <TableHead className="text-center">Enterprise Value</TableHead>{" "}
             <TableHead className="text-center">
               Realized Hashrate ({getData[0].realizedHash.month})
             </TableHead>
-            <TableHead className="text-center">No. of Shares</TableHead>
+            <TableHead className="text-center">
+              Price Hashratio ({getData[0].priceHashratio.month})
+            </TableHead>
+            <TableHead className="text-center">Holdings (BTC)</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -63,7 +92,6 @@ export default async function CompanyTable() {
             return (
               <TableRow key={company.symbol}>
                 <TableCell className="font-medium">{company.symbol}</TableCell>
-
                 <TableCell>
                   {company.marketCapitalization.toLocaleString("en-us", {
                     minimumFractionDigits: 2,
@@ -80,11 +108,14 @@ export default async function CompanyTable() {
                   {company?.realizedHash?.price
                     ? company?.realizedHash?.price
                     : 0}
+                </TableCell>{" "}
+                <TableCell className="text-center">
+                  {company?.priceHashratio?.price
+                    ? company?.priceHashratio?.price
+                    : 0}
                 </TableCell>
                 <TableCell className="text-center">
-                  {company.numberOfShares.toLocaleString("en-us", {
-                    minimumFractionDigits: 2,
-                  })}
+                  {company?.bitcoinHolding ? company?.bitcoinHolding : 0}
                 </TableCell>
               </TableRow>
             );

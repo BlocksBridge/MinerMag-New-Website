@@ -15,7 +15,7 @@ export const companies = [
     "CAN",
     "CANG",
     "HIVE",
-    "SDIG", // To be removed once merger with Bitfarms is complete
+    "SDIG",
     "ARBK",
     "BTCM",
     "GRYP",
