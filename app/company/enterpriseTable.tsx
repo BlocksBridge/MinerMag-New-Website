@@ -95,7 +95,6 @@ export default async function CompanyTable() {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[200px]">Name</TableHead>
-            <TableHead>Market Cap</TableHead>
             <TableHead className="text-center">Enterprise Value</TableHead>{" "}
             <TableHead className="text-center">
               Realized Hashrate ({getData[0].realizedHash.month})
@@ -120,12 +119,6 @@ export default async function CompanyTable() {
                     href={`/company/${company.symbol.toUpperCase()}`}>
                     {company.symbol}
                   </Link>
-                </TableCell>
-                <TableCell>
-                  {company.marketCapitalization.toLocaleString("en-us", {
-                    minimumFractionDigits: 2,
-                  })}
-                  $
                 </TableCell>
                 <TableCell className="text-center">
                   {company.enterpriseValue.toLocaleString("en-us", {
