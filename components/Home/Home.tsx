@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { geistSans } from "@/app/fonts/fonts";
+import Twitter from "./Twitter";
+
 export default async function HomePage({
   getPosts,
   BitcoinData,
@@ -35,7 +37,8 @@ export default async function HomePage({
             <h2 className="font-semibold mb-2">Quick Links</h2>
             <nav className="space-y-1">
               <Link
-                href="#"
+                target="_blank"
+                href="/company"
                 className="flex items-center space-x-2 text-sm hover:text-blue-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -50,10 +53,11 @@ export default async function HomePage({
                     d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 .895 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 11-18 0118 0z"
                   />
                 </svg>
-                <span>Bitcoin Price</span>
+                <span>Market Data</span>
               </Link>
               <Link
-                href="#"
+                target="_blank"
+                href="/learn"
                 className="flex items-center space-x-2 text-sm hover:text-blue-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -68,10 +72,11 @@ export default async function HomePage({
                     d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 00-2-2H7a2 00-2 2v10a2 002 2zM9 9h6v6H9V9z"
                   />
                 </svg>
-                <span>Mining Hardware</span>
+                <span>Learn</span>
               </Link>
               <Link
-                href="#"
+                target="_blank"
+                href="https://pro.theminermag.com"
                 className="flex items-center space-x-2 text-sm hover:text-blue-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -86,10 +91,11 @@ export default async function HomePage({
                     d="M13 10V3L4 14h7v7l9-11h-7z"
                   />
                 </svg>
-                <span>Network Hashrate</span>
+                <span>Statistics</span>
               </Link>
               <Link
-                href="#"
+                target="_blank"
+                href="/news"
                 className="flex items-center space-x-2 text-sm hover:text-blue-600">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -104,45 +110,14 @@ export default async function HomePage({
                     d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 .895 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 11-18 0118 0z"
                   />
                 </svg>
-                <span>Mining Profitability</span>
-              </Link>
-              <Link
-                href="#"
-                className="flex items-center space-x-2 text-sm hover:text-blue-600">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 24"
-                  stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 12l3-3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 01-1-1V4z"
-                  />
-                </svg>
-                <span>Market Analysis</span>
+                <span>News</span>
               </Link>
             </nav>
           </div>
           <div className="bg-white p-4 rounded-lg shadow">
             <h2 className="font-semibold mb-2">Latest Tweets</h2>
             <div className="space-y-4">
-              <div className="text-sm">
-                <p className="mb-1">
-                  @MiningInsider: New record high for #Bitcoin hashrate! Network
-                  security stronger than ever.
-                </p>
-                <span className="text-gray-500">2 hours ago</span>
-              </div>
-              <div className="text-sm">
-                <p className="mb-1">
-                  @BlockchainDaily: Major mining pool announces expansion plans.
-                  More decentralization on the horizon!
-                </p>
-                <span className="text-gray-500">5 hours ago</span>
-              </div>
+              <Twitter />
             </div>
           </div>
         </aside>
@@ -337,6 +312,7 @@ export default async function HomePage({
                   description:
                     "Learn the basics of Bitcoin mining, from blockchain technology to proof-of-work consensus.",
                   cta: "Start Learning",
+                  link: "/learn",
                 },
                 {
                   icon: (
@@ -354,10 +330,11 @@ export default async function HomePage({
                       />
                     </svg>
                   ),
-                  title: "Mining Hardware Guide",
+                  title: "Bitcoin Mining Research",
                   description:
                     "Explore different types of mining hardware and learn how to choose the right equipment for your needs.",
-                  cta: "Read Guide",
+                  cta: "Read Research",
+                  link: "/research",
                 },
               ].map((item, index) => (
                 <div key={index} className="bg-white p-4 rounded-lg shadow">
@@ -366,9 +343,11 @@ export default async function HomePage({
                   <p className="text-sm text-gray-600 mb-4">
                     {item.description}
                   </p>
-                  <button className="px-4 py-2 text-sm border border-zinc-200 border-blue-600 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors dark:border-zinc-800">
+                  <Link
+                    href={item.link}
+                    className="px-4 py-2 text-sm border border-zinc-200 border-blue-600 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors dark:border-zinc-800">
                     {item.cta}
-                  </button>
+                  </Link>
                 </div>
               ))}
             </div>
