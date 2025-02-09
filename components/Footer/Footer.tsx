@@ -81,7 +81,20 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t text-center text-sm text-gray-500">
-          © 2024 TheMinerMag. All rights reserved.
+          © BlocksBridge Consulting{" "}
+          <Link
+            target="_blank"
+            className="text-black underline"
+            href={"https://theminermag.com/the-privacy-policy"}>
+            Privacy Policy
+          </Link>{" "}
+          |{" "}
+          <Link
+            target="_blank"
+            className="text-black underline"
+            href={"https://theminermag.com/contact-us"}>
+            Contact Us
+          </Link>
         </div>
       </div>
     </footer>
