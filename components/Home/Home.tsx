@@ -204,7 +204,7 @@ export default async function HomePage({
                     BitcoinData.length - 1
                   ].closePrice.toLocaleString("en-us", {
                     minimumFractionDigits: 2,
-                  })}`,
+                  })}$`,
                   change: `${
                     (
                       ((BitcoinData[BitcoinData.length - 1].closePrice -
