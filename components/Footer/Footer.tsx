@@ -85,7 +85,7 @@ export default function Footer() {
           <Link
             target="_blank"
             className="text-black underline"
-            href={"https://theminermag.com/the-privacy-policy"}>
+            href={`/privacy-policy`}>
             Privacy Policy
           </Link>{" "}
           |{" "}
