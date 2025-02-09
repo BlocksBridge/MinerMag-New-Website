@@ -92,7 +92,7 @@ export default function Footer() {
           <Link
             target="_blank"
             className="text-black underline"
-            href={"https://theminermag.com/contact-us"}>
+            href={"/contact-us"}>
             Contact Us
           </Link>
         </div>
