@@ -10,7 +10,7 @@ export default function Footer() {
           <div className="md:col-span-2">
             <h3 className="font-semibold mb-4">About Us</h3>
             <Image
-              src={"/logo.png"}
+              src={"/images/logo.png"}
               width={200}
               height={200}
               alt="TheMinerMag Logo"

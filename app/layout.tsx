@@ -15,10 +15,10 @@ export const metadata: Metadata = {
   publisher: "BlocksBridge Consulting",
   keywords: ["Bitcoin Mining"],
   icons: {
-    icon: "/logo.png",
-    shortcut: "/logo.png",
-    apple: "/logo.png",
-    other: { rel: "TheMinerMag Logo", url: "/logo.png" },
+    icon: "/favicon.ico",
+    shortcut: "/images/logo.png",
+    apple: "/images/logo.png",
+    other: { rel: "TheMinerMag Logo", url: "/images/logo.png" },
   },
   openGraph: {
     title: "TheMinerMag - Bitcoin Mining Stocks, Data, Research and Analysis",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     siteName: "TheMinerMag",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_website_url}/logo.png`,
+        url: `${process.env.NEXT_PUBLIC_website_url}/images/logo.png`,
         alt: "TheMinerMag Logo",
         width: 800,
         height: 600,

@@ -58,7 +58,12 @@ export default async function Header() {
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
               <div className=" text-white p-2 rounded">
-                <Image src={"/logo.png"} width={150} height={150} alt="logo" />
+                <Image
+                  src={"/images/logo.png"}
+                  width={150}
+                  height={150}
+                  alt="logo"
+                />
               </div>
             </Link>
             <nav className="hidden md:flex items-center space-x-6">
