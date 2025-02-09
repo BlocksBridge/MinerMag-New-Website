@@ -365,51 +365,7 @@ export default async function CompanyPage({
             </section>
 
             {/* Social Media Section */}
-            {/* <section>
-              <div className="flex items-center gap-2 mb-6">
-                <Globe className="w-6 h-6 text-blue-600" />
-                <h2 className="text-2xl font-bold text-gray-900">
-                  Social Media
-                </h2>
-              </div>
-              <div className="grid gap-6 md:grid-cols-2">
-                {socialFeeds.map((post, index) => (
-                  <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                    <div className="flex items-center gap-3 mb-3">
-                      <post.icon className="w-5 h-5 text-blue-600" />
-                      <span className="font-medium text-gray-900">
-                        {post.platform}
-                      </span>
-                      <span className="text-sm text-gray-500">
-                        • {post.date}
-                      </span>
-                    </div>
-                    <p className="text-gray-600 mb-3">{post.content}</p>
-                    <div className="text-sm text-gray-500">
-                      {post.engagement} engagements
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-8 flex gap-4">
-                <a
-                  href="https://twitter.com/RiotBlockchain"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#1DA1F2] text-white rounded-lg hover:bg-[#1a8cd8] transition-colors">
-                  <Twitter className="w-5 h-5" />
-                  Follow on Twitter
-                </a>
-                <a
-                  href="https://www.linkedin.com/company/riot-blockchain"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#0A66C2] text-white rounded-lg hover:bg-[#084d93] transition-colors">
-                  <Linkedin className="w-5 h-5" />
-                  Follow on LinkedIn
-                </a>
-              </div>
-            </section> */}
+        s */}
           </div>
         </main>
       </div>
