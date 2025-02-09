@@ -9,8 +9,31 @@ import { geistMono, geistSans } from "./fonts/fonts";
 import TopHeader from "@/components/Header/TopHeader";
 
 export const metadata: Metadata = {
-  title: "theMinerMag",
-  description: "Best Bitcoin Mining Updates",
+  title: "TheMinerMag - Bitcoin Mining Stocks, Data, Research and Analysis",
+  description:
+    "TheMinerMag is a bitcoin mining news and research platform brought to you by BlocksBridge Consulting, a public relations firm dedicated to the bitcoin mining industry. TheMinerMag operates with full editorial independence, delivering accurate, data-driven insights and unbiased analysis on industry trends.",
+  publisher: "BlocksBridge Consulting",
+  keywords: ["Bitcoin Mining"],
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+    other: { rel: "TheMinerMag Logo", url: "/logo.png" },
+  },
+  openGraph: {
+    title: "TheMinerMag - Bitcoin Mining Stocks, Data, Research and Analysis",
+    description:
+      "TheMinerMag is a bitcoin mining news and research platform brought to you by BlocksBridge Consulting, a public relations firm dedicated to the bitcoin mining industry. TheMinerMag operates with full editorial independence, delivering accurate, data-driven insights and unbiased analysis on industry trends.",
+    siteName: "TheMinerMag",
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_website_url}/logo.png`,
+        alt: "TheMinerMag Logo",
+        width: 800,
+        height: 600,
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
