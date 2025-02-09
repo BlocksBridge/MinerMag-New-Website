@@ -1,17 +1,26 @@
 import Link from "next/link";
 import { Facebook, Linkedin, Search, Twitter } from "lucide-react";
 import { geistMono, geistSans } from "@/app/fonts/fonts";
-
+import Image from "next/image";
 export default function Footer() {
   return (
     <footer className={`bg-white border-t ${geistMono.className} `}>
       <div className="container mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-4 gap-8">
-          <div>
+        <div className="grid md:grid-cols-5 gap-8">
+          <div className="md:col-span-2">
             <h3 className="font-semibold mb-4">About Us</h3>
-            <p className="text-sm text-gray-600">
-              TheMinerMag is your go-to source for the latest news, analysis,
-              and insights in the world of cryptocurrency mining.
+            <Image
+              src={"/logo.png"}
+              width={200}
+              height={200}
+              alt="TheMinerMag Logo"
+            />
+            <p className="text-sm text-justify text-gray-600 mt-5">
+              TheMinerMag is a bitcoin mining news and research platform brought
+              to you by BlocksBridge Consulting, a public relations firm
+              dedicated to the bitcoin mining industry. TheMinerMag operates
+              with full editorial independence, delivering accurate, data-driven
+              insights and unbiased analysis on industry trends.
             </p>
           </div>
           <div>
