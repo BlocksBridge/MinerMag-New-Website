@@ -182,7 +182,11 @@ export default async function HomePage({
                     </div>
                     <div className="p-4">
                       <div className="text-sm text-gray-500 mb-2">
-                        {article.date}
+                        {new Date(article.date).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
                       </div>
                       <h3 className="font-semibold mb-2">{article.title}</h3>
                       <p className="text-sm text-gray-600">{article.excerpt}</p>
