@@ -20,6 +20,7 @@ import {
   Globe,
   ArrowUpRight,
 } from "lucide-react";
+import SECFilingsSection from "./secFill";
 
 export default async function CompanyPage({
   params,
@@ -84,7 +85,7 @@ export default async function CompanyPage({
       process.env.NEXT_PUBLIC_website_url
     }/api/companyprofile?company=${param.company.toUpperCase()}`
   ).then((res) => res.json());
-  console.log(getCompanyInfo);
+  // console.log(getCompanyInfo);
   let getCompanyNews = await fetch(
     `https://sandbox.financialmodelingprep.com/stable/news/stock?symbols=${param.company.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
   ).then((res) => res.json());
@@ -365,7 +366,7 @@ export default async function CompanyPage({
             </section>
 
             {/* Social Media Section */}
-        s */}
+            <SECFilingsSection company={param.company} />
           </div>
         </main>
       </div>
