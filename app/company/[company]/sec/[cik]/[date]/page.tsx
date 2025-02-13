@@ -103,6 +103,7 @@ export default async function SummarisedSEC({
           <div className="min-h-screen bg-gray-100 py-12">
             <div className="container mx-auto px-4 max-w-4xl">
               <Link
+                target="_blank"
                 href={`/company/${paths.company}/sec`}
                 className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6">
                 <ArrowLeft className="w-4 h-4 mr-2" />
@@ -111,9 +112,14 @@ export default async function SummarisedSEC({
               <div className="bg-white shadow rounded-lg overflow-hidden">
                 <div className="p-6">
                   <h1 className="text-3xl font-bold mb-2">
-                    {filing.type}: {filing.title}
+                    {getFillings[0].formType}: {getFillings[0].cik}
                   </h1>
-                  <p className="text-gray-600 mb-4">Filed on {filing.date}</p>
+                  <p className="text-gray-600 mb-4">
+                    Filed on{" "}
+                    {new Date(getFillings[0].filingDate)
+                      .toISOString()
+                      .slice(0, 10)}
+                  </p>
                   <div className="mb-8">
                     <h2 className="text-2xl font-semibold mb-4">Summary</h2>
 
@@ -121,7 +127,7 @@ export default async function SummarisedSEC({
                       className="text-gray-700 leading-relaxed"
                       dangerouslySetInnerHTML={{ __html: res.value }}></p>
                   </div>
-                  <div>
+                  {/* <div>
                     <h3 className="text-xl font-semibold mb-3">Key Points</h3>
                     <ul className="list-disc pl-5 space-y-2">
                       {filing.keyPoints.map((point, index) => (
@@ -130,10 +136,11 @@ export default async function SummarisedSEC({
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="bg-gray-50 px-6 py-4">
                   <Link
+                    target="_blank"
                     href={findCorrectFiling[0].finalLink}
                     className="inline-flex items-center text-blue-600 hover:text-blue-800">
                     <FileText className="w-5 h-5 mr-2" />
@@ -159,6 +166,7 @@ export default async function SummarisedSEC({
         <div className="min-h-screen bg-gray-100 py-12">
           <div className="container mx-auto px-4 max-w-4xl">
             <Link
+              target="_blank"
               href={`/company/${paths.company}/sec`}
               className="inline-flex items-center text-blue-600 hover:text-blue-800 mb-6">
               <ArrowLeft className="w-4 h-4 mr-2" />
@@ -187,6 +195,7 @@ export default async function SummarisedSEC({
               </div>
               <div className="bg-gray-50 px-6 py-4">
                 <Link
+                  target="_blank"
                   href={filingData.miscData.link}
                   className="inline-flex items-center text-blue-600 hover:text-blue-800">
                   <FileText className="w-5 h-5 mr-2" />
