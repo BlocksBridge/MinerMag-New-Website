@@ -366,7 +366,7 @@ export default async function CompanyPage({
             </section>
 
             {/* Social Media Section */}
-            <SECFilingsSection company={param.company} />
+            {/* <SECFilingsSection company={param.company} /> */}
           </div>
         </main>
       </div>
