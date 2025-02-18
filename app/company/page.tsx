@@ -4,22 +4,17 @@ import EnterpriseTable from "./enterpriseTable";
 import CompanyTable from "./companyTable";
 import { TabsContent } from "@radix-ui/react-tabs";
 export default async function ConsolidatedCompanies() {
-  const getNetworkDifficulty = await fetch(
-    "https://api.hashrateindex.com/v1/hashrateindex/network/difficulty",
-    { headers: { "X-Hi-Api-Key": "hi.72efa27d0f82a2541260cfb351e3adc7" } }
-  ).then((res) => res.json());
-  const getNetworkOveriew = await fetch(
-    "https://api.hashrateindex.com/v1/hashrateindex/network/overview",
-    { headers: { "X-Hi-Api-Key": "hi.72efa27d0f82a2541260cfb351e3adc7" } }
-  ).then((res) => res.json());
-  const getBlockReward = await fetch(
-    "https://api.hashrateindex.com/v1/hashrateindex/network/block-reward",
-    { headers: { "X-Hi-Api-Key": "hi.72efa27d0f82a2541260cfb351e3adc7" } }
-  ).then((res) => res.json());
+  const getNetworkData = await fetch(
+    `${process.env.NEXT_PUBLIC_website_url}/api/networkdata`
+  )
+    .then((res) => res.json())
+    .then((data) => data.data);
 
-  const NetworkOverview = getNetworkOveriew.data;
-  const BlockReward = getBlockReward.data;
-  const NetworkDiff = getNetworkDifficulty.data;
+  console.log(getNetworkData, "data");
+
+  const NetworkOverview = getNetworkData.networkOverview.data;
+  const BlockReward = getNetworkData.blockReward.data;
+  const NetworkDiff = getNetworkData.networkDiff.data;
   return (
     <div className="my-10 m-auto flex justify-center flex-col items-center gap-8 w-5/6">
       <h1 className="font-bold"> Bitcoin Mining Companies Statistics</h1>
