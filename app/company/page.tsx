@@ -20,7 +20,7 @@ export default async function ConsolidatedCompanies() {
       <h1 className="font-bold"> Bitcoin Mining Companies Statistics</h1>
       {/* Market Data Section */}
       <section className="flex justify-center items-centerm m-auto">
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
           {[
             {
               title: "Network Difficulty",
