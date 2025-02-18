@@ -4,7 +4,7 @@ import { geistMono, geistSans } from "@/app/fonts/fonts";
 import Image from "next/image";
 export default function Footer() {
   return (
-    <footer className={`bg-white border-t ${geistMono.className} `}>
+    <footer className={`bg-white border-t ${geistSans.className} `}>
       <div className="container mx-auto px-4 py-8">
         <div className="grid md:grid-cols-5 gap-8">
           <div className="md:col-span-2">
