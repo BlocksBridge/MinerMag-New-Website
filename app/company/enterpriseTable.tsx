@@ -100,7 +100,7 @@ export default async function CompanyTable() {
               Realized Hashrate ({getData[0].realizedHash.month})
             </TableHead>
             <TableHead className="text-center">
-              Price Hashratio ({getData[0].priceHashratio.month})
+              Price-to-Hash Ratio ($/TH/s) ({getData[0].priceHashratio.month})
             </TableHead>
             <TableHead className="text-center">Holdings (BTC)</TableHead>
             <TableHead className="text-center">

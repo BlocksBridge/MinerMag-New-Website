@@ -85,8 +85,8 @@ export default async function ConsolidatedCompanies() {
       </section>
       <Tabs className="w-full" defaultValue="index">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="index">Market Cap</TabsTrigger>
-          <TabsTrigger value="enterprise">Operations Metrics</TabsTrigger>
+          <TabsTrigger value="index">Trading Data</TabsTrigger>
+          <TabsTrigger value="enterprise">Operation Metrics</TabsTrigger>
         </TabsList>
         <TabsContent value="index">
           <CompanyTable />
