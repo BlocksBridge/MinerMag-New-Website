@@ -121,10 +121,10 @@ export default async function CompanyTable() {
                   </Link>
                 </TableCell>
                 <TableCell className="text-center">
+                  ${" "}
                   {company.enterpriseValue.toLocaleString("en-us", {
                     minimumFractionDigits: 2,
                   })}
-                  $
                 </TableCell>
                 <TableCell className="text-center">
                   {company?.realizedHash?.price

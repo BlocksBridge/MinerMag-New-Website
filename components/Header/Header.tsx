@@ -115,11 +115,10 @@ export default async function Header() {
                               </div>
                             </span>
                             <span className="text-gray-600">
-                              Stock Price:{" "}
+                              Stock Price: $
                               {company.stockPrice.toLocaleString("en-us", {
                                 minimumFractionDigits: 2,
                               })}
-                              $
                             </span>
                             <span className="text-gray-600">
                               Market Cap:{" "}

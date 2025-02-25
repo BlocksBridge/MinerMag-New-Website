@@ -48,7 +48,7 @@ export default async function ConsolidatedCompanies() {
                   minimumFractionDigits: 0,
                 }
               )} TH/s`,
-              change: `Fees in Blocks (24h): ${NetworkOverview.feesBlocks24h} BTC`,
+              // change: `Fees in Blocks (24h): ${NetworkOverview.feesBlocks24h} BTC`,
               additional: `Est. Difficulty Adjustment: ${NetworkOverview.estDiffAdj}%`,
               changeColor: "text-gray-500",
             },

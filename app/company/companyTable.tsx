@@ -50,16 +50,16 @@ export default async function CompanyTable() {
                     </Link>
                   </TableCell>
                   <TableCell>
+                    $
                     {company.price.toLocaleString("en-us", {
                       minimumFractionDigits: 2,
                     })}
-                    $
                   </TableCell>
                   <TableCell>
+                    $
                     {company.marketCap.toLocaleString("en-us", {
                       minimumFractionDigits: 2,
                     })}
-                    $
                   </TableCell>
                   <TableCell className="text-center">
                     {company.dayHigh.toLocaleString("en-us", {
