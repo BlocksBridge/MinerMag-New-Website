@@ -50,9 +50,12 @@ export default async function Header() {
         </Link>
       </div>
       {/* Header */}
-      <TickerTape
-        symbols={companies.map((i) => ({ proName: i.toUpperCase() }))}
-      />
+      <div className="disabled pointer-events-none">
+        {" "}
+        <TickerTape
+          symbols={companies.map((i) => ({ proName: i.toUpperCase() }))}
+        />
+      </div>
       <header className="bg-white border-b sticky top-0 z-10">
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
