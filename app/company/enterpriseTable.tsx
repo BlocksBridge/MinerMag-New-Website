@@ -91,7 +91,7 @@ export default async function CompanyTable() {
   if (getData.length) {
     return (
       <Table>
-        <TableCaption>Bitcoin Mining Companies Stat</TableCaption>
+        {/* <TableCaption>Bitcoin Mining Companies Stat</TableCaption> */}
         <TableHeader>
           <TableRow>
             <TableHead className="w-[200px]">Name</TableHead>

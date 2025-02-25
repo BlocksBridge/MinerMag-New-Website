@@ -91,6 +91,7 @@ export default async function Header() {
                       return (
                         <Link
                           key={index}
+                          target="_blank"
                           href={`/company/${company.company}`}
                           className="rounded-lg border   p-4 hover:bg-gray-200">
                           <div className="flex flex-col w-full">

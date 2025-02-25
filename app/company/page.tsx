@@ -17,7 +17,10 @@ export default async function ConsolidatedCompanies() {
   const NetworkDiff = getNetworkData.networkDiff.data;
   return (
     <div className="my-10 m-auto flex justify-center flex-col items-center gap-8 w-5/6">
-      <h1 className="font-bold"> Bitcoin Mining Companies Statistics</h1>
+      <h1 className="font-bold text-2xl">
+        {" "}
+        Bitcoin Mining Companies Statistics
+      </h1>
       {/* Market Data Section */}
       <section className="flex justify-center items-centerm m-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">

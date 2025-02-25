@@ -137,7 +137,11 @@ export default async function HomePage({
               </div>
               <div className="p-6">
                 <div className="text-sm text-gray-500 mb-2 ">
-                  November 14, 2024
+                  {new Date(getPosts[0].date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
                 </div>
                 <h1 className="text-2xl font-bold mb-4">
                   {getPosts[0].title.rendered}
