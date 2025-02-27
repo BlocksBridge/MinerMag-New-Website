@@ -48,7 +48,14 @@ export default function Search() {
     console.log(results);
   }, [toggleSearch]);
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      onMouseEnter={() => {
+        setIsResultsVisible(true);
+      }}
+      onMouseLeave={() => {
+        setIsResultsVisible(false);
+      }}>
       <input
         type="text"
         placeholder="Search..."
@@ -67,7 +74,8 @@ export default function Search() {
       </button>
 
       {isResultsVisible && (
-        <div className="w-80 h-[60vh] rounded border border-2 pb-4 right-0 overflow-scroll absolute bg-white shadow-sm">
+        <div
+          className={` w-80 h-[60vh] rounded border border-2 pb-4 right-0 overflow-scroll  absolute bg-white shadow-sm`}>
           <div className="grid grid-cols-1">
             {results.map((item) => (
               <Link
