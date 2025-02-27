@@ -15,13 +15,13 @@ export default function Footer() {
               height={200}
               alt="TheMinerMag Logo"
             />
-            <p className="text-sm text-justify text-gray-600 mt-5">
+            {/* <p className="text-sm text-justify text-gray-600 mt-5">
               TheMinerMag is a bitcoin mining news and research platform brought
               to you by BlocksBridge Consulting, a public relations firm
               dedicated to the bitcoin mining industry. TheMinerMag operates
               with full editorial independence, delivering accurate, data-driven
               insights and unbiased analysis on industry trends.
-            </p>
+            </p> */}
           </div>
           <div>
             <h3 className="font-semibold mb-4">Quick Links</h3>
