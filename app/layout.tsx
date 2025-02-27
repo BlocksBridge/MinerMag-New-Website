@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { revalidateTag } from "next/cache";
 import Header from "@/components/Header/Header";
-
 import Footer from "@/components/Footer/Footer";
 import { geistMono, geistSans } from "./fonts/fonts";
 import TopHeader from "@/components/Header/TopHeader";

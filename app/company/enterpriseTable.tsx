@@ -10,6 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import TableEnterprise from "./tableEnterprise";
+
 import { companies } from "../companiesData";
 export default async function CompanyTable() {
   let MinerMagData: {
@@ -49,7 +51,7 @@ export default async function CompanyTable() {
           ];
         finalData["realizedHash"] = {
           month: String(realizedHashMonth),
-          price: realizedHashData,
+          price: Number(realizedHashData),
         };
       }
       if (priceHashRatioMonth !== null) {
@@ -59,7 +61,7 @@ export default async function CompanyTable() {
           ];
         finalData["priceHashratio"] = {
           month: String(priceHashRatioMonth),
-          price: priceHashratioPrice,
+          price: Number(priceHashratioPrice),
         };
       }
       if (realizedRateMonth !== null) {
@@ -73,16 +75,13 @@ export default async function CompanyTable() {
         };
       }
 
-      console.log(
-        MinerMagData.bitcoinHoldings["Holdings (BTC)"][companySymbol],
-        companySymbol
-      );
       if (
         MinerMagData.bitcoinHoldings["Holdings (BTC)"][companySymbol] !=
         undefined
       ) {
-        finalData["bitcoinHolding"] =
-          MinerMagData.bitcoinHoldings["Holdings (BTC)"][companySymbol];
+        finalData["bitcoinHolding"] = Number(
+          MinerMagData.bitcoinHoldings["Holdings (BTC)"][companySymbol]
+        );
       }
       return finalData;
     })
@@ -90,79 +89,71 @@ export default async function CompanyTable() {
 
   if (getData.length) {
     return (
-      <Table>
-        {/* <TableCaption>Bitcoin Mining Companies Stat</TableCaption> */}
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[200px]">Name</TableHead>
-            <TableHead className="text-center">Enterprise Value</TableHead>{" "}
-            <TableHead className="text-center">
-              Realized Hashrate ({getData[0].realizedHash.month})
-            </TableHead>
-            <TableHead className="text-center">
-              Price-to-Hash Ratio ($/TH/s) ({getData[0].priceHashratio.month})
-            </TableHead>
-            <TableHead className="text-center">Holdings (BTC)</TableHead>
-            <TableHead className="text-center">
-              Realization Rate ({getData[0].realizationRate.month})
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {getData.map((company, index) => {
-            return (
-              <TableRow key={company.symbol}>
-                <TableCell className="font-medium">
-                  {" "}
-                  <Link
-                    target="_blank"
-                    href={`/company/${company.symbol.toUpperCase()}`}>
-                    {company.symbol}
-                  </Link>
-                </TableCell>
-                <TableCell className="text-center">
-                  ${" "}
-                  {company.enterpriseValue.toLocaleString("en-us", {
-                    minimumFractionDigits: 2,
-                  })}
-                </TableCell>
-                <TableCell className="text-center">
-                  {company?.realizedHash?.price
-                    ? company?.realizedHash?.price
-                    : "TBD"}
-                </TableCell>{" "}
-                <TableCell className="text-center">
-                  {company?.priceHashratio?.price
-                    ? company?.priceHashratio?.price
-                    : "TBD"}
-                </TableCell>
-                <TableCell className="text-center">
-                  {company?.bitcoinHolding ? company?.bitcoinHolding : "TBD"}
-                </TableCell>
-                <TableCell className="text-center">
-                  {company?.realizationRate?.price
-                    ? company?.realizationRate?.price
-                    : "TBD"}
-                </TableCell>
-              </TableRow>
-            );
-          })}
-          {/* {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
-          </TableRow>
-        ))} */}
-        </TableBody>
-        {/* <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter> */}
-      </Table>
+      <>
+        <div>
+          <TableEnterprise data={getData} />
+        </div>
+        {/* <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="">Name</TableHead>
+              <TableHead className="text-center">
+                Enterprise Value
+              </TableHead>{" "}
+              <TableHead className="text-center">
+                Realized Hashrate ({getData[0].realizedHash.month})
+              </TableHead>
+              <TableHead className="text-center">
+                Price-to-Hash Ratio ($/TH/s) ({getData[0].priceHashratio.month})
+              </TableHead>
+              <TableHead className="text-center">Holdings (BTC)</TableHead>
+              <TableHead className="text-center">
+                Realization Rate ({getData[0].realizationRate.month})
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {getData.map((company, index) => {
+              return (
+                <TableRow key={company.symbol}>
+                  <TableCell className="font-medium">
+                    {" "}
+                    <Link
+                      target="_blank"
+                      href={`/company/${company.symbol.toUpperCase()}`}>
+                      {company.symbol}
+                    </Link>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    ${" "}
+                    {company.enterpriseValue.toLocaleString("en-us", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {company?.realizedHash?.price
+                      ? company?.realizedHash?.price
+                      : "TBD"}
+                  </TableCell>{" "}
+                  <TableCell className="text-center">
+                    {company?.priceHashratio?.price
+                      ? company?.priceHashratio?.price
+                      : "TBD"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {company?.bitcoinHolding ? company?.bitcoinHolding : "TBD"}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {company?.realizationRate?.price
+                      ? company?.realizationRate?.price
+                      : "TBD"}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table> */}
+      </>
     );
   }
 }
