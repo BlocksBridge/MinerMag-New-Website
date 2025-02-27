@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Search as SearchIcon } from "lucide-react";
-
+import Link from "next/link";
+import Image from "next/image";
 export default function Search() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -13,16 +14,34 @@ export default function Search() {
     console.log(query);
     if (toggleSearch) {
       (async () => {
+        // const fetchResults = await fetch(
+        //   `${
+        //     process.env.NEXT_PUBLIC_backend_url
+        //   }/wp-json/ajax-search-pro/v0/search?s=${String(
+        //     query
+        //   )}&orderby=date&order=desc`
+        // ).then((res) => res.json());
         const fetchResults = await fetch(
           `${
             process.env.NEXT_PUBLIC_backend_url
-          }/wp-json/ajax-search-pro/v0/search?s=${String(query)}`
+          }/wp-json/wp/v2/search?search=${String(
+            query
+          ).toLowerCase()}&orderby=date&order=desc&_embed=true&per_page=5&acf_format=standard`
         ).then((res) => res.json());
         if (fetchResults.length) {
-          setResults(fetchResults);
+          let ProcessSearchResults = await Promise.all(
+            fetchResults.map(async (i) => {
+              let getMedia = await fetch(`
+                ${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/media/${i["_embedded"]["self"][0]["acf"]["main_image"]}`).then(
+                (res) => res.json()
+              );
+              return { ...i, image: getMedia.guid.rendered };
+            })
+          );
+          setResults(ProcessSearchResults);
           setIsResultsVisible(true);
           setToggleSearch(false);
-          console.log(fetchResults);
+          // console.log(fetchResults[0]["_embedded"]["self"][0]);
         }
       })();
     }
@@ -48,31 +67,40 @@ export default function Search() {
       </button>
 
       {isResultsVisible && (
-        <div className="w-full absolute">
-          <h3 className="text-lg font-semibold text-gray-700 mb-4">
-            Search Results
-          </h3>
-          <div className="grid grid-cols-1 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div
-                key={item}
-                className="bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition duration-300 ease-in-out overflow-hidden">
-                <div className="h-40 bg-gray-200"></div>
-                <div className="p-4">
-                  <h4 className="text-xl font-semibold text-gray-900 mb-2">
-                    Result Title {item}
-                  </h4>
-                  <p className="text-sm text-gray-600 mb-4">
+        <div className="w-80 h-[60vh] rounded border border-2 pb-4 right-0 overflow-scroll absolute bg-white shadow-sm">
+          <div className="grid grid-cols-1">
+            {results.map((item) => (
+              <Link
+                key={item.id}
+                href={item.url.split(".com")[1]}
+                target="_blank">
+                <div
+                  key={item.id}
+                  className="bg-white border border-gray-200 transition duration-300 ease-in-out overflow-hidden">
+                  <div className="h-40 p-1 w-[100%] relative bg-gray-200">
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      objectFit={"cover"}
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h4 className="text-md font-semibold text-gray-900 mb-2">
+                      {item.title}
+                    </h4>
+                    {/* <p className="text-sm text-gray-600 mb-4">
                     This is a brief description of the search result {item}. It
                     provides a quick overview of the content.
-                  </p>
-                  <a
-                    href="#"
-                    className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                    Learn more →
-                  </a>
+                  </p> */}
+                    <Link
+                      href={item.url.split(".com")[1]}
+                      className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                      Learn more →
+                    </Link>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           <div className="mt-6 text-center">
