@@ -51,10 +51,10 @@ export default function Search() {
     <div
       className="relative"
       onMouseEnter={() => {
-        results && setIsResultsVisible(true);
+        results.length && setIsResultsVisible(true);
       }}
       onMouseLeave={() => {
-        results && setIsResultsVisible(false);
+        results.length && setIsResultsVisible(false);
       }}>
       <input
         type="text"
