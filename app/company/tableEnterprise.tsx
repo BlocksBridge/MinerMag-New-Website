@@ -1,5 +1,5 @@
 "use client";
-
+import Link from "next/link";
 import { AgGridReact } from "ag-grid-react";
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 
@@ -7,7 +7,19 @@ export default function ComsDA({ data }) {
   ModuleRegistry.registerModules([AllCommunityModule]);
 
   let cols = [
-    { field: "symbol", headerName: "Name", sortable: false },
+    {
+      field: "symbol",
+      headerName: "Name",
+      sortable: false,
+      cellRenderer: (props) => {
+        // put the value in bold
+        return (
+          <Link target="_blank" href={`/company/${props.value.toUpperCase()}`}>
+            {props.value}
+          </Link>
+        );
+      },
+    },
     { field: "enterpriseValue", headerName: "Enterprise Value ($)" },
     {
       field: "realizedHash.price",
