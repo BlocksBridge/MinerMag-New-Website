@@ -12,7 +12,6 @@ export default function ComsDA({ data }) {
       headerName: "Name",
       sortable: false,
       cellRenderer: (props) => {
-        // put the value in bold
         return (
           <Link target="_blank" href={`/company/${props.value.toUpperCase()}`}>
             {props.value}
