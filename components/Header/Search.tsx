@@ -111,13 +111,13 @@ export default function Search() {
               </Link>
             ))}
           </div>
-          <div className="mt-6 text-center">
+          {/* <div className="mt-6 text-center">
             <a
               href="#"
               className="text-blue-600 hover:text-blue-800 font-medium">
               View all results
             </a>
-          </div>
+          </div> */}
         </div>
       )}
     </div>
