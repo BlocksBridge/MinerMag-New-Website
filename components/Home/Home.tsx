@@ -114,12 +114,12 @@ export default async function HomePage({
               </Link>
             </nav>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow">
+          {/* <div className="bg-white p-4 rounded-lg shadow">
             <h2 className="font-semibold mb-2">Latest Tweets</h2>
             <div className="space-y-4">
               <Twitter />
             </div>
-          </div>
+          </div> */}
         </aside>
 
         {/* Main Content Area */}
