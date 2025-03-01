@@ -55,7 +55,7 @@ export default function MobileHeader() {
             target="_parent"
             href="/learn"
             className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100 transition-colors">
-            LEARN
+            RESEARCH
           </Link>
           <div className="px-3 py-2"></div>
         </nav>

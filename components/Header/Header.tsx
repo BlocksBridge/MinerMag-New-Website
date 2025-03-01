@@ -141,7 +141,7 @@ export default async function Header() {
               <Link
                 className="text-sm font-medium hover:text-blue-600"
                 href="/learn">
-                LEARN
+                RESEARCH
               </Link>
               <Search />
             </nav>

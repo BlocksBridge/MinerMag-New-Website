@@ -54,13 +54,13 @@ export default function NewsArticle({ post, relatedPosts }) {
 
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-4">
-              Subscribe to Our Newsletter
+              Get Weekly Mining Insights by Email
             </h2>
             <Link
               href={"https://substack.com/@blocksbridge"}
               target="_blank"
               className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-              Subscribe To Newsletter
+              Subscribe to Miner Weekly newsletter
             </Link>
           </section>
         </article>

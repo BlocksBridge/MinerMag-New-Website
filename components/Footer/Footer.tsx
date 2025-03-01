@@ -16,9 +16,16 @@ export default function Footer() {
               alt="TheMinerMag Logo"
             />
             <p className="text-sm text-justify text-gray-600 mt-5">
-              TheMinerMag operates with full editorial independence, delivering
-              accurate, data-driven insights and unbiased analysis on industry
-              trends.
+              Brought to you by{" "}
+              <Link
+                href="https://blocksbridge.com"
+                className="text-blue-700"
+                target="_blank">
+                BlocksBridge Consulting
+              </Link>
+              , TheMinerMag operates with full editorial independence,
+              delivering accurate, data-driven insights and unbiased analysis on
+              industry trends.
             </p>
           </div>
           <div>
@@ -36,7 +43,7 @@ export default function Footer() {
                 Market Data
               </Link>
               <Link href="/learn" className="block text-sm hover:text-blue-600">
-                Learn
+                Research
               </Link>
             </nav>
           </div>
@@ -61,19 +68,21 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-semibold mb-4"></h3>
+            <h3 className="font-semibold text-md mb-4">
+              Stay up-to-date with latest mining insights
+            </h3>
             <div className="space-y-2 flex flex-col">
               <Link
-                href={"https://substack.com/@blocksbridge"}
+                href={"https://blocksbridge.substack.com/"}
                 target="_blank"
                 className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-                Subscribe To Newsletter
-              </Link>
+                Weekly Email Updates
+              </Link>{" "}
               <Link
                 href={"https://t.me/TheMinerMag"}
                 target="_blank"
                 className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-                Join Telegram Channel
+                Instant Telegram updates
               </Link>
             </div>
           </div>

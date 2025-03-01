@@ -3,6 +3,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EnterpriseTable from "./enterpriseTable";
 import CompanyTable from "./companyTable";
 import { TabsContent } from "@radix-ui/react-tabs";
+import "./table.css";
 export default async function ConsolidatedCompanies() {
   const getNetworkData = await fetch(
     `${process.env.NEXT_PUBLIC_website_url}/api/networkdata`
