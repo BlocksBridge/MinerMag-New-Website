@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { companies } from "@/app/companiesData";
 import Search from "./Search";
+import "./Header.css";
 import { ChevronDown, Building2, ChevronUp, Menu, X } from "lucide-react";
 import "@/app/company/[company]/tradingView.css";
 import TickerTape from "./StockTicker";
@@ -88,7 +89,7 @@ export default async function Header() {
                   COMPANIES
                   <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
                 </Link>
-                <div className="hidden group-hover:block hover:block absolute bg-white shadow-lg rounded-lg  w-5/6 left-0 right-0 top-15 h-[70vh] lg:h-auto m-auto p-2 z-50  overflow-scroll">
+                <div className="Search hidden group-hover:block hover:block absolute bg-white shadow-lg rounded-lg overscroll-contain w-5/6 left-0 right-0 top-15 h-[70vh] lg:h-auto m-auto p-2 z-50  overflow-auto">
                   <ul className="grid grid-cols-5 gap-2 justify-center items-center overflow-scroll  ">
                     {companyWithPrices.map((company, index) => {
                       return (
