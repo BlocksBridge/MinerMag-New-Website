@@ -35,7 +35,11 @@ export default async function Category({
       );
       return (
         <div className="flex flex-col w-5/6 m-auto items-center justify-center my-10">
-          <h1 className="text-3xl font-bold mb-8">{checkCategory[0].name}</h1>
+          <h1 className="text-3xl font-bold mb-8">
+            {checkCategory[0].name == "LEARN"
+              ? "RESEARCH"
+              : checkCategory[0].name}
+          </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {getPostsByCategory.map((article) => (
               <SinglePostCard
