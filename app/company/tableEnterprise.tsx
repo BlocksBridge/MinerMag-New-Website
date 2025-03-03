@@ -5,7 +5,13 @@ import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 
 export default function ComsDA({ data }) {
   ModuleRegistry.registerModules([AllCommunityModule]);
-
+  let MinerMagCellRender = (props) => {
+    if (props.value == undefined) {
+      return <>n/a</>;
+    } else {
+      return <>{props.value}</>;
+    }
+  };
   let cols = [
     {
       field: "symbol",
@@ -23,22 +29,37 @@ export default function ComsDA({ data }) {
     {
       field: "realizedHash.price",
       headerName: `Realized Hashrate (${data[0].realizedHash.month})`,
+      cellRenderer: MinerMagCellRender,
     },
     {
       field: "priceHashratio.price",
       headerName: `Price-to-Hash Ratio ($/TH/s) (${data[0].priceHashratio.month})`,
+      cellRenderer: MinerMagCellRender,
     },
-    { field: "bitcoinHolding", headerName: "Holdings (BTC)" },
+    {
+      field: "bitcoinHolding",
+      headerName: "Holdings (BTC)",
+      cellRenderer: MinerMagCellRender,
+    },
     {
       field: "realizationRate.price",
       headerName: `Realization Rate (${data[0].realizationRate.month})`,
+      cellRenderer: MinerMagCellRender,
     },
   ];
   let rowDefs = data;
   console.log(data);
   return (
-    <div className=" mt-5 h-[500px]">
-      <AgGridReact columnDefs={cols} rowData={rowDefs} />
-    </div>
+    <>
+      <div className=" mt-5 h-[500px]">
+        <AgGridReact columnDefs={cols} rowData={rowDefs} />
+      </div>{" "}
+      <div className="text-sm mt-1">
+        {" "}
+        <p>Legends:</p>
+        <p>n/a: TheMinerMag Team Does not track that data</p>
+        <p>0: Data is unannounced for that period</p>
+      </div>
+    </>
   );
 }

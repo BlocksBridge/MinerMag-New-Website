@@ -11,7 +11,7 @@ export default async function ConsolidatedCompanies() {
     .then((res) => res.json())
     .then((data) => data.data);
 
-  console.log(getNetworkData, "data");
+  // console.log(getNetworkData, "data");
 
   const NetworkOverview = getNetworkData.networkOverview.data;
   const BlockReward = getNetworkData.blockReward.data;
