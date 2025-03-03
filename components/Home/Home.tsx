@@ -8,11 +8,13 @@ export default async function HomePage({
   BitcoinData,
   NetworkOverview,
   BlockReward,
+  NetworkDiff,
 }: {
   getPosts: [any];
   BitcoinData: [any];
   NetworkOverview: [any];
   BlockReward: [any];
+  NetworkDiff: [any];
 }) {
   const three = getPosts.slice(1, 4).map((item) => {
     return {
@@ -24,7 +26,7 @@ export default async function HomePage({
       link: item.link,
     };
   });
-  //console.log(three);
+
   return (
     <div className={`min-h-screen bg-gray-100 flex flex-col font-sans `}>
       {/* Top Banner */}
@@ -258,10 +260,19 @@ export default async function HomePage({
                   changeColor: "text-gray-500",
                 },
                 {
-                  title: "Mining Difficulty",
-                  value: "71.5 T",
-                  change: "+0.8% (last adjustment)",
-                  changeColor: "text-green-500",
+                  title: "Network Difficulty",
+                  value: `${NetworkDiff[0]["difficulty"].toLocaleString(
+                    "en-us",
+                    {}
+                  )}`,
+
+                  lastUpdated: ` ${`Last Updated: ${
+                    new Date(NetworkDiff[0].timestamp).getDate() +
+                    "/" +
+                    new Date(NetworkDiff[0].timestamp).getMonth() +
+                    "/" +
+                    new Date(NetworkDiff[0].timestamp).getFullYear()
+                  }`}`,
                 },
                 {
                   title: "Block Reward",
