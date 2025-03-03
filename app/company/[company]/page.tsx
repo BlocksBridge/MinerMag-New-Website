@@ -2,7 +2,7 @@ import React from "react";
 import {
   Building2,
   TrendingUp,
-  Users,
+  AlignCenterHorizontal,
   MapPin,
   ExternalLink,
   ChevronUp,
@@ -89,6 +89,17 @@ export default async function CompanyPage({
   let getCompanyNews = await fetch(
     `https://sandbox.financialmodelingprep.com/stable/news/stock?symbols=${param.company.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
   ).then((res) => res.json());
+
+  let MinerMagData: {
+    realizedHashrate: any;
+    priceHashratio: any;
+    bitcoinHoldings: { "Holdings (BTC)": any };
+    realizationRate: any;
+  } = await fetch(`${process.env.NEXT_PUBLIC_website_url}/api/statistics`).then(
+    (res) => res.json()
+  );
+
+  console.log(MinerMagData, "data comapny");
   // console.log(getCompanyNews, "news");
   if (getCompanyInfo.data.length) {
     return (
@@ -179,12 +190,34 @@ export default async function CompanyPage({
                   </div>
                   <div className="flex items-center space-x-3">
                     <div className="bg-green-50 p-2 rounded-lg">
-                      <Users className="h-5 w-5 text-green-600" />
+                      <AlignCenterHorizontal className="h-5 w-5 text-green-600" />
                     </div>
                     <div>
-                      <div className="text-sm text-gray-500">Employees</div>
+                      <div className="text-sm text-gray-500">
+                        Realized Hashrate (
+                        {String(
+                          Object.keys(
+                            MinerMagData.realizedHashrate[
+                              getCompanyInfo.data[0].symbol
+                            ]
+                          )[0]
+                        )}
+                        )
+                      </div>
                       <div className="font-semibold">
-                        {getCompanyInfo.data[0].fullTimeEmployees}
+                        {
+                          MinerMagData.realizedHashrate[
+                            getCompanyInfo.data[0].symbol
+                          ][
+                            String(
+                              Object.keys(
+                                MinerMagData.realizedHashrate[
+                                  getCompanyInfo.data[0].symbol
+                                ]
+                              )[0]
+                            )
+                          ]
+                        }
                       </div>
                     </div>
                   </div>
@@ -193,15 +226,15 @@ export default async function CompanyPage({
                       <Activity className="h-5 w-5 text-purple-600" />
                     </div>
                     <div>
-                      <div className="text-sm text-gray-500">IPO</div>
+                      <div className="text-sm text-gray-500">
+                        Bitcoin Holdings
+                      </div>
                       <div className="font-semibold">
-                        {new Date(
-                          getCompanyInfo.data[0].ipoDate
-                        ).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
+                        {
+                          MinerMagData.bitcoinHoldings["Holdings (BTC)"][
+                            getCompanyInfo.data[0].symbol
+                          ]
+                        }
                       </div>
                     </div>
                   </div>
