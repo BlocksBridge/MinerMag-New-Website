@@ -140,7 +140,7 @@ export default async function Header() {
               </div>
               <Link
                 className="text-sm font-medium hover:text-blue-600"
-                href="/learn">
+                href="/research">
                 RESEARCH
               </Link>
               <Search />

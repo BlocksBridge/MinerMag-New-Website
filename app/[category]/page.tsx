@@ -16,7 +16,6 @@ export default async function Category({
   ).then((res) => res.json());
 
   if (checkCategory.length) {
-    console.log(checkCategory);
     const getPostsByCategory = await fetch(
       `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?categories=${
         checkCategory[0].id
@@ -25,20 +24,25 @@ export default async function Category({
       }&order=desc&orderby=date&acf_format=standard`
     ).then((res) => res.json());
 
-    console.log(getPostsByCategory, getPostsByCategory.length);
     if (getPostsByCategory.code) {
       redirect("/404");
     } else {
       let checkIfNextPageExists = await PaginationProtection(
-        Number(pageQuery.page) + 1,
+        Number(pageQuery.page) ? Number(pageQuery.page) + 1 : 2,
         checkCategory[0].id
+      );
+      console.log(
+        checkIfNextPageExists,
+        pageQuery,
+        Boolean(
+          Number(pageQuery.page),
+          Number(pageQuery.page) ? Number(pageQuery.page) + 1 : 1
+        )
       );
       return (
         <div className="flex flex-col w-5/6 m-auto items-center justify-center my-10">
           <h1 className="text-3xl font-bold mb-8">
-            {checkCategory[0].name == "LEARN"
-              ? "RESEARCH"
-              : checkCategory[0].name}
+            {checkCategory[0].name.toUpperCase()}
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {getPostsByCategory.map((article) => (
@@ -51,15 +55,17 @@ export default async function Category({
           </div>
           <div className="flex justify-center gap-5 mt-10">
             {" "}
-            <Link
-              href={`${category.category}?page=${
-                pageQuery.page && Number(pageQuery.page) !== 1
-                  ? Number(pageQuery.page) - 1
-                  : 1
-              }`}
-              className="bg-blue-600 font-bold px-3 py-2 rounded-md text-white">
-              Prev
-            </Link>
+            {pageQuery.page !== undefined && (
+              <Link
+                href={`${category.category}?page=${
+                  pageQuery.page && Number(pageQuery.page) !== 1
+                    ? Number(pageQuery.page) - 1
+                    : 1
+                }`}
+                className="bg-blue-600 font-bold px-3 py-2 rounded-md text-white">
+                Prev
+              </Link>
+            )}
             {checkIfNextPageExists && (
               <Link
                 href={`${category.category}?page=${
@@ -135,7 +141,7 @@ async function PaginationProtection(nextPage, categoryId) {
       nextPage ? nextPage : 1
     }`}&order=desc&orderby=date&acf_format=standard`
   ).then((res) => res.json());
-  console.log(checkNextPage);
+  console.log(checkNextPage, "nextt", nextPage);
   if (checkNextPage.code) {
     return false;
   } else {
