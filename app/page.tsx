@@ -22,7 +22,7 @@ export default async function Page() {
   const NetworkOverview = getNetworkData.networkOverview.data;
   const BlockReward = getNetworkData.blockReward.data;
   const NetworkDiff = getNetworkData.networkDiff.data;
-  console.log(NetworkDiff);
+
   return (
     <HomePage
       getPosts={getPosts}
