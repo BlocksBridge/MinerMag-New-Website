@@ -223,19 +223,9 @@ export default async function HomePage({
                       100
                     ).toFixed(2) + "%"
                   } (24h)`,
-                  lastUpdated: ` ${`Last Updated: ${
-                    new Date(
-                      BitcoinData[BitcoinData.length - 1].closeTime
-                    ).getDate() +
-                    "/" +
-                    new Date(
-                      BitcoinData[BitcoinData.length - 1].closeTime
-                    ).getMonth() +
-                    "/" +
-                    new Date(
-                      BitcoinData[BitcoinData.length - 1].closeTime
-                    ).getFullYear()
-                  }`}`,
+                  lastUpdated: ` ${`Last Updated: ${new Date(
+                    BitcoinData[BitcoinData.length - 1].closeTime
+                  ).toLocaleDateString()}`}`,
                   changeColor: `${
                     Number(
                       ((BitcoinData[BitcoinData.length - 1].closePrice -
@@ -266,24 +256,17 @@ export default async function HomePage({
                     {}
                   )}`,
 
-                  lastUpdated: ` ${`Last Updated: ${
-                    new Date(NetworkDiff[0].timestamp).getDate() +
-                    "/" +
-                    new Date(NetworkDiff[0].timestamp).getMonth() +
-                    "/" +
-                    new Date(NetworkDiff[0].timestamp).getFullYear()
-                  }`}`,
+                  lastUpdated: ` ${`Last Updated: ${new Date(
+                    NetworkDiff[0].timestamp
+                  ).toLocaleDateString()}`}`,
                 },
                 {
                   title: "Block Reward",
+
                   value: `${BlockReward[0].blockReward} BTC`,
-                  change: `Last Updated: ${
-                    new Date(BlockReward[0].timestamp).getDate() +
-                    "/" +
-                    new Date(BlockReward[0].timestamp).getMonth() +
-                    "/" +
-                    new Date(BlockReward[0].timestamp).getFullYear()
-                  }`,
+                  change: `Last Updated: ${new Date(
+                    BlockReward[0].timestamp
+                  ).toLocaleDateString()}`,
                   changeColor: "text-gray-500",
                 },
               ].map((item, index) => (
