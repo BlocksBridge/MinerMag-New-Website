@@ -16,7 +16,7 @@ export default async function TopHeader() {
             alt="Ad Banner"
             src={checkHeaderAd.html.split("src=")[1].split('"')[1]}
             width={728}
-            height={60}
+            height={90}
           />
         </div>
       ) : (
