@@ -8,10 +8,10 @@ export default function Search() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [toggleSearch, setToggleSearch] = useState(false);
+  const [debounce, setDebounce] = useState(0);
   const [isResultsVisible, setIsResultsVisible] = useState(false);
 
   useEffect(() => {
-    console.log(query);
     if (toggleSearch) {
       (async () => {
         // const fetchResults = await fetch(
@@ -45,7 +45,6 @@ export default function Search() {
         }
       })();
     }
-    console.log(results);
   }, [toggleSearch]);
   return (
     <div
