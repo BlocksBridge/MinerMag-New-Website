@@ -28,3 +28,5 @@ export const companies = [
     // "DGHI",
     // "ANY",
 ];
+
+export const nonNasdaqCompanies = ["PHX", "ARBK", "NB2", "HIVE" ]
