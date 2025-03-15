@@ -28,7 +28,7 @@ export async function generatePostsSitepmap() {
   let shouldRun = true
 
   while (shouldRun) {
-    let getPostsFromWordpress = await fetch(`${process.env.NEXT_PUBLIC_website_url || 'https://theminermag.com'}/wp-json/wp/v2/posts?per_page=100&page=${currPage}`).then(res=>res.json())
+    let getPostsFromWordpress = await fetch(`${process.env.NEXT_PUBLIC_backend_url || 'https://theminermag.com'}/wp-json/wp/v2/posts?per_page=100&page=${currPage}`).then(res=>res.json())
     if (getPostsFromWordpress?.code !== undefined) {
       shouldRun = false
     } else {
