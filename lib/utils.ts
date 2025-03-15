@@ -21,3 +21,24 @@ export function NormaliseMinerMagData(minermagData) {
 
   return finalData
 }
+
+export async function generatePostsSitepmap() {
+  let allPosts: any[] = []
+  let currPage = 1
+  let shouldRun = true
+
+  while (shouldRun) {
+    let getPostsFromWordpress = await fetch(`${process.env.NEXT_PUBLIC_website_url || 'https://theminermag.com'}/wp-json/wp/v2/posts?per_page=100&page=${currPage}`).then(res=>res.json())
+    if (getPostsFromWordpress?.code !== undefined) {
+      shouldRun = false
+    } else {
+      shouldRun = true
+      currPage += 1
+      allPosts = [...allPosts, ...getPostsFromWordpress]
+    }
+
+  }
+  console.log(allPosts.length, currPage)
+  return allPosts
+
+}
