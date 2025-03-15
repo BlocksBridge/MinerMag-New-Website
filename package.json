@@ -20,7 +20,6 @@
     "groq-sdk": "^0.11.0",
     "lucide-react": "^0.474.0",
     "next": "15.0.4",
-    "next-sitemap": "^4.2.3",
     "openai": "^4.78.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
