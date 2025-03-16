@@ -80,24 +80,24 @@ export default function NewsArticle({ post, relatedPosts }) {
                 if (localPost.post_title == post.title.rendered) {
                   return null;
                 }
-                let getImage = await fetch(
-                  `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts/${localPost.ID}?acf_format=standard`
-                ).then((res) => res.json());
-
+                // let getImage = await fetch(
+                //   `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts/${localPost.ID}?acf_format=standard`
+                // ).then((res) => res.json());
+                console.log(localPost, "localpost");
                 return (
                   <Link
                     key={localPost.ID}
-                    href={`${localPost.asp_guid.split(".com")[1]}`}
+                    href={`${localPost.link.split(".com")[1]}`}
                     className="group">
                     <Image
-                      src={getImage.acf.main_image}
-                      alt={`Latest news ${localPost.post_title}`}
+                      src={localPost.acf.main_image}
+                      alt={`Latest news ${localPost.title.rendered}`}
                       width={400}
                       height={200}
                       className="w-full h-48 object-cover rounded-lg mb-3"
                     />
                     <h3 className="font-medium group-hover:text-blue-600">
-                      {localPost.post_title}
+                      {localPost.title.rendered}
                     </h3>
                     <p className="text-sm text-gray-500">
                       {/* {localPost.post_modified.toLocaleDateString("en-US", {
