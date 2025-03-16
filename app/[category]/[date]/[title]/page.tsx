@@ -1,5 +1,5 @@
 import NewsArticle from "@/components/Single/Post";
-// import OpenAI from "openai";
+import OpenAI from "openai";
 import Groq from "groq-sdk";
 import { Metadata } from "next";
 export default async function Page({
