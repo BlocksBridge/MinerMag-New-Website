@@ -107,14 +107,40 @@ export async function generateMetadata({
   params,
 }: {
   params: { category: string; date: string; title: string };
-}) {
+}): Metadata {
   const query = await params;
 
   let getInfoAboutPost = await fetch(
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?acf_format=standard&slug=${query.title}&date=${query.date}`
   ).then((res) => res.json());
-  // console.log(getInfoAboutPost[0], "metadata");
+
+  let getTags = await Promise.all(
+    getInfoAboutPost[0].tags.map(async (item) => {
+      let getTagName = await fetch(
+        `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/tags/${item}`
+      ).then((res) => res.json());
+      return getTagName.name;
+    })
+  );
+  console.log(getInfoAboutPost[0], "metadata");
   return {
     title: getInfoAboutPost[0].title.rendered + "- By TheMinerMag",
+    description: getInfoAboutPost[0].excerpt.rendered,
+    openGraph: {
+      title: getInfoAboutPost[0].title.rendered + "- By TheMinerMag",
+      description: getInfoAboutPost[0].excerpt.rendered,
+      siteName: "theMinerMag",
+      images: [getInfoAboutPost[0].acf.main_image],
+      type: "article",
+      publishedTime: new Date(getInfoAboutPost[0].date).toISOString(),
+    },
+    keywords: getTags,
+    twitter: {
+      card: "summary_large_image",
+      title: getInfoAboutPost[0].title.rendered + "- By TheMinerMag",
+      description: getInfoAboutPost[0].excerpt.rendered,
+      images: [getInfoAboutPost[0].acf.main_image],
+      creator: "@TheMinerMag_",
+    },
   };
 }

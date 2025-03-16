@@ -83,7 +83,6 @@ export default function NewsArticle({ post, relatedPosts }) {
                 // let getImage = await fetch(
                 //   `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts/${localPost.ID}?acf_format=standard`
                 // ).then((res) => res.json());
-                console.log(localPost, "localpost");
                 return (
                   <Link
                     key={localPost.ID}
