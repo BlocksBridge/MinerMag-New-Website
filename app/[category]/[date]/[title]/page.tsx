@@ -17,9 +17,13 @@ export default async function Page({
   //   method: "POST",
   // }).then((res) => res.json());
   const groq = new Groq({ apiKey: process.env.GROQ_KEY });
-  let generateQuery = await groq.chat.completions.create({
-    response_format: { type: "json_object" },
-    model: "mixtral-8x7b-32768",
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_KEY,
+    organization: process.env.OPENAI_ORG,
+  });
+
+  let generateQuery = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
     messages: [
       {
         role: "system",
@@ -35,6 +39,23 @@ export default async function Page({
     ],
   });
 
+  // let generateQuery = await groq.chat.completions.create({
+  //   response_format: { type: "json_object" },
+  //   model: "mixtral-8x7b-32768",
+  //   messages: [
+  //     {
+  //       role: "system",
+  //       content: `You are Search Assistant, Your Task is to find the company name from the Article Headline which will be used as Search Query, If there is no company then suggest short search query with same schema
+  //      Use JSON \n The JSON object must use the schema: ${JSON.stringify({
+  //        company: "string",
+  //      })}  `,
+  //     },
+  //     {
+  //       role: "user",
+  //       content: `Here is the headline: ${getPost[0].title.rendered}`,
+  //     },
+  //   ],
+  // });
   let formattedQuery = JSON.parse(generateQuery.choices[0].message.content);
   let finalQuery = Object.values(formattedQuery).reduce((acc, val) => {
     return val + " " + acc;
