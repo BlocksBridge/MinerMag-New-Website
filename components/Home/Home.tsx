@@ -145,9 +145,11 @@ export default async function HomePage({
                     day: "numeric",
                   })}
                 </div>
-                <h1 className="text-2xl font-bold mb-4">
-                  {getPosts[0].title.rendered}
-                </h1>
+                <h1
+                  className="text-2xl font-bold mb-4"
+                  dangerouslySetInnerHTML={{
+                    __html: getPosts[0].title.rendered,
+                  }}></h1>
                 <p className="text-gray-600 mb-4">
                   {getPosts[0].acf.sub_title}
                 </p>
@@ -194,7 +196,11 @@ export default async function HomePage({
                           day: "numeric",
                         })}
                       </div>
-                      <h3 className="font-semibold mb-2">{article.title}</h3>
+                      <h3
+                        className="font-semibold mb-2"
+                        dangerouslySetInnerHTML={{
+                          __html: article.title,
+                        }}></h3>
                       <p className="text-sm text-gray-600">{article.excerpt}</p>
                     </div>
                   </div>
