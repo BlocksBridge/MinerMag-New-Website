@@ -5,6 +5,7 @@ import { revalidateTag } from "next/cache";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import { geistMono, geistSans } from "./fonts/fonts";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import TopHeader from "@/components/Header/TopHeader";
 
 export const metadata: Metadata = {
@@ -49,6 +50,7 @@ export default function RootLayout({
         <div className="flex-grow">{children}</div>
         <Footer />
       </body>
+      <GoogleAnalytics gaId="G-CKRPQKSJQZ" />
     </html>
   );
 }
