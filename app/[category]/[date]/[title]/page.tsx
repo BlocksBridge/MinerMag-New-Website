@@ -122,7 +122,6 @@ export async function generateMetadata({
       return getTagName.name;
     })
   );
-  console.log(getInfoAboutPost[0], "metadata");
   return {
     title: getInfoAboutPost[0].title.rendered + "- By TheMinerMag",
     description: getInfoAboutPost[0].excerpt.rendered,
