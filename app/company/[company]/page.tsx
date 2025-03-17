@@ -186,7 +186,7 @@ export default async function CompanyPage({
                     <ChevronDown className="h-4 w-4" />
                   )}
                   <span className="font-semibold">
-                    {Math.abs(getCompanyInfo.data[0].change)}%
+                    {Math.abs(getCompanyInfo.data[0].changePercentage)}%
                   </span>
                 </div>
               </div>
