@@ -70,7 +70,7 @@ export default function ComsDA({ data }) {
       <div className="text-sm mt-1">
         {" "}
         <p>Legends:</p>
-        <p>n/a: n/a: Data not tracked</p>
+        <p>n/a: Data not tracked</p>
         <p>0: Data not publicly available for the specified period.</p>
       </div>
     </>
