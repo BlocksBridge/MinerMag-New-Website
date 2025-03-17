@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import TradingView from "./tradingView";
 import { companies } from "@/app/companiesData";
+import numeral from "numeral";
 
 import Link from "next/link";
 import {
@@ -213,13 +214,17 @@ export default async function CompanyPage({
                     <div>
                       <div className="text-sm text-gray-500">Market Cap</div>
                       <div className="font-semibold">
-                        $
-                        {getCompanyInfo.data[0].marketCap.toLocaleString(
-                          "en-us",
-                          {
-                            minimumFractionDigits: 0,
-                          }
-                        )}
+                        {numeral(
+                          getCompanyInfo.data[0].marketCap.toLocaleString(
+                            "en-us",
+                            {
+                              minimumFractionDigits: 0,
+                            }
+                          )
+                        )
+                          .format("($ 0.00 a)")
+                          .replace(" ", "")
+                          .toUpperCase()}
                       </div>
                     </div>
                   </div>
