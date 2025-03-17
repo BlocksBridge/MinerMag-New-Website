@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { companies } from "@/app/companiesData";
 import Search from "./Search";
+
 import "./Header.css";
 import { ChevronDown, Building2, ChevronUp, Menu, X } from "lucide-react";
 import "@/app/company/[company]/tradingView.css";
@@ -40,6 +41,7 @@ export default async function Header() {
     currentdate.getMinutes() +
     ":" +
     currentdate.getSeconds();
+
   return (
     <>
       {" "}

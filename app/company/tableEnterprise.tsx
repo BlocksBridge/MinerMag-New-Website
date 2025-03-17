@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { AgGridReact } from "ag-grid-react";
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
-
+import numeral from "numeral";
 export default function ComsDA({ data }) {
   ModuleRegistry.registerModules([AllCommunityModule]);
   let MinerMagCellRender = (props) => {
@@ -25,7 +25,20 @@ export default function ComsDA({ data }) {
         );
       },
     },
-    { field: "enterpriseValue", headerName: "Enterprise Value ($)" },
+    {
+      field: "enterpriseValue",
+      headerName: "Enterprise Value ($)",
+      cellRenderer: (props) => {
+        return (
+          <>
+            {numeral(props.value)
+              .format("($ 0.00 a)")
+              .replace(" ", "")
+              .toUpperCase()}
+          </>
+        );
+      },
+    },
     {
       field: "realizedHash.price",
       headerName: `Realized Hashrate (${data[0].realizedHash.month})`,

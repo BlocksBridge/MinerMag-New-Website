@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { AgGridReact } from "ag-grid-react";
 import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
-
+import numeral from "numeral";
 export default function ComsDA({ data }) {
   ModuleRegistry.registerModules([AllCommunityModule]);
   let cols = [
@@ -21,7 +21,20 @@ export default function ComsDA({ data }) {
       },
     },
     { field: "price", headerName: "Price ($)" },
-    { field: "marketCap", headerName: "Market Cap ($)" },
+    {
+      field: "marketCap",
+      headerName: "Market Cap ($)",
+      cellRenderer: (props) => {
+        return (
+          <>
+            {numeral(props.value)
+              .format("($ 0.00 a)")
+              .replace(" ", "")
+              .toUpperCase()}
+          </>
+        );
+      },
+    },
     { field: "dayHigh", headerName: "1D H ($)" },
     { field: "dayLow", headerName: "1D L ($)" },
     { field: "volume", headerName: "Volume" },
