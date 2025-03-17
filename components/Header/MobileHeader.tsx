@@ -1,9 +1,18 @@
 "use client";
 import Link from "next/link";
 import { ChevronDown, Building2, ChevronUp, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 export default function MobileHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      console.log("opneded");
+      window.scrollBy(0, 400);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [isMenuOpen]);
   return (
     <div className="md:hidden">
       {" "}
