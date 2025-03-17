@@ -151,13 +151,13 @@ export default async function CompanyPage({
                 ← Back to Companies
               </Link>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="grid grid-cols-2 md:flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <div className="bg-blue-600 p-4 rounded-lg">
-                  <Building2 className="h-8 w-8 text-white" />
+                  <Building2 className="h-4 w-4 md:h-8 md:w-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">
+                  <h1 className="md:text-2xl font-bold text-gray-900">
                     {getCompanyInfo.data[0]?.companyName}
                   </h1>
                   <div className="flex items-center space-x-2 mt-1">
@@ -171,7 +171,7 @@ export default async function CompanyPage({
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-3xl font-bold text-gray-900">
+                <div className="text-2xl md:text-3xl font-bold text-gray-900">
                   ${getCompanyInfo.data[0].price}
                 </div>
                 <div
