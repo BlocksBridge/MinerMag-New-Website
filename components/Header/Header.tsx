@@ -17,11 +17,17 @@ export default async function Header() {
           process.env.NEXT_PUBLIC_website_url
         }/api/companyprofile?company=${i.toUpperCase()}`
       ).then((res) => res.json());
+      console.log(
+        "change percentage: ",
+        getStockPrice.data[0].changePercentage,
+        Number(getStockPrice.data[0].changePercentage),
+        getStockPrice.data[0]
+      );
       return {
         company: i.toUpperCase(),
         stockPrice: getStockPrice.data[0].price,
         marketCap: getStockPrice.data[0].marketCap,
-        priceChange: getStockPrice.data[0].change,
+        priceChange: getStockPrice.data[0].changePercentage,
       };
     })
   ).then((i) => {
@@ -41,7 +47,7 @@ export default async function Header() {
     currentdate.getMinutes() +
     ":" +
     currentdate.getSeconds();
-
+  // console.log(companyWithPrices);
   return (
     <>
       {" "}
