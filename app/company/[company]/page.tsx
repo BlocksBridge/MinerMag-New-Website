@@ -99,6 +99,41 @@ export default async function CompanyPage({
     (res) => res.json()
   );
 
+  let realizedHashRate = null;
+  let realizedHashMonth = null;
+  try {
+    if (
+      MinerMagData.realizedHashrate[getCompanyInfo.data[0].symbol][
+        String(
+          Object.keys(
+            MinerMagData.realizedHashrate[getCompanyInfo.data[0].symbol]
+          )[0]
+        )
+      ] &&
+      String(
+        Object.keys(
+          MinerMagData.realizedHashrate[getCompanyInfo.data[0].symbol]
+        )[0]
+      )
+    ) {
+      realizedHashMonth = String(
+        Object.keys(
+          MinerMagData.realizedHashrate[getCompanyInfo.data[0].symbol]
+        )[0]
+      );
+      realizedHashRate =
+        MinerMagData.realizedHashrate[getCompanyInfo.data[0].symbol][
+          String(
+            Object.keys(
+              MinerMagData.realizedHashrate[getCompanyInfo.data[0].symbol]
+            )[0]
+          )
+        ];
+    }
+  } catch (e) {
+    console.log("ee");
+  }
+
   console.log(MinerMagData, "data comapny");
   // console.log(getCompanyNews, "news");
   if (getCompanyInfo.data.length) {
@@ -194,30 +229,11 @@ export default async function CompanyPage({
                     </div>
                     <div>
                       <div className="text-sm text-gray-500">
-                        Realized Hashrate (
-                        {String(
-                          Object.keys(
-                            MinerMagData.realizedHashrate[
-                              getCompanyInfo.data[0].symbol
-                            ]
-                          )[0]
-                        )}
-                        )
+                        Realized Hashrate
+                        {realizedHashMonth ? `(${realizedHashMonth})` : null}
                       </div>
                       <div className="font-semibold">
-                        {
-                          MinerMagData.realizedHashrate[
-                            getCompanyInfo.data[0].symbol
-                          ][
-                            String(
-                              Object.keys(
-                                MinerMagData.realizedHashrate[
-                                  getCompanyInfo.data[0].symbol
-                                ]
-                              )[0]
-                            )
-                          ]
-                        }
+                        {realizedHashRate ? realizedHashRate : "NA"}
                       </div>
                     </div>
                   </div>
@@ -230,11 +246,13 @@ export default async function CompanyPage({
                         Bitcoin Holdings
                       </div>
                       <div className="font-semibold">
-                        {
-                          MinerMagData.bitcoinHoldings["Holdings (BTC)"][
-                            getCompanyInfo.data[0].symbol
-                          ]
-                        }
+                        {MinerMagData.bitcoinHoldings["Holdings (BTC)"][
+                          getCompanyInfo.data[0].symbol
+                        ]
+                          ? MinerMagData.bitcoinHoldings["Holdings (BTC)"][
+                              getCompanyInfo.data[0].symbol
+                            ]
+                          : "NA"}
                       </div>
                     </div>
                   </div>
