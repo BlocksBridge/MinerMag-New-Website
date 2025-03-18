@@ -4,15 +4,22 @@ import { Facebook, Linkedin, Search, Twitter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function NewsArticle({ post, relatedPosts }) {
-  console.log(post.content.rendered);
+export default function NewsArticle({
+  post,
+  relatedPosts,
+}: {
+  post: { title: { rendered: String } };
+  relatedPosts: [any];
+}) {
   // console.log(relatedPosts, "redlatwe");
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1">
         <article className="max-w-3xl mx-auto px-4 py-8">
           <h1
-            dangerouslySetInnerHTML={{ __html: post.title.rendered }}
+            dangerouslySetInnerHTML={{
+              __html: post.title.rendered,
+            }}
             className="text-3xl font-bold mb-2"></h1>
           <div className="text-sm text-gray-500 mb-6">
             {" "}
@@ -33,7 +40,12 @@ export default function NewsArticle({ post, relatedPosts }) {
 
           <div
             className="prose max-w-none mb-12 flex-col flex gap-y-7"
-            dangerouslySetInnerHTML={{ __html: post.content.rendered }}></div>
+            dangerouslySetInnerHTML={{
+              __html: post.content.rendered.replace(
+                `src="https://theminermag.com`,
+                `src="${process.env.NEXT_PUBLIC_backend_url}`
+              ),
+            }}></div>
 
           <div className="flex gap-4 mb-12">
             <button
