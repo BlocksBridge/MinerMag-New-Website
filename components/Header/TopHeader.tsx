@@ -8,7 +8,10 @@ export default async function TopHeader() {
   const checkHeaderAd = await fetch(
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/ad-banners/v1/header-top-banner`
   ).then((res) => res.json());
-  console.log(checkHeaderAd);
+  console.log(
+    checkHeaderAd,
+    checkHeaderAd.html.split("src=")[1].split('"')[1].split(".com")[1]
+  );
   return (
     <div className="w-10/12 md:w-6/12 mx-auto bg-white p-4 rounded-lg ">
       {checkHeaderAd?.html ? (
@@ -17,7 +20,9 @@ export default async function TopHeader() {
           target="_blank">
           <Image
             alt="Ad Banner"
-            src={checkHeaderAd.html.split("src=")[1].split('"')[1]}
+            src={`${process.env.NEXT_PUBLIC_backend_url}/${
+              checkHeaderAd.html.split("src=")[1].split('"')[1].split(".com")[1]
+            }`}
             width={728}
             height={90}
           />

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function NewsArticle({ post, relatedPosts }) {
+  console.log(post.content.rendered);
   // console.log(relatedPosts, "redlatwe");
   return (
     <div className="min-h-screen flex flex-col">
