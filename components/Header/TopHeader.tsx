@@ -13,7 +13,7 @@ export default async function TopHeader() {
     checkHeaderAd.html.split("src=")[1].split('"')[1].split(".com")[1]
   );
   return (
-    <div className="w-10/12 md:w-6/12 mx-auto bg-white p-4 rounded-lg ">
+    <div className="w-11/12 md:w-10/12 mx-auto flex justify-center items-center bg-white p-4 rounded-lg ">
       {checkHeaderAd?.html ? (
         <Link
           href={checkHeaderAd.html.split('href="')[1].split(`"`)[0]}
