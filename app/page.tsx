@@ -4,8 +4,8 @@ export default async function Page() {
   const getPosts: [any] = await fetch(
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?acf_format=standard`,
     {
-      cache: "no-store",
-      next: { tags: ["posts"] },
+      cache: "no-cache",
+      next: { tags: ["posts"], revalidate: 60 },
     }
   ).then((res) => res.json());
   const getBitcoinPrice = await fetch(
@@ -33,3 +33,5 @@ export default async function Page() {
     />
   );
 }
+
+export const dynamic = "force-dynamic";

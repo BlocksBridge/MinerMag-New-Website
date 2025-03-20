@@ -1,4 +1,4 @@
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) { 
@@ -8,5 +8,6 @@ export async function GET(request: Request) {
       }).then((res) => res.json());
       //console.log(getPosts[0].acf)
     await revalidateTag("tags");
+    await revalidatePath('/', 'layout')
     return NextResponse.json({ message: "Cleared Cache" });
 }
