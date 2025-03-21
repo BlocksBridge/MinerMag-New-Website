@@ -31,14 +31,14 @@ export default async function Category({
         Number(pageQuery.page) ? Number(pageQuery.page) + 1 : 2,
         checkCategory[0].id
       );
-      console.log(
-        checkIfNextPageExists,
-        pageQuery,
-        Boolean(
-          Number(pageQuery.page),
-          Number(pageQuery.page) ? Number(pageQuery.page) + 1 : 1
-        )
-      );
+      // console.log(
+      //   checkIfNextPageExists,
+      //   pageQuery,
+      //   Boolean(
+      //     Number(pageQuery.page),
+      //     Number(pageQuery.page) ? Number(pageQuery.page) + 1 : 1
+      //   )
+      // );
       return (
         <div className="flex flex-col w-5/6 m-auto items-center justify-center my-10">
           <h1 className="text-3xl font-bold mb-8">
@@ -141,7 +141,7 @@ async function PaginationProtection(nextPage, categoryId) {
       nextPage ? nextPage : 1
     }`}&order=desc&orderby=date&acf_format=standard`
   ).then((res) => res.json());
-  console.log(checkNextPage, "nextt", nextPage);
+  // console.log(checkNextPage, "nextt", nextPage);
   if (checkNextPage.code) {
     return false;
   } else {
