@@ -2,7 +2,6 @@ import NewsArticle from "@/components/Single/Post";
 // import OpenAI from "openai";
 // import Groq from "groq-sdk";
 import * as cheerio from "cheerio";
-import getMetaData from "metadata-scraper";
 import { Metadata } from "next";
 
 export default async function Page({
@@ -116,22 +115,20 @@ export async function generateMetadata({
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?acf_format=standard&slug=${query.title}&date=${query.date}`
   ).then((res) => res.json());
 
-  // let getRankMathInfo = await fetch(
-  //   `${process.env.NEXT_PUBLIC_backend_url}/wp-json/rankmath/v1/getHead?url=${getInfoAboutPost[0].link}`
-  // ).then((res) => res.json());
+  let getRankMathInfo = await fetch(
+    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/rankmath/v1/getHead?url=${getInfoAboutPost[0].link}`
+  ).then((res) => res.json());
 
-  let getMeta: { title: string; description: string; keywords: [string] } =
-    await getMetaData(getInfoAboutPost[0].link);
-
-  // console.log(getRankMathInfo, "rankmath", getRankMathInfo.head);
-
+  console.log(getRankMathInfo, "rankmath", getRankMathInfo.head);
+  let s = cheerio.load(getRankMathInfo.head);
+  let metaDataToAdd = {};
   // let parsed = HTMLToJSON(getRankMathInfo.head);
-  // s("meta").each((i, el) => {
-  //   if (el.attribs.property && el.attribs.property.includes("og")) {
-  //     metaDataToAdd[el.attribs.property.split("og:")[1]] = el.attribs.content;
-  //   }
-  // });
-  // console.log(metaDataToAdd);
+  s("meta").each((i, el) => {
+    if (el.attribs.property && el.attribs.property.includes("og")) {
+      metaDataToAdd[el.attribs.property.split("og:")[1]] = el.attribs.content;
+    }
+  });
+  console.log(metaDataToAdd);
   let getTags = await Promise.all(
     getInfoAboutPost[0].tags.map(async (item) => {
       let getTagName = await fetch(
@@ -140,29 +137,29 @@ export async function generateMetadata({
       return getTagName.name;
     })
   );
-  // let metaTitle = metaDataToAdd?.title
-  //   ? metaDataToAdd.title + "-By TheMinerMag"
-  //   : getInfoAboutPost[0].title.rendered + "-By TheMinerMag";
-  // let metaDesc = metaDataToAdd?.description
-  //   ? metaDataToAdd.description
-  //   : getInfoAboutPost[0].excerpt.rendered;
+  let metaTitle = metaDataToAdd?.title
+    ? metaDataToAdd.title + "-By TheMinerMag"
+    : getInfoAboutPost[0].title.rendered + "-By TheMinerMag";
+  let metaDesc = metaDataToAdd?.description
+    ? metaDataToAdd.description
+    : getInfoAboutPost[0].excerpt.rendered;
   // console.log(getInfoAboutPost);
   return {
-    title: getMeta.title,
-    description: getMeta.description,
+    title: metaTitle,
+    description: metaDesc,
     openGraph: {
-      title: getMeta.title,
-      description: getMeta.description,
+      title: metaTitle,
+      description: metaDesc,
       siteName: "TheMinerMag",
       images: [getInfoAboutPost[0].acf.main_image],
       type: "article",
       publishedTime: new Date(getInfoAboutPost[0].date).toISOString(),
     },
-    keywords: getMeta.keywords,
+    keywords: getTags,
     twitter: {
       card: "summary_large_image",
-      title: getMeta.title,
-      description: getMeta.description,
+      title: metaTitle,
+      description: metaDesc,
       images: [getInfoAboutPost[0].acf.main_image],
       creator: "@TheMinerMag_",
     },
