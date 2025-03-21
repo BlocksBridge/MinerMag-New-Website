@@ -19,7 +19,7 @@ export default async function TopHeader() {
           href={checkHeaderAd.html.split('href="')[1].split(`"`)[0]}
           target="_blank">
           <Image
-            alt="Ad Banner"
+            alt="Banner"
             src={`${process.env.NEXT_PUBLIC_backend_url}/${
               checkHeaderAd.html.split("src=")[1].split('"')[1].split(".com")[1]
             }`}
