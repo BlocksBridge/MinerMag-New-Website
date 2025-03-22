@@ -90,7 +90,7 @@ export default function NewsArticle({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {relatedPosts.length &&
               relatedPosts.map(async (localPost, index) => {
-                if (localPost.post_title == post.title.rendered) {
+                if (localPost.title.rendered == post.title.rendered) {
                   return null;
                 }
                 // let getImage = await fetch(
