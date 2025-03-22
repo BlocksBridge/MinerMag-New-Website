@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import SinglePostCard from "@/components/Category/SinglePostCard";
 import Link from "next/link";
+import { headers } from "next/headers";
 export default async function Category({
   searchParams,
   params,
@@ -9,10 +10,15 @@ export default async function Category({
   searchParams: { page: number };
   params: { category: string };
 }) {
+  const headersList = await headers();
+
   const pageQuery = await searchParams;
   const category = await params;
   const checkCategory: [SingleCategory] = await fetch(
-    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/categories?slug=${category.category}`
+    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/categories?slug=${
+      category.category
+    }&${headersList.get("host") ? false : false}`,
+    { cache: "no-store", next: { revalidate: 0, tags: ["posts"] } }
   ).then((res) => res.json());
 
   if (checkCategory.length) {
@@ -21,7 +27,10 @@ export default async function Category({
         checkCategory[0].id
       }&per_page=12&${
         pageQuery.page && `page=${pageQuery.page}`
-      }&order=desc&orderby=date&acf_format=standard`
+      }&order=desc&orderby=date&acf_format=standard&${
+        headersList.get("host") ? false : false
+      }}`,
+      { cache: "no-store", next: { revalidate: 0, tags: ["posts"] } }
     ).then((res) => res.json());
 
     if (getPostsByCategory.code) {
@@ -148,3 +157,5 @@ async function PaginationProtection(nextPage, categoryId) {
     return true;
   }
 }
+
+export const dynamic = "force-dynamic";
