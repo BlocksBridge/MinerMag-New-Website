@@ -61,7 +61,7 @@ export default function ComsDA({ data }) {
     },
   ];
   let rowDefs = data;
-  console.log(data);
+  // console.log(data);
   return (
     <>
       <div className=" mt-5 h-[500px]">

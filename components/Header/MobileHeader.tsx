@@ -7,7 +7,7 @@ export default function MobileHeader() {
 
   useEffect(() => {
     if (isMenuOpen) {
-      console.log("opneded");
+      // console.log("opneded");
       window.scrollBy(0, 400);
     } else {
       window.scrollTo(0, 0);

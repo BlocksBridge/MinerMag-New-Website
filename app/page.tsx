@@ -15,7 +15,7 @@ export default async function Page({ searchParams }) {
     }
   ).then((res) => res.json());
 
-  console.log("par", getPosts[0]);
+  // console.log("par", getPosts[0]);
   const getBitcoinPrice = await fetch(
     "https://api.hashrateindex.com/v1/hashrateindex/coin/bitcoin/price",
     { headers: { "X-Hi-Api-Key": "hi.72efa27d0f82a2541260cfb351e3adc7" } }

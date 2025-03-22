@@ -120,7 +120,7 @@ export async function generateMetadata({
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/rankmath/v1/getHead?url=${getInfoAboutPost[0].link}`
   ).then((res) => res.json());
 
-  console.log(getRankMathInfo, "rankmath", getRankMathInfo.head);
+  // console.log(getRankMathInfo, "rankmath", getRankMathInfo.head);
   let s = cheerio.load(getRankMathInfo.head);
   let metaDataToAdd = {};
   // let parsed = HTMLToJSON(getRankMathInfo.head);
@@ -129,7 +129,7 @@ export async function generateMetadata({
       metaDataToAdd[el.attribs.property.split("og:")[1]] = el.attribs.content;
     }
   });
-  console.log(metaDataToAdd);
+  // console.log(metaDataToAdd);
   let getTags = await Promise.all(
     getInfoAboutPost[0].tags.map(async (item) => {
       let getTagName = await fetch(
