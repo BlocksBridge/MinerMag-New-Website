@@ -2,7 +2,7 @@ import NewsArticle from "@/components/Single/Post";
 // import OpenAI from "openai";
 // import Groq from "groq-sdk";
 import * as cheerio from "cheerio";
-import getMetaData from "metadata-scraper";
+import { parser } from "html-metadata-parser";
 import { Metadata } from "next";
 
 export default async function Page({
@@ -146,15 +146,16 @@ export async function generateMetadata({
     : getInfoAboutPost[0].excerpt.rendered;
 
   // let getMeta = await getMetaData(getInfoAboutPost[0].link);
+  let getMeta = await parser(getInfoAboutPost[0].link);
 
   // console.log(getMeta, "getMetttt", Object.keys(getMeta));
   // console.log(getInfoAboutPost);
   return {
-    title: metaTitle,
-    description: metaDesc,
+    title: getMeta.meta.title,
+    description: getMeta.meta.description,
     openGraph: {
-      title: metaTitle,
-      description: metaDesc,
+      title: getMeta.meta.title,
+      description: getMeta.meta.description,
       siteName: "TheMinerMag",
       images: [getInfoAboutPost[0].acf.main_image],
       type: "article",
@@ -163,8 +164,8 @@ export async function generateMetadata({
     keywords: getTags,
     twitter: {
       card: "summary_large_image",
-      title: metaTitle,
-      description: metaDesc,
+      title: getMeta.meta.title,
+      description: getMeta.meta.description,
       images: [getInfoAboutPost[0].acf.main_image],
       creator: "@TheMinerMag_",
     },
