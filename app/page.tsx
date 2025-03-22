@@ -7,7 +7,6 @@ export default async function Page({ searchParams }) {
       process.env.NEXT_PUBLIC_backend_url
     }/wp-json/wp/v2/posts?acf_format=standard&${par ? "" : ""}`,
     {
-      cache: "no-cache",
       next: { tags: ["posts"], revalidate: 60 },
     }
   ).then((res) => res.json());
