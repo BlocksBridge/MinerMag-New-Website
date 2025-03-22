@@ -7,8 +7,12 @@ export default async function Page({ searchParams }) {
   let par = await searchParams;
 
   const getPosts: [any] = await fetch(
-    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?acf_format=standard`,
-    { cache: "no-store", next: { tags: ["posts"], revalidate: 0 } }
+    `${
+      process.env.NEXT_PUBLIC_backend_url
+    }/wp-json/wp/v2/posts?acf_format=standard&_=${Date.now()}`,
+    {
+      cache: "no-store",
+    }
   ).then((res) => res.json());
 
   console.log("par", getPosts[0]);
@@ -39,5 +43,3 @@ export default async function Page({ searchParams }) {
 }
 
 export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
-export const revalidate = 0;

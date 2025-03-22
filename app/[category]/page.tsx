@@ -17,7 +17,7 @@ export default async function Category({
   const checkCategory: [SingleCategory] = await fetch(
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/categories?slug=${
       category.category
-    }&${headersList.get("host") ? false : false}`,
+    }&_=${Date.now()}`,
     { cache: "no-store", next: { revalidate: 0, tags: ["posts"] } }
   ).then((res) => res.json());
 
@@ -27,9 +27,7 @@ export default async function Category({
         checkCategory[0].id
       }&per_page=12&${
         pageQuery.page && `page=${pageQuery.page}`
-      }&order=desc&orderby=date&acf_format=standard&${
-        headersList.get("host") ? false : false
-      }}`,
+      }&order=desc&orderby=date&acf_format=standard&_=${Date.now()}}`,
       { cache: "no-store", next: { revalidate: 0, tags: ["posts"] } }
     ).then((res) => res.json());
 
