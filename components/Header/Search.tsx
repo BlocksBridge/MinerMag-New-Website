@@ -173,10 +173,10 @@ export default function Search() {
                       <div className="flex border-b border-gray-100 p-3">
                         <div className="h-20 w-20 relative flex-shrink-0 bg-gray-100 rounded overflow-hidden">
                           <Image
-                            src={item.image.replace(
-                              "https://theminermag.com",
-                              process.env.NEXT_PUBLIC_backend_url
-                            )}
+                            src={
+                              process.env.NEXT_PUBLIC_backend_url +
+                              new URL(item.image).pathname
+                            }
                             alt={item.title?.rendered || "Search result"}
                             fill
                             sizes="80px"

@@ -1,7 +1,7 @@
 // app/search/page.js
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -13,7 +13,8 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export default function SearchResults() {
+// This component will use the search params
+function SearchResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams.get("q") || "";
@@ -58,7 +59,6 @@ export default function SearchResults() {
         response.headers.get("X-WP-TotalPages") || "0",
         10
       );
-
       setTotalResults(totalItems);
       setTotalPages(totalPagesCount);
 
@@ -189,56 +189,64 @@ export default function SearchResults() {
       ) : (
         <div className="space-y-6">
           {searchResults.length > 0 ? (
-            searchResults.map((result: { image: string }) => (
-              <Link
-                key={result.id}
-                href={getRelativePath(result.url)}
-                className="block bg-white rounded-lg shadow hover:shadow-md transition duration-150 ease-in-out overflow-hidden">
-                <div className="flex flex-col md:flex-row">
-                  <div className="md:w-1/4 h-48 md:h-auto relative bg-gray-200">
-                    <Image
-                      src={result.image.replace(
-                        "https://theminermag.com",
-                        process.env.NEXT_PUBLIC_backend_url
-                      )}
-                      alt={result.title?.rendered || "Search result"}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 25vw"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="p-6 md:w-3/4">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                      {result.title?.rendered || result.title || "Untitled"}
-                    </h2>
-                    {result._embedded?.self?.[0]?.excerpt?.rendered && (
-                      <div
-                        className="text-gray-600 mb-4 line-clamp-3"
-                        dangerouslySetInnerHTML={{
-                          __html: result._embedded.self[0].excerpt.rendered,
-                        }}
+            searchResults.map(
+              (result: {
+                id: number;
+                src: string;
+                image: string;
+                title: { rendered: string } | string;
+                url: string;
+              }) => (
+                <Link
+                  key={result.id}
+                  href={getRelativePath(result.url)}
+                  className="block bg-white rounded-lg shadow hover:shadow-md transition duration-150 ease-in-out overflow-hidden">
+                  <div className="flex flex-col md:flex-row">
+                    <div className="md:w-1/4 h-48 md:h-auto relative bg-gray-200">
+                      <Image
+                        src={
+                          process.env.NEXT_PUBLIC_backend_url +
+                          new URL(result.image).pathname
+                        }
+                        alt={result.title?.rendered || "Search result"}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 25vw"
+                        className="object-cover"
                       />
-                    )}
-                    <div className="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center">
-                      Read more
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 ml-1"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    </div>
+                    <div className="p-6 md:w-3/4">
+                      <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                        {result.title?.rendered || result.title || "Untitled"}
+                      </h2>
+                      {result._embedded?.self?.[0]?.excerpt?.rendered && (
+                        <div
+                          className="text-gray-600 mb-4 line-clamp-3"
+                          dangerouslySetInnerHTML={{
+                            __html: result._embedded.self[0].excerpt.rendered,
+                          }}
                         />
-                      </svg>
+                      )}
+                      <div className="text-blue-600 hover:text-blue-800 font-medium inline-flex items-center">
+                        Read more
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4 ml-1"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor">
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M14 5l7 7m0 0l-7 7m7-7H3"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-            ))
+                </Link>
+              )
+            )
           ) : query ? (
             <div className="text-center py-12 bg-gray-50 rounded-lg">
               <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -330,5 +338,43 @@ export default function SearchResults() {
         </div>
       )}
     </div>
+  );
+}
+
+// Loading fallback component
+function SearchResultsLoading() {
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <h1 className="text-2xl font-bold mb-6">Search Results</h1>
+      <div className="animate-pulse">
+        <div className="h-10 bg-gray-200 rounded max-w-lg mx-auto mb-8"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/3 mb-8"></div>
+
+        {[1, 2, 3].map((item) => (
+          <div
+            key={item}
+            className="bg-white rounded-lg shadow mb-6 overflow-hidden">
+            <div className="flex flex-col md:flex-row">
+              <div className="md:w-1/4 h-48 bg-gray-300"></div>
+              <div className="p-6 md:w-3/4">
+                <div className="h-6 bg-gray-300 rounded w-3/4 mb-4"></div>
+                <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Main component that wraps the content with Suspense
+export default function SearchResults() {
+  return (
+    <Suspense fallback={<SearchResultsLoading />}>
+      <SearchResultsContent />
+    </Suspense>
   );
 }
