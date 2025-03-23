@@ -1,165 +1,197 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Search as SearchIcon } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { Search as SearchIcon, Loader2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+
 export default function Search() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
-  const [toggleSearch, setToggleSearch] = useState(false);
-  const [debounce, setDebounce] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [isResultsVisible, setIsResultsVisible] = useState(false);
+  const searchContainerRef = useRef(null);
 
+  // Debounce search to prevent excessive API calls
   useEffect(() => {
-    if (toggleSearch) {
-      (async () => {
-        // const fetchResults = await fetch(
-        //   `${
-        //     process.env.NEXT_PUBLIC_backend_url
-        //   }/wp-json/ajax-search-pro/v0/search?s=${String(
-        //     query
-        //   )}&orderby=date&order=desc`
-        // ).then((res) => res.json());
-        const fetchResults = await fetch(
-          `${
-            process.env.NEXT_PUBLIC_backend_url
-          }/wp-json/wp/v2/search?search=${String(
-            query
-          ).toLowerCase()}&orderby=date&order=desc&_embed=true&per_page=5&acf_format=standard`
-        ).then((res) => res.json());
-        if (fetchResults.length) {
-          let ProcessSearchResults = await Promise.all(
-            fetchResults.map(async (i) => {
-              let getMedia = await fetch(`
-                ${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/media/${i["_embedded"]["self"][0]["acf"]["main_image"]}`).then(
-                (res) => res.json()
-              );
-              return { ...i, image: getMedia.guid.rendered };
-            })
-          );
-          setResults(ProcessSearchResults);
-          setIsResultsVisible(true);
-          setToggleSearch(false);
-          // console.log(fetchResults[0]["_embedded"]["self"][0]);
-        }
-      })();
+    if (!query || query.length < 2) {
+      setResults([]);
+      setIsResultsVisible(false);
+      return;
     }
-  }, [toggleSearch]);
+
+    const timer = setTimeout(() => {
+      fetchSearchResults();
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  // Close results when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target)
+      ) {
+        setIsResultsVisible(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const fetchSearchResults = async () => {
+    try {
+      setIsLoading(true);
+
+      const response = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_backend_url
+        }/wp-json/wp/v2/search?search=${encodeURIComponent(
+          query.toLowerCase()
+        )}&orderby=date&order=desc&_embed=true&per_page=5&acf_format=standard`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+
+      const fetchResults = await response.json();
+
+      if (fetchResults.length) {
+        const processedResults = await Promise.all(
+          fetchResults.map(async (item) => {
+            try {
+              // Check if required nested properties exist
+              if (!item._embedded?.self?.[0]?.acf?.main_image) {
+                return {
+                  ...item,
+                  image: "/placeholder-image.jpg", // Fallback image path
+                };
+              }
+
+              const mediaResponse = await fetch(
+                `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/media/${item._embedded.self[0].acf.main_image}`
+              );
+
+              if (!mediaResponse.ok) {
+                throw new Error("Failed to fetch media");
+              }
+
+              const mediaData = await mediaResponse.json();
+              return {
+                ...item,
+                image: mediaData.guid?.rendered || "/placeholder-image.jpg",
+              };
+            } catch (error) {
+              console.error("Error processing search result:", error);
+              return {
+                ...item,
+                image: "/placeholder-image.jpg", // Fallback image on error
+              };
+            }
+          })
+        );
+
+        setResults(processedResults);
+        setIsResultsVisible(true);
+      } else {
+        setResults([]);
+      }
+    } catch (error) {
+      console.error("Search error:", error);
+      setResults([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Handle URL parsing safely
+  const getRelativePath = (url) => {
+    try {
+      if (!url) return "/";
+      const urlObj = new URL(url);
+      return urlObj.pathname + urlObj.search + urlObj.hash;
+    } catch (e) {
+      console.error("Invalid URL:", url);
+      return "/";
+    }
+  };
+
   return (
-    <div
-      className="relative"
-      onMouseEnter={() => {
-        results.length && setIsResultsVisible(true);
-      }}
-      onMouseLeave={() => {
-        results.length && setIsResultsVisible(false);
-      }}>
-      <input
-        type="text"
-        placeholder="Search..."
-        onChange={(evt) => {
-          setQuery(evt.target.value);
-        }}
-        className="w-full px-4 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-      />
-      <button
-        type="submit"
-        onClick={() => {
-          setToggleSearch(!toggleSearch);
-        }}
-        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-500 hover:text-gray-700 focus:outline-none">
-        <SearchIcon className="w-5 h-5" />
-      </button>
+    <div className="relative w-full max-w-md mx-auto" ref={searchContainerRef}>
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => query.length >= 2 && setIsResultsVisible(true)}
+          className="w-full px-4 py-2 pl-10 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          aria-label="Search"
+        />
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+          <SearchIcon className="w-4 h-4" />
+        </div>
+        {isLoading && (
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-500">
+            <Loader2 className="w-4 h-4 animate-spin" />
+          </div>
+        )}
+      </div>
 
       {isResultsVisible && (
-        <div
-          className={` w-80 h-[60vh] rounded border border-2 pb-4 right-0 overflow-scroll  absolute bg-white shadow-sm`}>
-          <div className="grid grid-cols-1">
-            {results.map((item) => (
-              <Link
-                key={item.id}
-                href={item.url.split(".com")[1]}
-                target="_blank">
-                <div
-                  key={item.id}
-                  className="bg-white border border-gray-200 transition duration-300 ease-in-out overflow-hidden">
-                  <div className="h-40 p-1 w-[100%] relative bg-gray-200">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      fill
-                      objectFit={"cover"}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h4 className="text-md font-semibold text-gray-900 mb-2">
-                      {item.title}
-                    </h4>
-                    {/* <p className="text-sm text-gray-600 mb-4">
-                    This is a brief description of the search result {item}. It
-                    provides a quick overview of the content.
-                  </p> */}
-                    <Link
-                      href={item.url.split(".com")[1]}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                      Learn more →
-                    </Link>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-          {/* <div className="mt-6 text-center">
-            <a
-              href="#"
-              className="text-blue-600 hover:text-blue-800 font-medium">
-              View all results
-            </a>
-          </div> */}
+        <div className="absolute w-full max-h-[60vh] bg-white border border-gray-200 rounded-lg shadow-lg mt-1 overflow-hidden z-10">
+          {results.length > 0 ? (
+            <div className="overflow-y-auto max-h-[60vh]">
+              {results.map(
+                (item: {
+                  image: string;
+                  id: number;
+                  url: string;
+                  title: { rendered: string } | string;
+                }) => (
+                  <Link
+                    key={item.id}
+                    href={getRelativePath(item.url)}
+                    className="block hover:bg-gray-50 transition duration-150 ease-in-out">
+                    <div className="flex border-b border-gray-100 p-3">
+                      <div className="h-20 w-20 relative flex-shrink-0 bg-gray-100 rounded overflow-hidden">
+                        <Image
+                          src={item.image.replace(
+                            "https://theminermag.com",
+                            "https://backend.theminermag.com"
+                          )}
+                          alt={item.title?.rendered || "Search result"}
+                          fill
+                          sizes="80px"
+                          className="object-cover"
+                          placeholder="blur"
+                          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+                        />
+                      </div>
+                      <div className="ml-4 flex-1 flex flex-col justify-center">
+                        <h4 className="text-sm font-medium text-gray-900 line-clamp-2">
+                          {item.title?.rendered || item.title || "Untitled"}
+                        </h4>
+                        <p className="text-xs text-blue-600 mt-1">
+                          View details →
+                        </p>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              )}
+            </div>
+          ) : (
+            <div className="p-4 text-center text-gray-500 text-sm">
+              {isLoading ? "Searching..." : "No results found"}
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 }
-
-// function SearchBarWithResults() {
-//   // Placeholder function for search
-
-// <div>
-//       {isResultsVisible && (
-//         <div className="mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg">
-//           <div className="p-4">
-//             <h3 className="text-sm font-semibold text-gray-700 mb-2">
-//               Search Results
-//             </h3>
-//             <ul className="space-y-2">
-//               {[1, 2, 3].map((item) => (
-//                 <li
-//                   key={item}
-//                   className="flex items-center space-x-4 p-2 hover:bg-gray-100 rounded-md transition duration-150 ease-in-out">
-//                   <div className="w-10 h-10 bg-gray-200 rounded-full flex-shrink-0"></div>
-//                   <div className="flex-grow">
-//                     <h4 className="text-sm font-medium text-gray-900">
-//                       Result Title {item}
-//                     </h4>
-//                     <p className="text-xs text-gray-500">
-//                       Brief description of the search result {item}
-//                     </p>
-//                   </div>
-//                 </li>
-//               ))}
-//             </ul>
-//           </div>
-//           <div className="px-4 py-2 bg-gray-50 border-t border-gray-200 rounded-b-lg">
-//             <a
-//               href="#"
-//               className="text-sm text-blue-600 hover:text-blue-800 font-medium">
-//               View all results
-//             </a>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
