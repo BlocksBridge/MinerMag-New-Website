@@ -92,7 +92,7 @@ export default function Footer() {
           <Link
             target="_blank"
             className="text-black underline"
-            href={`/privacy-policy`}>
+            href={`/disclaimer`}>
             Disclaimer
           </Link>{" "}
           |{" "}
