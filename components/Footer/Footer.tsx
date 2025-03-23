@@ -93,6 +93,13 @@ export default function Footer() {
             target="_blank"
             className="text-black underline"
             href={`/privacy-policy`}>
+            Disclaimer
+          </Link>{" "}
+          |{" "}
+          <Link
+            target="_blank"
+            className="text-black underline"
+            href={`/privacy-policy`}>
             Privacy Policy
           </Link>{" "}
           |{" "}
