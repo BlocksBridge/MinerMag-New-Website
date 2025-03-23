@@ -24,7 +24,7 @@ export default async function CompanyTable() {
   );
 
   if (getData.length) {
-    console.log(getData, "data");
+    // console.log(getData, "data");
     return (
       <>
         <TableCompany data={getData} />

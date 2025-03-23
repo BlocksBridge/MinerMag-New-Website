@@ -13,7 +13,7 @@ export  async function GET(req: NextRequest, res: NextResponse) {
     let PriceHashRatio = NormaliseMinerMagData(getPriceHashRatio)
     let bitcoinHoldings = NormaliseMinerMagData(getBitcoinHoldings)
     let realizationRate = NormaliseMinerMagData(getRealizationRate)
-    console.log(realizationRate)
+    // console.log(realizationRate)
     
   return NextResponse.json({ realizedHashrate: realizedData, priceHashratio: PriceHashRatio, bitcoinHoldings: bitcoinHoldings, realizationRate:realizationRate});
 }

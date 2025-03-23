@@ -135,7 +135,7 @@ export default async function CompanyPage({
     console.log("ee");
   }
 
-  console.log(MinerMagData, "data comapny");
+  // console.log(MinerMagData, "data comapny");
   // console.log(getCompanyNews, "news");
   if (getCompanyInfo.data.length) {
     return (
