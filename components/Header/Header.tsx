@@ -54,9 +54,10 @@ export default async function Header() {
         </Link>
       </div>
       {/* Header */}
-      <div className="disabled pointer-events-none">
+      <div className="disabled pointer-events-none ">
         {" "}
         <TickerTape
+          displayMode="compact"
           symbols={companies.map((i) => ({ proName: i.toUpperCase() }))}
         />
       </div>
