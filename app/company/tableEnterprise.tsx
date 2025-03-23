@@ -17,9 +17,13 @@ export default function ComsDA({ data }) {
       field: "symbol",
       headerName: "Name",
       sortable: false,
+      flex: 1,
       cellRenderer: (props) => {
         return (
-          <Link target="_blank" href={`/company/${props.value.toUpperCase()}`}>
+          <Link
+            className="text-blue-600 hover:text-blue-800 font-medium"
+            target="_blank"
+            href={`/company/${props.value.toUpperCase()}`}>
             {props.value}
           </Link>
         );
@@ -28,6 +32,7 @@ export default function ComsDA({ data }) {
     {
       field: "enterpriseValue",
       headerName: "Enterprise Value ($)",
+      filter: true,
       cellRenderer: (props) => {
         return (
           <>
@@ -38,24 +43,33 @@ export default function ComsDA({ data }) {
           </>
         );
       },
+      flex: 1,
     },
     {
       field: "realizedHash.price",
       headerName: `Realized Hashrate (${data[0].realizedHash.month})`,
+      filter: true,
+      flex: 1,
       cellRenderer: MinerMagCellRender,
     },
     {
       field: "priceHashratio.price",
+      flex: 1,
       headerName: `Price-to-Hash Ratio ($/TH/s) (${data[0].priceHashratio.month})`,
+      filter: true,
       cellRenderer: MinerMagCellRender,
     },
     {
       field: "bitcoinHolding",
+      flex: 1,
+      filter: true,
       headerName: "Holdings (BTC)",
       cellRenderer: MinerMagCellRender,
     },
     {
       field: "realizationRate.price",
+      flex: 1,
+      filter: true,
       headerName: `Realization Rate (${data[0].realizationRate.month})`,
       cellRenderer: MinerMagCellRender,
     },
@@ -67,11 +81,17 @@ export default function ComsDA({ data }) {
       <div className=" mt-5 h-[500px]">
         <AgGridReact columnDefs={cols} rowData={rowDefs} />
       </div>{" "}
-      <div className="text-sm mt-1">
-        {" "}
-        <p>Legends:</p>
-        <p>n/a: Data not tracked</p>
-        <p>0: Data not publicly available for the specified period.</p>
+      <div className="text-sm mt-3 bg-gray-50 p-3 rounded-md">
+        <p className="font-medium mb-1">Legend:</p>
+        <ul className="list-disc pl-5 space-y-1">
+          <li>
+            <span className="text-gray-500">n/a</span>: Data not tracked
+          </li>
+          <li>
+            <span className="text-gray-500">0</span>: Data not publicly
+            available for the specified period
+          </li>
+        </ul>
       </div>
     </>
   );
