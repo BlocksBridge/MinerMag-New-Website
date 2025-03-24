@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { companies } from "@/app/companiesData";
 import Search from "./Search";
+import numeral from "numeral";
 
 import "./Header.css";
 import { ChevronDown, Building2, ChevronUp, Menu, X } from "lucide-react";
@@ -57,7 +58,7 @@ export default async function Header() {
       <div className="disabled pointer-events-none ">
         {" "}
         <TickerTape
-          displayMode="compact"
+          displayMode="adaptive"
           symbols={companies.map((i) => ({ proName: i.toUpperCase() }))}
         />
       </div>
@@ -130,9 +131,14 @@ export default async function Header() {
                             </span>
                             <span className="text-gray-600">
                               Market Cap:{" "}
-                              {company.marketCap.toLocaleString("en-us", {
-                                minimumFractionDigits: 0,
-                              })}
+                              {numeral(
+                                company.marketCap.toLocaleString("en-us", {
+                                  minimumFractionDigits: 0,
+                                })
+                              )
+                                .format("($ 0.00 a)")
+                                .replace(" ", "")
+                                .toUpperCase()}
                             </span>
                           </div>
                         </Link>
