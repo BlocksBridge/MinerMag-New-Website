@@ -212,7 +212,9 @@ export default function Heatmap() {
 
   return (
     <div className="flex justify-center items-center flex-col m-10">
-      <h1 className="text-lg font-semibold">Bitcoin Mining Heatmap</h1>
+      <h1 className="text-lg font-semibold capitalize">
+        operational Bitcoin mining capacity as of Q4 2023
+      </h1>
       <div className="flex justify-center items-center m-10">
         <div ref={mapContainerRef} className="w-[90vw] h-[500px]" />
       </div>
