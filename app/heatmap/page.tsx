@@ -207,6 +207,59 @@ export default function Heatmap() {
       <div className="flex justify-center items-center m-10">
         <div ref={mapContainerRef} className="w-[90vw] h-[500px]" />
       </div>
+      <div className="w-full max-w-2xl mx-auto mt-6 p-4 bg-white rounded-lg border border-gray-200">
+        <h3 className="text-lg font-bold text-gray-800 mb-3">Map Legend</h3>
+
+        {/* Marker Explanation */}
+        <div className="flex items-start mb-4">
+          <div className="flex flex-col items-center mr-4">
+            <div className="bg-white text-xs font-medium px-1 rounded mb-1 text-gray-700">
+              State Name
+            </div>
+            <div className="bg-blue-600 text-white font-bold rounded-full w-10 h-10 flex items-center justify-center shadow-md">
+              386
+            </div>
+          </div>
+          <div className="text-sm text-gray-600">
+            <p>
+              <span className="font-semibold">Blue circle:</span> Shows power
+              capacity in MW
+            </p>
+            <p>
+              <span className="font-semibold">Text above:</span> Indicates the
+              state/province name
+            </p>
+            <p>Larger circles = higher power capacity</p>
+          </div>
+        </div>
+
+        {/* Capacity Scale */}
+        <div className="grid grid-cols-3 gap-2 text-xs mb-4">
+          <div className="flex flex-col items-center">
+            <div className="w-6 h-6 bg-blue-300 rounded-full mb-1"></div>
+            <span>Low</span>
+            <span>&lt;100 MW</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="w-8 h-8 bg-blue-500 rounded-full mb-1"></div>
+            <span>Medium</span>
+            <span>100-500 MW</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="w-10 h-10 bg-blue-700 rounded-full mb-1"></div>
+            <span>High</span>
+            <span>500 MW</span>
+          </div>
+        </div>
+
+        {/* Data Note */}
+        <div className="text-xs text-gray-500 border-t pt-3">
+          <p>
+            Data represents operational Bitcoin mining capacity as of Q4 2023
+          </p>
+          <p>Source: 22 mining operators (self-mining + colocation)</p>
+        </div>
+      </div>
     </div>
   );
 }
