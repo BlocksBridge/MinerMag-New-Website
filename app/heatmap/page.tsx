@@ -4,6 +4,12 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 
+const getCapacityColor = (capacity) => {
+  if (capacity < 100) return "bg-blue-300"; // Light blue for low capacity
+  if (capacity < 500) return "bg-blue-500"; // Medium blue
+  return "bg-blue-600"; // Dark blue for high capacity
+};
+
 export default function Heatmap() {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
@@ -157,7 +163,10 @@ export default function Heatmap() {
         );
 
         if (stateData) {
+          const colorClass = getCapacityColor(stateData["Power Capacity (MW)"]);
+
           // Create marker element
+
           const el = document.createElement("div");
           el.className = "marker-container";
           el.innerHTML = `
@@ -165,7 +174,7 @@ export default function Heatmap() {
   <div class="bg-white text-xs sm:text-sm font-semibold px-1 rounded mb-1 whitespace-nowrap">
     ${location[0].properties.name}
   </div>
-  <div class="bg-blue-600 text-white font-bold rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center shadow-lg text-xs sm:text-base">
+  <div class="${colorClass} text-white font-bold rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center shadow-lg text-xs sm:text-base">
     ${stateData["Power Capacity (MW)"]}
   </div>
 </div>
