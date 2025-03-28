@@ -11,24 +11,40 @@ import "@/app/company/[company]/tradingView.css";
 import TickerTape from "./StockTicker";
 import MobileHeader from "./MobileHeader";
 export default async function Header() {
-  let companyWithPrices = await Promise.all(
-    companies.map(async (i) => {
-      let getStockPrice = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_website_url
-        }/api/companyprofile?company=${i.toUpperCase()}`
-      ).then((res) => res.json());
+  // let companyWithPrices = await Promise.all(
+  //   companies.map(async (i) => {
+  //     let getStockPrice = await fetch(
+  //       `${
+  //         process.env.NEXT_PUBLIC_website_url
+  //       }/api/companyprofile?company=${i.toUpperCase()}`
+  //     ).then((res) => res.json());
 
-      return {
-        company: i.toUpperCase(),
-        stockPrice: getStockPrice.data[0].price,
-        marketCap: getStockPrice.data[0].marketCap,
-        priceChange: getStockPrice.data[0].changePercentage,
-      };
-    })
-  ).then((i) => {
-    return i;
+  //     return {
+  //       company: i.toUpperCase(),
+  //       stockPrice: getStockPrice.data[0].price,
+  //       marketCap: getStockPrice.data[0].marketCap,
+  //       priceChange: getStockPrice.data[0].changePercentage,
+  //     };
+  //   })
+  // ).then((i) => {
+  //   return i;
+  // });
+  let getCompanyStocks = await await fetch(
+    `${process.env.NEXT_PUBLIC_website_url}/api/stockprofile?_=${Date.now()}`
+  ).then((res) => res.json());
+
+  let allCompanyStocks = getCompanyStocks.map((i) => {
+    let company = JSON.parse(i.data_points)[0];
+    return {
+      company: company.symbol.toUpperCase(),
+      stockPrice: company.price,
+      marketCap: company.marketCap,
+      priceChange: company.changePercentage,
+    };
   });
+
+  // console.log(allCompanyStocks);
+
   let currentdate = new Date();
   let datetime =
     "Last Sync: " +
@@ -96,7 +112,7 @@ export default async function Header() {
                 </Link>
                 <div className="Search hidden group-hover:block hover:block absolute bg-white shadow-lg rounded-lg overscroll-contain w-5/6 left-0 right-0 top-15 h-[70vh] lg:h-auto m-auto p-2 z-50  overflow-auto">
                   <ul className="grid grid-cols-5 gap-2 justify-center items-center overflow-scroll  ">
-                    {companyWithPrices.map((company, index) => {
+                    {allCompanyStocks.map((company, index) => {
                       return (
                         <Link
                           key={index}

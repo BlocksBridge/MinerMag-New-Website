@@ -37,13 +37,13 @@ export function middleware(request: NextRequest) {
   const isEdgeFunction = request.nextUrl.pathname.startsWith('/api/')
 
   // Verbose logging for debugging
-  console.log('Request Details:', {
-    origin,
-    referer,
-    host,
-    pathname: request.nextUrl.pathname,
-    allowedOrigins: ALLOWED_ORIGINS
-  });
+  // console.log('Request Details:', {
+  //   origin,
+  //   referer,
+  //   host,
+  //   pathname: request.nextUrl.pathname,
+  //   allowedOrigins: ALLOWED_ORIGINS
+  // });
 
   // If it's an edge function, perform strict origin checking
   if (isEdgeFunction) {
