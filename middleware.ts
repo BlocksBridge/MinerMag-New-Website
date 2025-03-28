@@ -15,6 +15,12 @@ export function middleware(request: NextRequest) {
   const referer = request.headers.get('referer')
   const host = request.headers.get('host')
 
+  const isVercelRequest = 
+  request.headers.get('host')?.includes('vercel.app') ||
+  request.headers.get('x-vercel-deployment-url') !== null ||
+  request.headers.get('x-vercel-id') !== null
+
+
   // Function to check if the source matches any allowed origin
   const isAllowedSource = (source: string | null) => {
     if (!source) return false;
@@ -47,7 +53,7 @@ export function middleware(request: NextRequest) {
 
   // If it's an edge function, perform strict origin checking
   if (isEdgeFunction) {
-    const isAllowed = 
+    const isAllowed = isVercelRequest ||
       isAllowedSource(origin) || 
       isAllowedSource(referer) ||
       (host && ALLOWED_ORIGINS.some(allowedOrigin => 
