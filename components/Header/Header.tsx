@@ -12,22 +12,17 @@ import TickerTape from "./StockTicker";
 import MobileHeader from "./MobileHeader";
 export default async function Header() {
   let getCompanyStocks = await fetch(
-    `${process.env.NEXT_PUBLIC_website_url}/api/stockprofile?_=${Date.now()}`
+    `${process.env.NEXT_PUBLIC_website_url}/api/stockprofile`
   ).then((res) => res.json());
 
   let allCompanyStocks = getCompanyStocks.map((i) => {
-    try {
-      let companyData = i.data_points;
-
-      return {
-        company: companyData.symbol.toUpperCase(),
-        stockPrice: companyData.price,
-        marketCap: companyData.marketCap,
-        priceChange: companyData.changePercentage,
-      };
-    } catch (e) {
-      return null;
-    }
+    let companyData = i.data_points;
+    return {
+      company: companyData.symbol.toUpperCase(),
+      stockPrice: companyData.price,
+      marketCap: companyData.marketCap,
+      priceChange: companyData.changePercentage,
+    };
   });
 
   // console.log(allCompanyStocks);
