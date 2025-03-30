@@ -1,7 +1,7 @@
 "use server";
 import Link from "next/link";
 import Image from "next/image";
-// import { companies } from "@/app/companiesData";
+import { companies } from "@/app/companiesData";
 import Search from "./Search";
 import numeral from "numeral";
 
@@ -17,8 +17,8 @@ export default async function Header() {
 
   let allCompanyStocks = getCompanyStocks.map((i) => {
     try {
-      let companyData = JSON.parse(i.data_points)[0];
-      console.log(companyData);
+      let companyData = i.data_points;
+
       return {
         company: companyData.symbol.toUpperCase(),
         stockPrice: companyData.price,
