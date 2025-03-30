@@ -11,24 +11,6 @@ import "@/app/company/[company]/tradingView.css";
 import TickerTape from "./StockTicker";
 import MobileHeader from "./MobileHeader";
 export default async function Header() {
-  // let companyWithPrices = await Promise.all(
-  //   companies.map(async (i) => {
-  //     let getStockPrice = await fetch(
-  //       `${
-  //         process.env.NEXT_PUBLIC_website_url
-  //       }/api/companyprofile?company=${i.toUpperCase()}`
-  //     ).then((res) => res.json());
-
-  //     return {
-  //       company: i.toUpperCase(),
-  //       stockPrice: getStockPrice.data[0].price,
-  //       marketCap: getStockPrice.data[0].marketCap,
-  //       priceChange: getStockPrice.data[0].changePercentage,
-  //     };
-  //   })
-  // ).then((i) => {
-  //   return i;
-  // });
   let getCompanyStocks = await await fetch(
     `${process.env.NEXT_PUBLIC_website_url}/api/stockprofile?_=${Date.now()}`
   ).then((res) => res.json());
