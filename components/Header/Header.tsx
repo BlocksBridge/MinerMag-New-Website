@@ -44,38 +44,32 @@ export default async function Header() {
 
   try {
     // Only fetch in production environment, not during build
-    if (
-      process.env.NODE_ENV !== "production" ||
-      process.env.VERCEL_ENV === "preview"
-    ) {
-      console.log("Skipping API call during build/preview");
-    } else {
-      const getCompanyStocks = await fetchCompanyStocks();
 
-      if (
-        getCompanyStocks &&
-        Array.isArray(getCompanyStocks) &&
-        getCompanyStocks.length > 0
-      ) {
-        allCompanyStocks = getCompanyStocks
-          .map((i) => {
-            try {
-              const companyData = i.data_points || {};
-              return {
-                company: companyData.symbol
-                  ? companyData.symbol.toUpperCase()
-                  : "UNKNOWN",
-                stockPrice: companyData.price || 0,
-                marketCap: companyData.marketCap || 0,
-                priceChange: companyData.changePercentage || 0,
-              };
-            } catch (err) {
-              console.error("Error processing company data:", err);
-              return null;
-            }
-          })
-          .filter(Boolean); // Remove any null entries
-      }
+    const getCompanyStocks = await fetchCompanyStocks();
+
+    if (
+      getCompanyStocks &&
+      Array.isArray(getCompanyStocks) &&
+      getCompanyStocks.length > 0
+    ) {
+      allCompanyStocks = getCompanyStocks
+        .map((i) => {
+          try {
+            const companyData = i.data_points || {};
+            return {
+              company: companyData.symbol
+                ? companyData.symbol.toUpperCase()
+                : "UNKNOWN",
+              stockPrice: companyData.price || 0,
+              marketCap: companyData.marketCap || 0,
+              priceChange: companyData.changePercentage || 0,
+            };
+          } catch (err) {
+            console.error("Error processing company data:", err);
+            return null;
+          }
+        })
+        .filter(Boolean); // Remove any null entries
     }
   } catch (error) {
     console.error("Error in Header component:", error);
