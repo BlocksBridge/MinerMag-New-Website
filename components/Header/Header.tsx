@@ -11,7 +11,7 @@ import "@/app/company/[company]/tradingView.css";
 import TickerTape from "./StockTicker";
 import MobileHeader from "./MobileHeader";
 export default async function Header() {
-  let getCompanyStocks = await await fetch(
+  let getCompanyStocks = await fetch(
     `${process.env.NEXT_PUBLIC_website_url}/api/stockprofile?_=${Date.now()}`
   ).then((res) => res.json());
 
