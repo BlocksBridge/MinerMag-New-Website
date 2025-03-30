@@ -1,7 +1,7 @@
 "use server";
 import Link from "next/link";
 import Image from "next/image";
-import { companies } from "@/app/companiesData";
+// import { companies } from "@/app/companiesData";
 import Search from "./Search";
 import numeral from "numeral";
 
