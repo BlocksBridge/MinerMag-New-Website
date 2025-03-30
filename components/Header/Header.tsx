@@ -14,7 +14,7 @@ export default async function Header() {
   let getCompanyStocks = await fetch(
     `${process.env.NEXT_PUBLIC_website_url}/api/stockprofile`
   ).then((res) => res.json());
-
+  console.log(getCompanyStocks);
   let allCompanyStocks = getCompanyStocks.map((i) => {
     let companyData = i.data_points;
     return {
@@ -24,8 +24,6 @@ export default async function Header() {
       priceChange: companyData.changePercentage,
     };
   });
-
-  // console.log(allCompanyStocks);
 
   let currentdate = new Date();
   let datetime =
