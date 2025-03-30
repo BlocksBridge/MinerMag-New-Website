@@ -17,12 +17,13 @@ export default async function Header() {
 
   let allCompanyStocks = getCompanyStocks.map((i) => {
     try {
-      let company = JSON.parse(i.data_points)[0];
+      let companyData = JSON.parse(i.data_points)[0];
+      console.log(companyData);
       return {
-        company: company.symbol.toUpperCase(),
-        stockPrice: company.price,
-        marketCap: company.marketCap,
-        priceChange: company.changePercentage,
+        company: companyData.symbol.toUpperCase(),
+        stockPrice: companyData.price,
+        marketCap: companyData.marketCap,
+        priceChange: companyData.changePercentage,
       };
     } catch (e) {
       return null;
