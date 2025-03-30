@@ -4,17 +4,23 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 
+// Color scale function for the choropleth
 const getCapacityColor = (capacity) => {
-  if (capacity < 100) return "bg-blue-300"; // Light blue for low capacity
-  if (capacity < 500) return "bg-blue-500"; // Medium blue
-  return "bg-blue-600"; // Dark blue for high capacity
+  if (capacity < 50) return "#e0f7fa"; // Very light blue
+  if (capacity < 100) return "#b2ebf2"; // Light blue
+  if (capacity < 200) return "#80deea"; // Medium-light blue
+  if (capacity < 300) return "#4db6ac"; // Medium blue
+  if (capacity < 400) return "#4285F4"; // Medium-dark blue
+  if (capacity < 500) return "#1976d2"; // Dark blue
+  return "#0d47a1"; // Very dark blue for highest values (Texas)
 };
 
 export default function Heatmap() {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
+  const [stateGeoJson, setStateGeoJson] = useState(null);
 
-  const toGeoCode = [
+  const miningData = [
     {
       "State/Province": "Québec",
       "Power Capacity (MW)": 212,
@@ -89,28 +95,39 @@ export default function Heatmap() {
     },
   ];
 
-  const [mapData, setMapData] = useState([]);
-  const [markers, setMarkers] = useState([]);
-
+  // Fetch US States GeoJSON data
   useEffect(() => {
-    (async () => {
-      let geocodeobj = {};
-      let geocode = await Promise.all(
-        toGeoCode.map(async (i) => {
-          let getCoord = await fetch(
-            `https://api.mapbox.com/search/geocode/v6/forward?q=${
-              i["State/Province"] + ", United States"
-            }&access_token=pk.eyJ1Ijoic2h1YmhhbXZzIiwiYSI6ImNtOG9idnUxazAxM2EybXNjNWxnbWtma2kifQ.hnlDhCKz8NO_Ms5dsxbfMg`
-          ).then((res) => res.json());
-          let getCorrectCoord = getCoord.features.filter((i) => {
-            if (i.properties.feature_type == "region") return i;
-          });
-          geocodeobj[i["State/Province"]] = getCorrectCoord;
-          return getCorrectCoord;
-        })
-      );
-      setMapData(geocode);
-    })();
+    fetch(
+      "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_1_states_provinces_lakes.geojson"
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        // Add power capacity data to the GeoJSON
+        const enhancedGeoJson = {
+          ...data,
+          features: data.features.map((feature) => {
+            // Try to match state/province name
+            const stateName = feature.properties.name;
+            const stateData = miningData.find(
+              (item) => item["State/Province"] === stateName
+            );
+
+            // Add power capacity to the feature properties if match found
+            if (stateData) {
+              return {
+                ...feature,
+                properties: {
+                  ...feature.properties,
+                  powerCapacity: stateData["Power Capacity (MW)"],
+                },
+              };
+            }
+            return feature;
+          }),
+        };
+        setStateGeoJson(enhancedGeoJson);
+      })
+      .catch((error) => console.error("Error fetching state GeoJSON:", error));
   }, []);
 
   // Initialize map when component mounts
@@ -120,21 +137,16 @@ export default function Heatmap() {
 
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: "mapbox://styles/mapbox/streets-v12",
+      style: "mapbox://styles/mapbox/light-v11", // Light style for better visibility of data
       center: [-98.5795, 39.8283],
       projection: { name: "albers" },
-      zoom: 3,
+      zoom: 3.5,
       pitch: 0, // Make the map flat
-
       renderWorldCopies: false, // Prevents map from repeating
       maxBounds: [
         [-128, 25], // Southwest coordinates of USA
         [-66, 50], // Northeast coordinates of USA
       ], // Restrict to USA
-    });
-    mapRef.current.on("style.load", () => {
-      mapRef.current.setTerrain(null);
-      mapRef.current.setFog({});
     });
 
     // Clean up on unmount
@@ -142,124 +154,153 @@ export default function Heatmap() {
       if (mapRef.current) {
         mapRef.current.remove();
       }
-      // Remove all markers
-      markers.forEach((marker) => marker.remove());
     };
   }, []);
 
-  // Add markers when mapData changes
+  // Add the choropleth layer when stateGeoJson changes
   useEffect(() => {
-    if (!mapRef.current || mapData.length === 0) return;
+    if (!mapRef.current || !stateGeoJson) return;
 
-    // Remove existing markers
-    markers.forEach((marker) => marker.remove());
-    const newMarkers = [];
+    // Wait for map to load
+    mapRef.current.on("load", () => {
+      // Add the source
+      if (!mapRef.current.getSource("states")) {
+        mapRef.current.addSource("states", {
+          type: "geojson",
+          data: stateGeoJson,
+        });
 
-    mapData.forEach((location, index) => {
-      if (location.length) {
-        const coordinates = location[0].geometry.coordinates;
-        const stateData = toGeoCode.find(
-          (item) => item["State/Province"] === location[0].properties.name
-        );
+        // Add fill layer for states with mining data
+        mapRef.current.addLayer({
+          id: "state-fills",
+          type: "fill",
+          source: "states",
+          filter: ["has", "powerCapacity"],
+          paint: {
+            "fill-color": [
+              "case",
+              ["has", "powerCapacity"],
+              [
+                "interpolate",
+                ["linear"],
+                ["get", "powerCapacity"],
+                30,
+                getCapacityColor(30),
+                50,
+                getCapacityColor(50),
+                100,
+                getCapacityColor(100),
+                200,
+                getCapacityColor(200),
+                400,
+                getCapacityColor(400),
+                600,
+                getCapacityColor(600),
+                2717,
+                getCapacityColor(2717),
+              ],
+              "transparent",
+            ],
+            "fill-opacity": 0.8,
+          },
+        });
 
-        if (stateData) {
-          const colorClass = getCapacityColor(stateData["Power Capacity (MW)"]);
+        // Add outline for all states
+        mapRef.current.addLayer({
+          id: "state-borders",
+          type: "line",
+          source: "states",
+          paint: {
+            "line-color": "#ffffff",
+            "line-width": 0.5,
+          },
+        });
 
-          // Create marker element
+        // Add labels for states with power capacity
+        mapRef.current.addLayer({
+          id: "state-labels",
+          type: "symbol",
+          source: "states",
+          filter: ["has", "powerCapacity"],
+          layout: {
+            "text-field": ["to-string", ["get", "powerCapacity"]],
+            "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+            "text-size": 14,
+            "text-allow-overlap": true,
+            "text-ignore-placement": true,
+          },
+          paint: {
+            "text-color": "#ffffff",
+            "text-halo-color": "#000000",
+            "text-halo-width": 1,
+          },
+        });
 
-          const el = document.createElement("div");
-          el.className = "marker-container";
-          el.innerHTML = `
-          <div class="relative flex flex-col items-center">
-  <div class="bg-white text-xs sm:text-sm font-semibold px-1 rounded mb-1 whitespace-nowrap">
-    ${location[0].properties.name}
-  </div>
-  <div class="${colorClass} text-white font-bold rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center shadow-lg text-xs sm:text-base">
-    ${stateData["Power Capacity (MW)"]}
-  </div>
-</div>
-          `;
+        // Add hover effect
+        mapRef.current.on("mouseenter", "state-fills", () => {
+          mapRef.current.getCanvas().style.cursor = "pointer";
+        });
 
-          const marker = new mapboxgl.Marker({
-            element: el,
-          })
-            .setLngLat(coordinates)
-            .addTo(mapRef.current);
+        mapRef.current.on("mouseleave", "state-fills", () => {
+          mapRef.current.getCanvas().style.cursor = "";
+        });
 
-          // Add popup on click
-          el.addEventListener("click", () => {
-            new mapboxgl.Popup({ offset: 25 })
-              .setLngLat(coordinates)
+        // Add popups on click
+        mapRef.current.on("click", "state-fills", (e) => {
+          if (e.features.length > 0 && e.features[0].properties.powerCapacity) {
+            new mapboxgl.Popup()
+              .setLngLat(e.lngLat)
               .setHTML(
-                `
-                <div class="p-2">
-                  <strong>${location[0].properties.name}</strong><br/>
-                  Power Capacity: ${stateData["Power Capacity (MW)"]} MW<br/>
-                  Count: ${stateData["Count"]}
-                </div>
-              `
+                `<div class="p-2">
+                  <strong>${e.features[0].properties.name}</strong><br/>
+                  Power Capacity: ${e.features[0].properties.powerCapacity} MW
+                </div>`
               )
               .addTo(mapRef.current);
-          });
-
-          newMarkers.push(marker);
-        }
+          }
+        });
       }
     });
 
-    setMarkers(newMarkers);
-  }, [mapData]);
+    // If map is already loaded, update the data
+    if (mapRef.current.loaded() && mapRef.current.getSource("states")) {
+      mapRef.current.getSource("states").setData(stateGeoJson);
+    }
+  }, [stateGeoJson]);
 
   return (
     <div className="flex justify-center items-center flex-col m-10">
-      <h1 className="text-lg font-semibold capitalize">
-        operational Bitcoin mining capacity as of Q4 2023
+      <h1 className="text-2xl font-semibold mb-2">
+        Operational Bitcoin Mining Power Capacity Distribution in North America
       </h1>
-      <div className="flex justify-center items-center m-10">
-        <div ref={mapContainerRef} className="w-[90vw] h-[500px]" />
+      <p className="text-gray-600 mb-6">
+        Data sourced from 22 mining operators as of Q4'23 including their
+        self-mining and colocation capacities
+      </p>
+      <div className="flex justify-center items-center mb-6">
+        <div
+          ref={mapContainerRef}
+          className="w-[90vw] h-[600px] border rounded-lg shadow-md"
+        />
       </div>
-      <div className="w-full max-w-2xl mx-auto mt-6 p-4 bg-white rounded-lg border border-gray-200">
+      <div className="w-full max-w-2xl mx-auto p-4 bg-white rounded-lg border border-gray-200">
         <h3 className="text-lg font-bold text-gray-800 mb-3">Map Legend</h3>
 
-        {/* Marker Explanation */}
-        <div className="flex items-start mb-4">
-          <div className="flex flex-col items-center mr-4">
-            <div className="bg-white text-xs font-medium px-1 rounded mb-1 text-gray-700">
-              State Name
+        {/* Color Scale */}
+        <div className="flex justify-between items-center mb-4">
+          <div className="text-sm font-semibold">Unit: Megawatts</div>
+          <div className="flex items-center">
+            <div className="w-6 h-6 bg-blue-100"></div>
+            <div className="w-6 h-6 bg-blue-200"></div>
+            <div className="w-6 h-6 bg-blue-300"></div>
+            <div className="w-6 h-6 bg-blue-400"></div>
+            <div className="w-6 h-6 bg-blue-500"></div>
+            <div className="w-6 h-6 bg-blue-600"></div>
+            <div className="w-6 h-6 bg-blue-800"></div>
+            <div className="ml-2 flex justify-between w-32 text-xs">
+              <span>31</span>
+              <span>2,717</span>
             </div>
-            <div className="bg-blue-600 text-white font-bold rounded-full w-10 h-10 flex items-center justify-center shadow-md">
-              386
-            </div>
-          </div>
-          <div className="text-sm text-gray-600">
-            <p>
-              <span className="font-semibold">Blue circle:</span> Shows power
-              capacity in MW
-            </p>
-            <p>
-              <span className="font-semibold">Text above:</span> Indicates the
-              state/province name
-            </p>
-            <p>Larger circles = higher power capacity</p>
-          </div>
-        </div>
-
-        {/* Capacity Scale */}
-        <div className="grid grid-cols-3 gap-2 text-xs mb-4">
-          <div className="flex flex-col items-center">
-            <div className="w-6 h-6 bg-blue-300 rounded-full mb-1"></div>
-            <span>Low</span>
-            <span>&lt;100 MW</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <div className="w-8 h-8 bg-blue-500 rounded-full mb-1"></div>
-            <span>Medium</span>
-            <span>100-500 MW</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <div className="w-10 h-10 bg-blue-700 rounded-full mb-1"></div>
-            <span>High</span>
-            <span>500 MW</span>
           </div>
         </div>
 
@@ -268,7 +309,8 @@ export default function Heatmap() {
           <p>
             Data represents operational Bitcoin mining capacity as of Q4 2023
           </p>
-          <p>Source: 22 mining operators (self-mining + colocation)</p>
+          <p>Source: SEC Filings; Press releases</p>
+          <p className="mt-2">Map: TheMinerMap</p>
         </div>
       </div>
     </div>
