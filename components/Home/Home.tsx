@@ -266,15 +266,6 @@ export default async function HomePage({
                     NetworkDiff[0].timestamp
                   ).toDateString()}`}`,
                 },
-                {
-                  title: "Block Reward",
-
-                  value: `${BlockReward[0].blockReward} BTC`,
-                  change: `Last Updated: ${new Date(
-                    BlockReward[0].timestamp
-                  ).toDateString()}`,
-                  changeColor: "text-gray-500",
-                },
               ].map((item, index) => (
                 <div key={index} className="bg-white p-4 rounded-lg shadow">
                   <h3 className="font-semibold mb-2">{item.title}</h3>
