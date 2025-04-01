@@ -35,7 +35,7 @@ export default async function ConsolidatedCompanies() {
 
               lastUpdated: ` ${`Last Updated: ${new Date(
                 NetworkDiff[0].timestamp
-              ).toLocaleDateString()}`}`,
+              ).toDateString()}`}`,
             },
             {
               title: "Network Hashrate",
@@ -54,7 +54,7 @@ export default async function ConsolidatedCompanies() {
               value: `${BlockReward[0].blockReward} BTC`,
               change: `Last Updated: ${new Date(
                 BlockReward[0].timestamp
-              ).toLocaleDateString()}`,
+              ).toDateString()}`,
               changeColor: "text-gray-500",
             },
           ].map((item, index) => (

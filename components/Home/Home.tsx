@@ -231,7 +231,7 @@ export default async function HomePage({
                   } (24h)`,
                   lastUpdated: ` ${`Last Updated: ${new Date(
                     BitcoinData[BitcoinData.length - 1].closeTime
-                  ).toLocaleDateString()}`}`,
+                  ).toDateString()}`}`,
                   changeColor: `${
                     Number(
                       ((BitcoinData[BitcoinData.length - 1].closePrice -
@@ -264,7 +264,7 @@ export default async function HomePage({
 
                   lastUpdated: ` ${`Last Updated: ${new Date(
                     NetworkDiff[0].timestamp
-                  ).toLocaleDateString()}`}`,
+                  ).toDateString()}`}`,
                 },
                 {
                   title: "Block Reward",
@@ -272,7 +272,7 @@ export default async function HomePage({
                   value: `${BlockReward[0].blockReward} BTC`,
                   change: `Last Updated: ${new Date(
                     BlockReward[0].timestamp
-                  ).toLocaleDateString()}`,
+                  ).toDateString()}`,
                   changeColor: "text-gray-500",
                 },
               ].map((item, index) => (
