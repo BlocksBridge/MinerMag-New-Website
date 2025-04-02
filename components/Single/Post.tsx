@@ -3,6 +3,7 @@
 import { Facebook, Linkedin, Search, Twitter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import DownloadReport from "./ReportWidget";
 
 export default function NewsArticle({
   post,
@@ -11,6 +12,7 @@ export default function NewsArticle({
   post: { title: { rendered: String } };
   relatedPosts: [any];
 }) {
+  console.log(post);
   // console.log(relatedPosts, "redlatwe");
   return (
     <div className="min-h-screen flex flex-col">
@@ -28,6 +30,9 @@ export default function NewsArticle({
               month: "long",
               day: "numeric",
             })}
+            {post.acf.show_report && post.acf.upload_report ? (
+              <DownloadReport reportTitle="ghe" />
+            ) : null}
           </div>
 
           <Image
