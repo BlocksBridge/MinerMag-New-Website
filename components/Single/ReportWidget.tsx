@@ -6,7 +6,6 @@ const DownloadReport = ({ reportTitle }: { reportTitle?: string }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
     companyName: "",
   });
