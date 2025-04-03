@@ -13,7 +13,11 @@ export default async function Page({
   const query = await params;
   //console.log(query);
   const getPost = await fetch(
-    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?acf_format=standard&slug=${query.title}&date=${query.date}`
+    `${
+      process.env.NEXT_PUBLIC_backend_url
+    }/wp-json/wp/v2/posts?acf_format=standard&slug=${query.title}&date=${
+      query.date
+    }&_=${Date.now()}`
   ).then((res) => res.json());
 
   let allTags = getPost[0].tags;
