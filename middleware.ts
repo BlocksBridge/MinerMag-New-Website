@@ -3,6 +3,16 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === "/api/emails/sendReport") {
+    request.headers.append("Access-Control-Allow-Credentials", "true");
+    request.headers.append("Access-Control-Allow-Origin", "*"); // replace this your actual origin
+    request.headers.append(
+      "Access-Control-Allow-Methods",
+      "GET,DELETE,PATCH,POST,PUT"
+    );
+    request.headers.append(
+      "Access-Control-Allow-Headers",
+      "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+    );
     return NextResponse.next();
   }
 
