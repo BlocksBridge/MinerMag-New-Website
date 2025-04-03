@@ -33,6 +33,9 @@ const DownloadReport = ({
       `${process.env.NEXT_PUBLIC_website_url}/api/emails/sendReport`,
       {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           email: formData.email,
           company: formData.companyName,
