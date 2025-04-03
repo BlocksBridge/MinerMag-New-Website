@@ -90,5 +90,5 @@ export function middleware(request: NextRequest) {
 
 // Configure which routes this middleware should run on
 export const config = {
-  matcher: ["/api/:path*", "!/api/emails/sendReport"],
+  matcher: "/api/:path*",
 };
