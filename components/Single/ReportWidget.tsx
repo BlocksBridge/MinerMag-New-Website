@@ -63,7 +63,7 @@ const DownloadReport = ({
     <>
       <button
         onClick={openDialog}
-        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">
+        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors mt-3">
         <Download className="h-4 w-4" />
         Download Report
       </button>
