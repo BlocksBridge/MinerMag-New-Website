@@ -3,13 +3,16 @@
 import { Facebook, Linkedin, Search, Twitter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import DownloadReport from "./ReportWidget";
 
 export default function NewsArticle({
   post,
   relatedPosts,
+  postQuery,
 }: {
   post: { title: { rendered: String } };
   relatedPosts: [any];
+  postQuery: { title: string; date: string };
 }) {
   // console.log(relatedPosts, "redlatwe");
   return (
@@ -28,6 +31,12 @@ export default function NewsArticle({
               month: "long",
               day: "numeric",
             })}
+            {post.acf.show_report && post.acf.upload_report ? (
+              <DownloadReport
+                postTitle={postQuery.title}
+                postDate={postQuery.date}
+              />
+            ) : null}
           </div>
 
           <Image

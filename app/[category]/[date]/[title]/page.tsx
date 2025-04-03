@@ -100,7 +100,11 @@ export default async function Page({
     return <div>Post not found</div>;
   } else {
     return (
-      <NewsArticle post={getPost[0]} relatedPosts={RelatedPosts.slice(0, 6)} />
+      <NewsArticle
+        post={getPost[0]}
+        relatedPosts={RelatedPosts.slice(0, 6)}
+        postQuery={query}
+      />
     );
   }
 }
