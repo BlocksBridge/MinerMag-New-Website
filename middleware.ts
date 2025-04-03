@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname === "/api/emails/sendReport") {
+    return NextResponse.next();
+  }
+
   // Manually define allowed origins
   const ALLOWED_ORIGINS = [
     "http://localhost:3000",
