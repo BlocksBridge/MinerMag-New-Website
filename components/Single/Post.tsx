@@ -8,11 +8,12 @@ import DownloadReport from "./ReportWidget";
 export default function NewsArticle({
   post,
   relatedPosts,
+  postQuery,
 }: {
   post: { title: { rendered: String } };
   relatedPosts: [any];
+  postQuery: { title: string; date: string };
 }) {
-  console.log(post);
   // console.log(relatedPosts, "redlatwe");
   return (
     <div className="min-h-screen flex flex-col">
@@ -31,7 +32,10 @@ export default function NewsArticle({
               day: "numeric",
             })}
             {post.acf.show_report && post.acf.upload_report ? (
-              <DownloadReport reportTitle="ghe" />
+              <DownloadReport
+                postTitle={postQuery.title}
+                postDate={postQuery.date}
+              />
             ) : null}
           </div>
 

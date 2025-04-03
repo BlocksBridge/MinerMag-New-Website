@@ -1,10 +1,17 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 
-const DownloadReport = ({ reportTitle }: { reportTitle?: string }) => {
+const DownloadReport = ({
+  postTitle,
+  postDate,
+}: {
+  postTitle?: string;
+  postDate: string;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEmailed, setIsEmailed] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     companyName: "",
@@ -18,29 +25,36 @@ const DownloadReport = ({ reportTitle }: { reportTitle?: string }) => {
   const openDialog = () => setIsOpen(true);
   const closeDialog = () => setIsOpen(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call to process download
-    setTimeout(() => {
-      // In a real implementation, you would send the form data to your backend
-      console.log("Form submitted:", formData);
-
-      // Trigger download (this would typically be a response from your API)
-      const dummyPdfUrl = "/sample-report.pdf";
-      const link = document.createElement("a");
-      link.href = dummyPdfUrl;
-      link.setAttribute("download", "mining-industry-report.pdf");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      setIsSubmitting(false);
-      setFormData({ name: "", email: "", companyName: "" });
-      closeDialog();
-    }, 1500);
+    let generateEmail = await fetch(
+      `${process.env.NEXT_PUBLIC_website_url}/api/emails/sendReport`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          email: formData.email,
+          company: formData.companyName,
+          postTitle: postTitle,
+          postDate: postDate,
+        }),
+      }
+    ).then((res) => res.json());
+    setIsEmailed(true);
+    // closeDialog();
   };
+
+  useEffect(() => {
+    if (!isOpen) {
+      setFormData({
+        email: "",
+        companyName: "",
+      });
+      setIsSubmitting(false);
+      setIsEmailed(false);
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -59,55 +73,60 @@ const DownloadReport = ({ reportTitle }: { reportTitle?: string }) => {
                 Download Report
               </h3>
               <p className="text-sm text-gray-500">
-                Please fill in your details to download{" "}
-                {reportTitle || "the report"}.
+                Please fill in your details to email the report
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <label
-                  htmlFor="companyName"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Company Name
-                </label>
-                <input
-                  id="companyName"
-                  name="companyName"
-                  placeholder="Acme Corporation"
-                  value={formData.companyName}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                />
-              </div>{" "}
-              <div className="space-y-2">
-                <label
-                  htmlFor="email"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="john@example.com"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors disabled:opacity-50 disabled:pointer-events-none"
-                disabled={isSubmitting}>
-                {isSubmitting ? "Processing..." : "Download Report"}
-              </button>
-              <p className="text-xs text-gray-500 text-center mt-2">
-                By downloading, you agree to our privacy policy and consent to
-                receive mining industry updates.
-              </p>
-            </form>
+            {isEmailed ? (
+              <h3 className="text-blue-500 text-md font-bold">
+                Please Check Your Email for the report!
+              </h3>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <label
+                    htmlFor="companyName"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    Company Name
+                  </label>
+                  <input
+                    id="companyName"
+                    name="companyName"
+                    placeholder="Acme Corporation"
+                    value={formData.companyName}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  />
+                </div>{" "}
+                <div className="space-y-2">
+                  <label
+                    htmlFor="email"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    Email Address
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="john@example.com"
+                    required
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors disabled:opacity-50 disabled:pointer-events-none"
+                  disabled={isSubmitting}>
+                  {isSubmitting ? "Processing..." : "Email Report"}
+                </button>
+                <p className="text-xs text-gray-500 text-center mt-2">
+                  By downloading, you agree to our privacy policy and consent to
+                  receive mining industry updates.
+                </p>
+              </form>
+            )}
 
             <button
               onClick={closeDialog}

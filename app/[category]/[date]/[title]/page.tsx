@@ -13,13 +13,9 @@ export default async function Page({
   const query = await params;
   //console.log(query);
   const getPost = await fetch(
-    `${
-      process.env.NEXT_PUBLIC_backend_url
-    }/wp-json/wp/v2/posts?acf_format=standard&slug=${query.title}&date=${
-      query.date
-    }&_=${new Date.now()}`
+    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?acf_format=standard&slug=${query.title}&date=${query.date}`
   ).then((res) => res.json());
-  console.log(getPost);
+
   let allTags = getPost[0].tags;
   // console.log(allTags);
 
@@ -104,7 +100,11 @@ export default async function Page({
     return <div>Post not found</div>;
   } else {
     return (
-      <NewsArticle post={getPost[0]} relatedPosts={RelatedPosts.slice(0, 6)} />
+      <NewsArticle
+        post={getPost[0]}
+        relatedPosts={RelatedPosts.slice(0, 6)}
+        postQuery={query}
+      />
     );
   }
 }
