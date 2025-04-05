@@ -2,6 +2,7 @@ import NewsArticle from "@/components/Single/Post";
 // import OpenAI from "openai";
 // import Groq from "groq-sdk";
 import * as cheerio from "cheerio";
+
 import { parser } from "html-metadata-parser";
 import { Metadata } from "next";
 

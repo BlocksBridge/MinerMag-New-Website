@@ -1,0 +1,18 @@
+h3 {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+li a , p a {
+    color: rgb(65, 105, 225);
+    text-decoration: underline;
+}
+
+li { 
+    display: list-item;
+    margin-left: 1em;
+}
+li::before {
+    content: "•";
+    padding: 0 1em
+}

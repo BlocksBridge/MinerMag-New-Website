@@ -2,6 +2,8 @@
 // import { Input } from "@/components/ui/input";
 import { Facebook, Linkedin, Search, Twitter } from "lucide-react";
 import Image from "next/image";
+
+import "./Post.css";
 import Link from "next/link";
 import DownloadReport from "./ReportWidget";
 

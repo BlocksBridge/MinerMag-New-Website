@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { geistSans } from "@/app/fonts/fonts";
-import Twitter from "./Twitter";
 
 export default async function HomePage({
   getPosts,
