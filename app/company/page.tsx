@@ -26,17 +26,17 @@ export default async function ConsolidatedCompanies() {
       <section className="flex justify-center items-centerm m-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
           {[
-            {
-              title: "Network Difficulty",
-              value: `${NetworkDiff[0]["difficulty"].toLocaleString(
-                "en-us",
-                {}
-              )}`,
+            // {
+            //   title: "Network Difficulty",
+            //   value: `${NetworkDiff[0]["difficulty"].toLocaleString(
+            //     "en-us",
+            //     {}
+            //   )}`,
 
-              lastUpdated: ` ${`Last Updated: ${new Date(
-                NetworkDiff[0].timestamp
-              ).toDateString()}`}`,
-            },
+            //   lastUpdated: ` ${`Last Updated: ${new Date(
+            //     NetworkDiff[0].timestamp
+            //   ).toDateString()}`}`,
+            // },
             {
               title: "Network Hashrate",
               value: `${NetworkOverview.networkHashrate7d.toLocaleString(

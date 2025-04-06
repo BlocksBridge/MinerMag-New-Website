@@ -254,17 +254,17 @@ export default async function HomePage({
                   additional: `Est. Difficulty Adjustment: ${NetworkOverview.estDiffAdj}%`,
                   changeColor: "text-gray-500",
                 },
-                {
-                  title: "Network Difficulty",
-                  value: `${NetworkDiff[0]["difficulty"].toLocaleString(
-                    "en-us",
-                    {}
-                  )}`,
+                // {
+                //   title: "Network Difficulty",
+                //   value: `${NetworkDiff[0]["difficulty"].toLocaleString(
+                //     "en-us",
+                //     {}
+                //   )}`,
 
-                  lastUpdated: ` ${`Last Updated: ${new Date(
-                    NetworkDiff[0].timestamp
-                  ).toDateString()}`}`,
-                },
+                //   lastUpdated: ` ${`Last Updated: ${new Date(
+                //     NetworkDiff[0].timestamp
+                //   ).toDateString()}`}`,
+                // },
               ].map((item, index) => (
                 <div key={index} className="bg-white p-4 rounded-lg shadow">
                   <h3 className="font-semibold mb-2">{item.title}</h3>
