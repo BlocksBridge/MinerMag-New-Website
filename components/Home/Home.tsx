@@ -265,25 +265,31 @@ export default async function HomePage({
                     NetworkDiff[0].timestamp
                   ).toDateString()}`}`,
                 },
-              ].map((item, index) => (
-                <div key={index} className="bg-white p-4 rounded-lg shadow">
-                  <h3 className="font-semibold mb-2">{item.title}</h3>
-                  <div className="text-2xl font-bold">{item.value}</div>
-                  <div className={`text-sm ${item.changeColor}`}>
-                    {item.change}
-                  </div>
-                  {item.additional ? (
-                    <div className={`text-sm ${item.changeColor}`}>
-                      {item.additional}
+              ].map((item, index) => {
+                try {
+                  return (
+                    <div key={index} className="bg-white p-4 rounded-lg shadow">
+                      <h3 className="font-semibold mb-2">{item.title}</h3>
+                      <div className="text-2xl font-bold">{item.value}</div>
+                      <div className={`text-sm ${item.changeColor}`}>
+                        {item.change}
+                      </div>
+                      {item.additional ? (
+                        <div className={`text-sm ${item.changeColor}`}>
+                          {item.additional}
+                        </div>
+                      ) : null}
+                      {item.lastUpdated ? (
+                        <div className={`text-sm text-gray-700`}>
+                          {item.lastUpdated}
+                        </div>
+                      ) : null}
                     </div>
-                  ) : null}
-                  {item.lastUpdated ? (
-                    <div className={`text-sm text-gray-700`}>
-                      {item.lastUpdated}
-                    </div>
-                  ) : null}
-                </div>
-              ))}
+                  );
+                } catch (e) {
+                  console.log(e);
+                }
+              })}
             </div>
           </section>
 
