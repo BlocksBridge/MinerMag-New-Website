@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Building2,
   TrendingUp,
@@ -29,43 +28,6 @@ export default async function CompanyPage({
   params: { company: string };
 }) {
   const param = await params;
-  const pressReleases = [
-    {
-      date: "2024-03-15",
-      title: "RIOT Blockchain Reports Record Q4 2023 Results",
-      url: "#",
-    },
-    {
-      date: "2024-02-28",
-      title: "RIOT Expands Texas Mining Operations with New Facility",
-      url: "#",
-    },
-    {
-      date: "2024-02-10",
-      title:
-        "RIOT Announces Strategic Partnership with Renewable Energy Provider",
-      url: "#",
-    },
-  ];
-
-  const socialFeeds = [
-    {
-      platform: "Twitter",
-      content:
-        "Excited to announce our latest expansion in sustainable #Bitcoin mining operations! 🌱⚡️",
-      date: "2h ago",
-      engagement: "1.2K",
-      icon: Twitter,
-    },
-    {
-      platform: "LinkedIn",
-      content:
-        "RIOT continues to lead the industry in sustainable cryptocurrency mining practices. Read our latest sustainability report.",
-      date: "1d ago",
-      engagement: "856",
-      icon: Linkedin,
-    },
-  ];
 
   // const [selectedPeriod, setSelectedPeriod] = useState("1M");
   let getAllTags = await fetch(
