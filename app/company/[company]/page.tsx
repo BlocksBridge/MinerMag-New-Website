@@ -379,7 +379,7 @@ export default async function CompanyPage({
                   process.env.NEXT_PUBLIC_website_url
                 }/company/${param.company.toUpperCase()}/news`}
                 className="mt-6 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800">
-                View all press releases
+                View {param.company.toUpperCase()} news from TheMinerMag
                 <ArrowUpRight className="ml-1 w-4 h-4" />
               </Link>
             </section>
