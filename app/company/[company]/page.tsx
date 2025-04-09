@@ -81,6 +81,10 @@ export default async function CompanyPage({
   let getCompanyArticles = await fetch(
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?tags=${companyTag}&acf_format=standard`
   ).then((res) => res.json());
+  let getCompanyCharts: [any] = await fetch(
+    `${process.env.NEXT_PUBLIC_website_url}/api/getchartsdata?company=${params.company}`
+  ).then((res) => res.json());
+
   let getCompanyInfo = await fetch(
     `${
       process.env.NEXT_PUBLIC_website_url
@@ -296,6 +300,7 @@ export default async function CompanyPage({
                 <h2 className="text-xl font-semibold mb-4">
                   Company Information
                 </h2>
+
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">
                     <Globe className="h-5 w-5 text-gray-400 mt-1" />
@@ -368,6 +373,37 @@ export default async function CompanyPage({
                   View all news
                   <ArrowUpRight className="ml-1 w-4 h-4" />
                 </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="my-4">
+            {" "}
+            <div className="bg-white rounded-xl shadow-sm p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold">
+                  Statistics from TheMinerMag
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2">
+                {getCompanyCharts.length
+                  ? getCompanyCharts.slice(0, 2).map((i) => {
+                      return (
+                        <div className=" w-full h-[650px] flex items-center justify-center bg-gray-50 rounded-lg">
+                          <iframe
+                            className="w-full h-full"
+                            src={
+                              process.env.NEXT_PUBLIC_charts_url +
+                              "/" +
+                              params.company.toUpperCase() +
+                              "/" +
+                              i.slug +
+                              "?embed=true"
+                            }></iframe>
+                        </div>
+                      );
+                    })
+                  : null}
               </div>
             </div>
           </div>
