@@ -62,7 +62,7 @@ export default async function Header() {
                 : "UNKNOWN",
               stockPrice: companyData.price || 0,
               marketCap: companyData.marketCap || 0,
-              priceChange: companyData.changePercentage || 0,
+              priceChange: Number(companyData.changePercentage).toFixed(2) || 0,
             };
           } catch (err) {
             console.error("Error processing company data:", err);
