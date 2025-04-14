@@ -19,134 +19,182 @@ export default function Heatmap() {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const [stateGeoJson, setStateGeoJson] = useState(null);
+  const [miningData, setMiningData] = useState([]);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
-  const miningData = [
-    {
-      "State/Province": "Québec",
-      "Power Capacity (MW)": 212,
-    },
-    {
-      "State/Province": "New Brunswick",
-      "Power Capacity (MW)": 43,
-    },
-    {
-      "State/Province": "Alberta",
-      "Power Capacity (MW)": 109,
-    },
-    {
-      "State/Province": "British Columbia",
-      "Power Capacity (MW)": 160,
-    },
-    {
-      "State/Province": "Alabama",
-      "Power Capacity (MW)": 55,
-    },
-    {
-      "State/Province": "North Dakota",
-      "Power Capacity (MW)": 386,
-    },
-    {
-      "State/Province": "Kentucky",
-      "Power Capacity (MW)": 150,
-    },
-    {
-      "State/Province": "North Carolina",
-      "Power Capacity (MW)": 104,
-    },
-    {
-      "State/Province": "South Carolina",
-      "Power Capacity (MW)": 44,
-    },
-    {
-      "State/Province": "Georgia",
-      "Power Capacity (MW)": 525,
-    },
-    {
-      "State/Province": "Mississippi",
-      "Power Capacity (MW)": 70,
-    },
-    {
-      "State/Province": "Texas",
-      "Power Capacity (MW)": 2717,
-    },
-    {
-      "State/Province": "Washington",
-      "Power Capacity (MW)": 30.5,
-    },
-    {
-      "State/Province": "New York",
-      "Power Capacity (MW)": 404,
-    },
-    {
-      "State/Province": "Pennsylvania",
-      "Power Capacity (MW)": 279,
-    },
-    {
-      "State/Province": "Ohio",
-      "Power Capacity (MW)": 82.5,
-    },
-    {
-      "State/Province": "Nebraska",
-      "Power Capacity (MW)": 100,
-    },
-    {
-      "State/Province": "Tennessee",
-      "Power Capacity (MW)": 141,
-    },
-  ];
-
-  // Fetch US States GeoJSON data
+  // Fetch mining data
   useEffect(() => {
-    fetch(
-      "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_1_states_provinces_lakes.geojson"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        // Add power capacity data to the GeoJSON
-        const enhancedGeoJson = {
-          ...data,
-          features: data.features.map((feature) => {
-            // Try to match state/province name
-            const stateName = feature.properties.name;
-            const stateData = miningData.find(
-              (item) => item["State/Province"] === stateName
-            );
+    const fetchMiningData = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_website_url}/Q4.json`
+        );
+        const data = await response.json();
+        setMiningData(data);
+      } catch (error) {
+        console.error("Error fetching mining data:", error);
+      }
+    };
 
-            // Add power capacity to the feature properties if match found
-            if (stateData) {
-              return {
-                ...feature,
-                properties: {
-                  ...feature.properties,
-                  powerCapacity: stateData["Power Capacity (MW)"],
-                },
-              };
-            }
-            return feature;
-          }),
-        };
-        setStateGeoJson(enhancedGeoJson);
-      })
-      .catch((error) => console.error("Error fetching state GeoJSON:", error));
+    fetchMiningData();
   }, []);
+
+  // Fetch US States and Canadian Provinces GeoJSON data
+  useEffect(() => {
+    if (!miningData.length) return;
+
+    const fetchGeoJsonData = async () => {
+      try {
+        // Fetch US data
+        const usResponse = await fetch(
+          "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_1_states_provinces_lakes.geojson"
+        );
+        const usData = await usResponse.json();
+
+        // Filter US states only
+        const usFeatures = usData.features.filter(
+          (feature) => feature.properties.iso_a2 === "US"
+        );
+
+        // Process US data
+        const enhancedUsFeatures = usFeatures.map((feature) => {
+          const stateName = feature.properties.name;
+          const stateData = miningData.find(
+            (item) =>
+              item["State"] === stateName && item["Country"] === "United States"
+          );
+
+          if (stateData) {
+            return {
+              ...feature,
+              properties: {
+                ...feature.properties,
+                powerCapacity: stateData["Power Capacity (MW)"],
+                country: "United States",
+              },
+            };
+          }
+          return {
+            ...feature,
+            properties: {
+              ...feature.properties,
+              country: "United States",
+            },
+          };
+        });
+
+        // Fetch Canadian data
+        const canadaResponse = await fetch(
+          "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/canada.geojson"
+        );
+        const canadaData = await canadaResponse.json();
+
+        // Process Canadian data
+        const enhancedCanadaFeatures = canadaData.features.map((feature) => {
+          const provinceName = feature.properties.name;
+          const provinceData = miningData.find(
+            (item) =>
+              item["State"] === provinceName && item["Country"] === "Canada"
+          );
+
+          if (provinceData) {
+            return {
+              ...feature,
+              properties: {
+                ...feature.properties,
+                powerCapacity: provinceData["Power Capacity (MW)"],
+                country: "Canada",
+              },
+              geometry: convertToPolygon(feature.geometry),
+            };
+          }
+          return {
+            ...feature,
+            properties: {
+              ...feature.properties,
+              country: "Canada",
+            },
+            geometry: convertToPolygon(feature.geometry),
+          };
+        });
+
+        // Combine the datasets properly
+        const combinedGeoJson = {
+          type: "FeatureCollection",
+          features: [...enhancedUsFeatures, ...enhancedCanadaFeatures],
+        };
+
+        // Set state with combined data
+        setStateGeoJson(combinedGeoJson);
+      } catch (error) {
+        console.error("Error fetching or processing GeoJSON data:", error);
+      }
+    };
+
+    fetchGeoJsonData();
+  }, [miningData]);
+
+  // Function to convert MultiPolygon to Polygon
+  function convertToPolygon(geometry) {
+    if (!geometry) {
+      return { type: "Polygon", coordinates: [[]] };
+    }
+
+    if (geometry.type === "Polygon") {
+      return geometry; // Already a Polygon, no conversion needed
+    }
+
+    if (geometry.type === "MultiPolygon") {
+      // Find the polygon with the largest area (approximated by number of points)
+      let largestPolygon = geometry.coordinates[0];
+      let maxPoints = countPoints(largestPolygon);
+
+      for (let i = 1; i < geometry.coordinates.length; i++) {
+        const points = countPoints(geometry.coordinates[i]);
+        if (points > maxPoints) {
+          maxPoints = points;
+          largestPolygon = geometry.coordinates[i];
+        }
+      }
+
+      return {
+        type: "Polygon",
+        coordinates: largestPolygon,
+      };
+    }
+
+    console.warn("Unsupported geometry type:", geometry.type);
+    return { type: "Polygon", coordinates: [[]] };
+  }
+
+  // Helper function to count points in a polygon
+  function countPoints(polygon) {
+    return polygon.reduce((sum, ring) => sum + ring.length, 0);
+  }
 
   // Initialize map when component mounts
   useEffect(() => {
     mapboxgl.accessToken =
       "pk.eyJ1Ijoic2h1YmhhbXZzIiwiYSI6ImNtOG9idnUxazAxM2EybXNjNWxnbWtma2kifQ.hnlDhCKz8NO_Ms5dsxbfMg";
 
-    mapRef.current = new mapboxgl.Map({
+    const map = new mapboxgl.Map({
       container: mapContainerRef.current,
-      style: "mapbox://styles/mapbox/light-v11", // Light style for better visibility of data
+      style: "mapbox://styles/mapbox/light-v11",
       center: [-98.5795, 39.8283],
       projection: { name: "albers" },
-      zoom: 3.5,
-      pitch: 0, // Make the map flat
-      renderWorldCopies: false, // Prevents map from repeating
+      zoom: 3,
+      pitch: 0,
+      renderWorldCopies: false,
       maxBounds: [
-        [-128, 25], // Southwest coordinates of USA
-        [-66, 50], // Northeast coordinates of USA
-      ], // Restrict to USA
+        [-180, 15], // Southwest coordinates (expanded to include more of Canada)
+        [-50, 80], // Northeast coordinates (expanded to include more of Canada)
+      ],
+    });
+
+    mapRef.current = map;
+
+    map.on("load", () => {
+      setMapLoaded(true);
     });
 
     // Clean up on unmount
@@ -157,116 +205,116 @@ export default function Heatmap() {
     };
   }, []);
 
-  // Add the choropleth layer when stateGeoJson changes
+  // Add the choropleth layer when stateGeoJson changes and map is loaded
   useEffect(() => {
-    if (!mapRef.current || !stateGeoJson) return;
+    if (!mapRef.current || !stateGeoJson || !mapLoaded) return;
 
-    // Wait for map to load
-    mapRef.current.on("load", () => {
-      // Add the source
-      if (!mapRef.current.getSource("states")) {
-        mapRef.current.addSource("states", {
-          type: "geojson",
-          data: stateGeoJson,
-        });
+    const map = mapRef.current;
 
-        // Add fill layer for states with mining data
-        mapRef.current.addLayer({
-          id: "state-fills",
-          type: "fill",
-          source: "states",
-          filter: ["has", "powerCapacity"],
-          paint: {
-            "fill-color": [
-              "case",
-              ["has", "powerCapacity"],
-              [
-                "interpolate",
-                ["linear"],
-                ["get", "powerCapacity"],
-                30,
-                getCapacityColor(30),
-                50,
-                getCapacityColor(50),
-                100,
-                getCapacityColor(100),
-                200,
-                getCapacityColor(200),
-                400,
-                getCapacityColor(400),
-                600,
-                getCapacityColor(600),
-                2717,
-                getCapacityColor(2717),
-              ],
-              "transparent",
-            ],
-            "fill-opacity": 0.8,
-          },
-        });
+    // Check if source already exists and remove it if needed
+    if (map.getSource("states")) {
+      map.removeLayer("state-labels");
+      map.removeLayer("state-borders");
+      map.removeLayer("state-fills");
+      map.removeSource("states");
+    }
 
-        // Add outline for all states
-        mapRef.current.addLayer({
-          id: "state-borders",
-          type: "line",
-          source: "states",
-          paint: {
-            "line-color": "#ffffff",
-            "line-width": 0.5,
-          },
-        });
-
-        // Add labels for states with power capacity
-        mapRef.current.addLayer({
-          id: "state-labels",
-          type: "symbol",
-          source: "states",
-          filter: ["has", "powerCapacity"],
-          layout: {
-            "text-field": ["to-string", ["get", "powerCapacity"]],
-            "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
-            "text-size": 14,
-            "text-allow-overlap": true,
-            "text-ignore-placement": true,
-          },
-          paint: {
-            "text-color": "#ffffff",
-            "text-halo-color": "#000000",
-            "text-halo-width": 1,
-          },
-        });
-
-        // Add hover effect
-        mapRef.current.on("mouseenter", "state-fills", () => {
-          mapRef.current.getCanvas().style.cursor = "pointer";
-        });
-
-        mapRef.current.on("mouseleave", "state-fills", () => {
-          mapRef.current.getCanvas().style.cursor = "";
-        });
-
-        // Add popups on click
-        mapRef.current.on("click", "state-fills", (e) => {
-          if (e.features.length > 0 && e.features[0].properties.powerCapacity) {
-            new mapboxgl.Popup()
-              .setLngLat(e.lngLat)
-              .setHTML(
-                `<div class="p-2">
-                  <strong>${e.features[0].properties.name}</strong><br/>
-                  Power Capacity: ${e.features[0].properties.powerCapacity} MW
-                </div>`
-              )
-              .addTo(mapRef.current);
-          }
-        });
-      }
+    // Add the source
+    map.addSource("states", {
+      type: "geojson",
+      data: stateGeoJson,
     });
 
-    // If map is already loaded, update the data
-    if (mapRef.current.loaded() && mapRef.current.getSource("states")) {
-      mapRef.current.getSource("states").setData(stateGeoJson);
-    }
-  }, [stateGeoJson]);
+    // Add fill layer for states with mining data
+    map.addLayer({
+      id: "state-fills",
+      type: "fill",
+      source: "states",
+      filter: ["has", "powerCapacity"],
+      paint: {
+        "fill-color": [
+          "case",
+          ["has", "powerCapacity"],
+          [
+            "interpolate",
+            ["linear"],
+            ["get", "powerCapacity"],
+            30,
+            getCapacityColor(30),
+            50,
+            getCapacityColor(50),
+            100,
+            getCapacityColor(100),
+            200,
+            getCapacityColor(200),
+            400,
+            getCapacityColor(400),
+            600,
+            getCapacityColor(600),
+            2717,
+            getCapacityColor(2717),
+          ],
+          "transparent",
+        ],
+        "fill-opacity": 0.8,
+      },
+    });
+
+    // Add outline for all states
+    map.addLayer({
+      id: "state-borders",
+      type: "line",
+      source: "states",
+      paint: {
+        "line-color": "#ffffff",
+        "line-width": 0.5,
+      },
+    });
+
+    // Add labels for states with power capacity
+    map.addLayer({
+      id: "state-labels",
+      type: "symbol",
+      source: "states",
+      filter: ["has", "powerCapacity"],
+      layout: {
+        "text-field": ["to-string", ["get", "powerCapacity"]],
+        "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
+        "text-size": 14,
+        "text-allow-overlap": true,
+        "text-ignore-placement": true,
+      },
+      paint: {
+        "text-color": "#ffffff",
+        "text-halo-color": "#000000",
+        "text-halo-width": 1,
+      },
+    });
+
+    // Add hover effect
+    map.on("mouseenter", "state-fills", () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+
+    map.on("mouseleave", "state-fills", () => {
+      map.getCanvas().style.cursor = "";
+    });
+
+    // Add popups on click
+    map.on("click", "state-fills", (e) => {
+      if (e.features.length > 0 && e.features[0].properties.powerCapacity) {
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(
+            `<div class="p-2">
+              <strong>${e.features[0].properties.name}</strong><br/>
+              Power Capacity: ${e.features[0].properties.powerCapacity} MW
+            </div>`
+          )
+          .addTo(map);
+      }
+    });
+  }, [stateGeoJson, mapLoaded]);
 
   return (
     <div className="flex justify-center items-center flex-col m-10">
@@ -290,13 +338,27 @@ export default function Heatmap() {
         <div className="flex justify-between items-center mb-4">
           <div className="text-sm font-semibold">Unit: Megawatts</div>
           <div className="flex items-center">
-            <div className="w-6 h-6 bg-blue-100"></div>
-            <div className="w-6 h-6 bg-blue-200"></div>
-            <div className="w-6 h-6 bg-blue-300"></div>
-            <div className="w-6 h-6 bg-blue-400"></div>
-            <div className="w-6 h-6 bg-blue-500"></div>
-            <div className="w-6 h-6 bg-blue-600"></div>
-            <div className="w-6 h-6 bg-blue-800"></div>
+            <div
+              className="w-6 h-6"
+              style={{ backgroundColor: getCapacityColor(30) }}></div>
+            <div
+              className="w-6 h-6"
+              style={{ backgroundColor: getCapacityColor(50) }}></div>
+            <div
+              className="w-6 h-6"
+              style={{ backgroundColor: getCapacityColor(100) }}></div>
+            <div
+              className="w-6 h-6"
+              style={{ backgroundColor: getCapacityColor(200) }}></div>
+            <div
+              className="w-6 h-6"
+              style={{ backgroundColor: getCapacityColor(300) }}></div>
+            <div
+              className="w-6 h-6"
+              style={{ backgroundColor: getCapacityColor(500) }}></div>
+            <div
+              className="w-6 h-6"
+              style={{ backgroundColor: getCapacityColor(2000) }}></div>
             <div className="ml-2 flex justify-between w-32 text-xs">
               <span>31</span>
               <span>2,717</span>
