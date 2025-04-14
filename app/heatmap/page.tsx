@@ -270,6 +270,7 @@ export default function Heatmap() {
     });
 
     // Add labels for states with power capacity
+    // Add labels for states with power capacity
     map.addLayer({
       id: "state-labels",
       type: "symbol",
@@ -279,8 +280,8 @@ export default function Heatmap() {
         "text-field": ["to-string", ["get", "powerCapacity"]],
         "text-font": ["Open Sans Bold", "Arial Unicode MS Bold"],
         "text-size": 14,
-        "text-allow-overlap": true,
-        "text-ignore-placement": true,
+        // REMOVED: "text-allow-overlap": true,
+        // REMOVED: "text-ignore-placement": true,
       },
       paint: {
         "text-color": "#ffffff",
