@@ -14,7 +14,11 @@
     "Power Capacity (MW)": 67,
     "Country": "Canada"
   },
-
+  {
+    "State": "Ontario",
+    "Power Capacity (MW)": 0,
+    "Country": "Canada"
+  },
   {
     "State": "British Columbia",
     "Power Capacity (MW)": 160,
