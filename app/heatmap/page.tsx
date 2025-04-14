@@ -26,9 +26,7 @@ export default function Heatmap() {
   useEffect(() => {
     const fetchMiningData = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_website_url}/Q4.json`
-        );
+        const response = await fetch(`/Q4.json`);
         const data = await response.json();
         setMiningData(data);
       } catch (error) {
