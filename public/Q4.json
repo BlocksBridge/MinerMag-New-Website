@@ -1,6 +1,6 @@
 [
   {
-    "State": "Québec",
+    "State": "Quebec",
     "Power Capacity (MW)": 223.5,
     "Country": "Canada"
   },
@@ -14,7 +14,7 @@
     "Power Capacity (MW)": 67,
     "Country": "Canada"
   },
- 
+
   {
     "State": "British Columbia",
     "Power Capacity (MW)": 160,
