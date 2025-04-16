@@ -15,9 +15,9 @@ const getCapacityColor = (capacity) => {
   if (capacity < 500) return "#1976d2"; // Dark blue
   return "#0d47a1"; // Very dark blue for highest values (Texas)
 };
-export const metadata: Metadata = {
-  title: "Bitcoin Mining Map - North America",
-};
+// export const metadata: Metadata = {
+//   title: "Bitcoin Mining Map - North America",
+// };
 
 export default function Heatmap() {
   const mapContainerRef = useRef(null);
