@@ -1,0 +1,98 @@
+[
+  {
+    "State": "Quebec",
+    "Power Capacity (MW)": 223.5,
+    "Country": "Canada"
+  },
+  {
+    "State": "New Brunswick",
+    "Power Capacity (MW)": 39,
+    "Country": "Canada"
+  },
+  {
+    "State": "Alberta",
+    "Power Capacity (MW)": 67,
+    "Country": "Canada"
+  },
+
+  {
+    "State": "British Columbia",
+    "Power Capacity (MW)": 160,
+    "Country": "Canada"
+  },
+  {
+    "State": "Alabama",
+    "Power Capacity (MW)": 55,
+    "Country": "United States"
+  },
+  {
+    "State": "North Dakota",
+    "Power Capacity (MW)": 373,
+    "Country": "United States"
+  },
+  {
+    "State": "Kentucky",
+    "Power Capacity (MW)": 210,
+    "Country": "United States"
+  },
+  {
+    "State": "North Carolina",
+    "Power Capacity (MW)": 104,
+    "Country": "United States"
+  },
+  {
+    "State": "South Carolina",
+    "Power Capacity (MW)": 44,
+    "Country": "United States"
+  },
+  {
+    "State": "Georgia",
+    "Power Capacity (MW)": 703,
+    "Country": "United States"
+  },
+  {
+    "State": "Mississippi",
+    "Power Capacity (MW)": 70.5,
+    "Country": "United States"
+  },
+  {
+    "State": "Texas",
+    "Power Capacity (MW)": 3847,
+    "Country": "United States"
+  },
+  {
+    "State": "Washington",
+    "Power Capacity (MW)": 30.5,
+    "Country": "United States"
+  },
+  {
+    "State": "New York",
+    "Power Capacity (MW)": 546,
+    "Country": "United States"
+  },
+  {
+    "State": "Pennsylvania",
+    "Power Capacity (MW)": 244.5,
+    "Country": "United States"
+  },
+  {
+    "State": "Ohio",
+    "Power Capacity (MW)": 170.5,
+    "Country": "United States"
+  },
+  {
+    "State": "Nebraska",
+    "Power Capacity (MW)": 92,
+    "Country": "United States"
+  },
+  {
+    "State": "Tennessee",
+    "Power Capacity (MW)": 320,
+    "Country": "United States"
+  },
+  {
+    "State": "Wyoming",
+    "Power Capacity (MW)": 110,
+    "Country": "United States"
+  }
+]
