@@ -357,10 +357,6 @@ export default function Heatmap() {
             <div
               className="w-6 h-6"
               style={{ backgroundColor: getCapacityColor(2000) }}></div>
-            <div className="ml-2 flex justify-between w-32 text-xs">
-              <span>31</span>
-              <span>2,717</span>
-            </div>
           </div>
         </div>
 
