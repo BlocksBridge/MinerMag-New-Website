@@ -3,6 +3,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 import { useRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
+import { Metadata } from "next";
 
 // Color scale function for the choropleth
 const getCapacityColor = (capacity) => {
@@ -13,6 +14,9 @@ const getCapacityColor = (capacity) => {
   if (capacity < 400) return "#4285F4"; // Medium-dark blue
   if (capacity < 500) return "#1976d2"; // Dark blue
   return "#0d47a1"; // Very dark blue for highest values (Texas)
+};
+export const metadata: Metadata = {
+  title: "Bitcoin Mining Map - North America",
 };
 
 export default function Heatmap() {

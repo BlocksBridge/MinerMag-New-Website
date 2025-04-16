@@ -358,11 +358,11 @@ export default async function HomePage({
                       />
                     </svg>
                   ),
-                  title: "Bitcoin Mining Heatmap",
+                  title: "Bitcoin Mining Map",
                   description:
                     "Explore Operational Bitcoin Mining Power Capacity Distribution in North America",
                   cta: "View Heatmap",
-                  link: "/heatmap",
+                  link: "/bitcoin-mining-map",
                 },
               ].map((item, index) => (
                 <div key={index} className="bg-white p-4 rounded-lg shadow">
