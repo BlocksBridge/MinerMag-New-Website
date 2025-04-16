@@ -367,7 +367,7 @@ export default function Heatmap() {
         {/* Data Note */}
         <div className="text-xs text-gray-500 border-t pt-3">
           <p>
-            Data represents operational Bitcoin mining capacity as of Q4 2025
+            Data represents operational Bitcoin mining capacity as of Q4 2024
           </p>
           <p>Source: SEC Filings; Press releases</p>
           <p className="mt-2">Map: TheMinerMag</p>
