@@ -172,8 +172,7 @@ export default function Heatmap() {
 
   // Initialize map when component mounts
   useEffect(() => {
-    mapboxgl.accessToken =
-      "pk.eyJ1Ijoic2h1YmhhbXZzIiwiYSI6ImNtOG9idnUxazAxM2EybXNjNWxnbWtma2kifQ.hnlDhCKz8NO_Ms5dsxbfMg";
+    mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX;
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
@@ -321,7 +320,7 @@ export default function Heatmap() {
         Operational Bitcoin Mining Power Capacity Distribution in North America
       </h1>
       <p className="text-gray-600 mb-6">
-        Data sourced from 22 mining operators as of Q4'23 including their
+        Data sourced from 20 mining operators as of Q4'24 including their
         self-mining and colocation capacities
       </p>
       <div className="flex justify-center items-center mb-6">
@@ -368,10 +367,10 @@ export default function Heatmap() {
         {/* Data Note */}
         <div className="text-xs text-gray-500 border-t pt-3">
           <p>
-            Data represents operational Bitcoin mining capacity as of Q4 2023
+            Data represents operational Bitcoin mining capacity as of Q4 2025
           </p>
           <p>Source: SEC Filings; Press releases</p>
-          <p className="mt-2">Map: TheMinerMap</p>
+          <p className="mt-2">Map: TheMinerMag</p>
         </div>
       </div>
     </div>
