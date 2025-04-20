@@ -361,7 +361,7 @@ export default async function HomePage({
                   title: "Bitcoin Mining Map",
                   description:
                     "Explore Operational Bitcoin Mining Power Capacity Distribution in North America",
-                  cta: "View Heatmap",
+                  cta: "View Map",
                   link: "/bitcoin-mining-map",
                 },
               ].map((item, index) => (
