@@ -19,8 +19,8 @@ export async function POST(response: NextRequest, request: NextResponse) {
       let sendReportLink = await sendEmail(
         body.email,
         `Here's Your Report From TheMinerMag's Article: ${body.postTitle}`,
-        `<h4>Here's Your Report For ${body.postTitle}: <a href="${getPost[0].acf.upload_report}">Report</a></h4> <br><br><p>If you can't access the hyperlink above, here's a direct link: ${getPost[0].acf.upload_report}</p>`
-      );
+        `<h4>Here's Your Report For ${body.postTitle}: <a href="${getPost[0].acf.upload_report}">Report</a></h4>`
+      ); // <br><br><p>If you can't access the hyperlink above, here's a direct link: ${getPost[0].acf.upload_report}</p>
 
       console.log(sendReportLink);
       return NextResponse.json({ error: null, status: 200 });
