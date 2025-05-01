@@ -156,6 +156,7 @@ export async function generateMetadata({
 
   // let getMeta = await getMetaData(getInfoAboutPost[0].link);
   let getMeta = await parser(getInfoAboutPost[0].link);
+
   // console.log(
   //   getInfoAboutPost[0],
   //   new Date(getInfoAboutPost[0].modified).toISOString()
@@ -167,6 +168,9 @@ export async function generateMetadata({
     description: getMeta.meta.description,
 
     openGraph: {
+      url:
+        process.env.NEXT_PUBLIC_website_url +
+        getInfoAboutPost[0].link.split(".com")[1],
       title: getMeta.meta.title,
       description: getMeta.meta.description,
       siteName: "TheMinerMag",
@@ -183,6 +187,17 @@ export async function generateMetadata({
       description: getMeta.meta.description,
       images: [getInfoAboutPost[0].acf.main_image],
       creator: "@TheMinerMag_",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-snippet": -1, // Example: Allow any snippet length
+        "max-image-preview": "large", // Example: Allow large image previews
+        "max-video-preview": -1, // Example: Allow any video preview length},
+      },
     },
   };
 }
