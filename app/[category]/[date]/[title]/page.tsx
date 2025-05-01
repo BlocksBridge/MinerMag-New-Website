@@ -156,10 +156,10 @@ export async function generateMetadata({
 
   // let getMeta = await getMetaData(getInfoAboutPost[0].link);
   let getMeta = await parser(getInfoAboutPost[0].link);
-  console.log(
-    getInfoAboutPost[0],
-    new Date(getInfoAboutPost[0].modified).toISOString()
-  );
+  // console.log(
+  //   getInfoAboutPost[0],
+  //   new Date(getInfoAboutPost[0].modified).toISOString()
+  // );
   // console.log(getMeta, "getMetttt", Object.keys(getMeta));
   // console.log(getInfoAboutPost);
   return {
