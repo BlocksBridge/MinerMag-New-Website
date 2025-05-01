@@ -119,7 +119,7 @@ export default function NewsArticle({
                       height={200}
                       className="w-full h-48 object-cover rounded-lg mb-3"
                     />
-                    <h3 className="font-medium group-hover:text-blue-600">
+                    <h3 className="font-medium text-sm group-hover:text-blue-600">
                       {localPost.title.rendered}
                     </h3>
                     <p className="text-sm text-gray-500">
