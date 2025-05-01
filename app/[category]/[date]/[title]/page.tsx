@@ -156,12 +156,16 @@ export async function generateMetadata({
 
   // let getMeta = await getMetaData(getInfoAboutPost[0].link);
   let getMeta = await parser(getInfoAboutPost[0].link);
-
+  console.log(
+    getInfoAboutPost[0],
+    new Date(getInfoAboutPost[0].modified).toISOString()
+  );
   // console.log(getMeta, "getMetttt", Object.keys(getMeta));
   // console.log(getInfoAboutPost);
   return {
     title: getMeta.meta.title,
     description: getMeta.meta.description,
+
     openGraph: {
       title: getMeta.meta.title,
       description: getMeta.meta.description,
@@ -169,8 +173,10 @@ export async function generateMetadata({
       images: [getInfoAboutPost[0].acf.main_image],
       type: "article",
       publishedTime: new Date(getInfoAboutPost[0].date).toISOString(),
+      modifiedTime: new Date(getInfoAboutPost[0].modified).toISOString(),
     },
     keywords: getTags,
+
     twitter: {
       card: "summary_large_image",
       title: getMeta.meta.title,
