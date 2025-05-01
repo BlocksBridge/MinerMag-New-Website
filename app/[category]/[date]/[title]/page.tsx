@@ -27,23 +27,15 @@ export default async function Page({
   let RelatedPosts = [];
   let getRelatedPostItems = await Promise.all(
     allTags.map(async (i) => {
-      // let getTagitem = await fetch(
-      //   `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/tags/${i}`
-      // ).then((res) => res.json());
-
-      // let getRelatedPosts: [any] = await fetch(
-      //   `${process.env.NEXT_PUBLIC_backend_url}/wp-json/ajax-search-pro/v0/search?s=${getTagitem.name}&id=3`
-      // ).then((res) => res.json());
       let getRelatedPostsByTags: [any] = await fetch(
         `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?tags=${i}&acf_format=standard`
       ).then((res) => res.json());
-      // console.log(getTagitem, "tag item", getRelatedPostsByTags);
 
       RelatedPosts = [...getRelatedPostsByTags];
       return getRelatedPostsByTags;
     })
   );
-  // const generateQuery = await fetch("/api/ai", {
+
   //   body: JSON.stringify({ headline: getPost[0].title.rendered }),
   //   method: "POST",
   // }).then((res) => res.json());
@@ -101,15 +93,65 @@ export default async function Page({
   //   console.log("Error generating Related Posts");
   // }
   // console.log("relatedss", RelatedPosts.length);
+  let getTagForJSON = await Promise.all(
+    getPost[0].tags.map(async (item) => {
+      let getTagName = await fetch(
+        `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/tags/${item}`
+      ).then((res) => res.json());
+      return getTagName.name;
+    })
+  );
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: getPost[0].title.rendered,
+    description: getPost[0].excerpt.rendered,
+    image: [getPost[0].acf.main_image],
+    datePublished: new Date(getPost[0].date).toISOString(),
+    dateModified: new Date(getPost[0].modified).toISOString(),
+    author: {
+      "@type": "Organization", // Or "Organization" if the author is a company/team
+      name: "TheMinerMag",
+      url: "https://theminermag.com",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "TheMinerMag",
+      url: "https://theminermag.com",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://www.theminermag.com/logo.png",
+        // Optional: "width": 600,
+        // Optional: "height": 60
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "Article",
+    },
+    keywords: [
+      getPost[0].title.rendered,
+      getPost[0].acf.sub_title,
+      ...getPost[0].title.rendered?.split(" "),
+      ...getPost[0].acf.sub_title.split(" "),
+    ],
+  };
+
   if (!getPost.length) {
     return <div>Post not found</div>;
   } else {
     return (
-      <NewsArticle
-        post={getPost[0]}
-        relatedPosts={RelatedPosts.slice(0, 6)}
-        postQuery={query}
-      />
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <NewsArticle
+          post={getPost[0]}
+          relatedPosts={RelatedPosts.slice(0, 6)}
+          postQuery={query}
+        />
+      </>
     );
   }
 }
@@ -179,7 +221,13 @@ export async function generateMetadata({
       publishedTime: new Date(getInfoAboutPost[0].date).toISOString(),
       modifiedTime: new Date(getInfoAboutPost[0].modified).toISOString(),
     },
-    keywords: getTags,
+    keywords: [
+      ...getTags,
+      getMeta.meta.title,
+      getInfoAboutPost[0].acf.sub_title,
+      ...getMeta.meta.title?.split(" "),
+      ...getInfoAboutPost[0].acf.sub_title.split(" "),
+    ],
 
     twitter: {
       card: "summary_large_image",
