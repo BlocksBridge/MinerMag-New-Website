@@ -10,9 +10,7 @@ export default async function Page({ searchParams }) {
     `${
       process.env.NEXT_PUBLIC_backend_url
     }/wp-json/wp/v2/posts?acf_format=standard&_=${Date.now()}`,
-    {
-      cache: "no-store",
-    }
+    { next: { revalidate: 3600 } }
   ).then((res) => res.json());
 
   // console.log("par", getPosts[0]);
@@ -22,7 +20,8 @@ export default async function Page({ searchParams }) {
   // ).then((res) => res.json());
 
   const getNetworkData = await fetch(
-    `${process.env.NEXT_PUBLIC_website_url}/api/networkdata`
+    `${process.env.NEXT_PUBLIC_website_url}/api/networkdata`,
+    { next: { revalidate: 3600 } }
   )
     .then((res) => res.json())
     .then((data) => data.data);
@@ -42,4 +41,4 @@ export default async function Page({ searchParams }) {
   );
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // invalidate every hour

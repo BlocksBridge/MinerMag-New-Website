@@ -18,7 +18,8 @@ export default async function Page({
       process.env.NEXT_PUBLIC_backend_url
     }/wp-json/wp/v2/posts?acf_format=standard&slug=${query.title}&date=${
       query.date
-    }&_date=${Date.now()}`
+    }&_date=${Date.now()}`,
+    { next: { revalidate: 3600 } }
   ).then((res) => res.json());
   console.log(getPost);
   let allTags = getPost[0].tags;
@@ -28,7 +29,8 @@ export default async function Page({
   let getRelatedPostItems = await Promise.all(
     allTags.map(async (i) => {
       let getRelatedPostsByTags: [any] = await fetch(
-        `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?tags=${i}&acf_format=standard`
+        `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?tags=${i}&acf_format=standard`,
+        { next: { revalidate: 3600 } }
       ).then((res) => res.json());
 
       RelatedPosts = [...getRelatedPostsByTags];
@@ -249,3 +251,5 @@ export async function generateMetadata({
     },
   };
 }
+
+export const revalidate = 3600;

@@ -18,7 +18,7 @@ export default async function Category({
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/categories?slug=${
       category.category
     }&_=${Date.now()}`,
-    { cache: "no-store", next: { revalidate: 0, tags: ["posts"] } }
+    { next: { revalidate: 3600, tags: ["posts"] } }
   ).then((res) => res.json());
 
   if (checkCategory.length) {
@@ -28,7 +28,7 @@ export default async function Category({
       }&per_page=12&${
         pageQuery.page && `page=${pageQuery.page}`
       }&order=desc&orderby=date&acf_format=standard&_=${Date.now()}}`,
-      { cache: "no-store", next: { revalidate: 0, tags: ["posts"] } }
+      { next: { revalidate: 3600, tags: ["posts"] } }
     ).then((res) => res.json());
 
     if (getPostsByCategory.code) {
@@ -156,4 +156,4 @@ async function PaginationProtection(nextPage, categoryId) {
   }
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
