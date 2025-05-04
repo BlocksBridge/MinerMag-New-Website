@@ -9,35 +9,36 @@ import { ChevronDown, Building2, ChevronUp, Menu, X } from "lucide-react";
 import "@/app/company/[company]/tradingView.css";
 import TickerTape from "./StockTicker";
 import MobileHeader from "./MobileHeader";
+import { GetStockProfile } from "@/lib/stockData";
 
 // Separate data fetching function with error handling
-async function fetchCompanyStocks() {
-  try {
-    // Add a conditional check for process.env during build
-    const apiUrl = process.env.NEXT_PUBLIC_website_url || "";
-    if (!apiUrl) {
-      console.warn("NEXT_PUBLIC_website_url not available during build");
-      return [];
-    }
+// async function fetchCompanyStocks() {
+//   try {
+//     // Add a conditional check for process.env during build
+//     const apiUrl = process.env.NEXT_PUBLIC_website_url || "";
+//     if (!apiUrl) {
+//       console.warn("NEXT_PUBLIC_website_url not available during build");
+//       return [];
+//     }
 
-    const res = await fetch(`${apiUrl}/api/stockprofile`, {
-      // Add timeout to prevent hanging during build
-      signal: AbortSignal.timeout(5000),
-      // Prevent request caching issues
-      next: { revalidate: 60 },
-    });
+//     // const res = await fetch(`/api/stockprofile`, {
+//     //   // Add timeout to prevent hanging during build
+//     //   signal: AbortSignal.timeout(5000),
+//     //   // Prevent request caching issues
+//     //   next: { revalidate: 60 },
+//     // });
 
-    if (!res.ok) {
-      console.error(`Failed to fetch stocks: ${res.status}`);
-      return [];
-    }
+//     if (!res.ok) {
+//       console.error(`Failed to fetch stocks: ${res.status}`);
+//       return [];
+//     }
 
-    return await res.json();
-  } catch (error) {
-    console.error("Error fetching company stocks:", error);
-    return [];
-  }
-}
+//     return await res.json();
+//   } catch (error) {
+//     console.error("Error fetching company stocks:", error);
+//     return [];
+//   }
+// }
 
 export default async function Header() {
   let allCompanyStocks = [];
@@ -45,7 +46,8 @@ export default async function Header() {
   try {
     // Only fetch in production environment, not during build
 
-    const getCompanyStocks = await fetchCompanyStocks();
+    // const getCompanyStocks = await fetchCompanyStocks();
+    const getCompanyStocks = await GetStockProfile();
 
     if (
       getCompanyStocks &&

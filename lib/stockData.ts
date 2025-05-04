@@ -1,8 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { companies } from "../../companiesData";
-
-export async function GET(req: NextRequest, res: NextResponse) {
+import { companies } from "@/app/companiesData";
+export async function GetStockProfile() {
   const supabase = createClient(
     "https://pllfxvvxgjrdbupxplbp.supabase.co",
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsbGZ4dnZ4Z2pyZGJ1cHhwbGJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTIzMjUwNzAsImV4cCI6MjAyNzkwMTA3MH0.b4fAV4r_kr5klOC1xHVgGGla8kIa5xFSJTZOjSswPP8"
@@ -22,12 +20,11 @@ export async function GET(req: NextRequest, res: NextResponse) {
         newItem.data_points = JSON.parse(newItem["data_points"])[0];
         return newItem;
       });
-    return NextResponse.json(stockData);
+    return stockData;
   } else {
-    return NextResponse.json({
+    return {
       error:
         "Something Went Wrong:" + companyProfile.error + companyProfile.status,
-    });
+    };
   }
 }
-export const dynamic = "force-dynamic";
