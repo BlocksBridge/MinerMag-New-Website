@@ -152,7 +152,7 @@ export default async function HomePage({
                 <p className="text-gray-600 mb-4">
                   {getPosts[0].acf.sub_title}
                 </p>
-                <Link href={getPosts[0].link.split(".com")[1]}>
+                <Link href={getPosts[0].link.split(".com")[1]} target="_blank">
                   <button className="px-4 py-2 border border-zinc-200 border-blue-600 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors dark:border-zinc-800">
                     Read More
                   </button>
@@ -174,6 +174,7 @@ export default async function HomePage({
             <div className="grid md:grid-cols-3 gap-6">
               {three.map((article, index) => (
                 <Link
+                  target="_blank"
                   href={article.link.split(".com")[1].replace("/home", "")}
                   key={index}>
                   <div
