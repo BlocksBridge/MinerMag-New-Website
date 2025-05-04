@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: { serverComponentsHmrCache: false },
+  output: "standalone",
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "backend.theminermag.com" },
