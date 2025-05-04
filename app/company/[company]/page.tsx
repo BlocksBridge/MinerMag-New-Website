@@ -53,8 +53,8 @@ export default async function CompanyPage({
   ).then((res) => res.json());
   // console.log(getCompanyInfo);
   let getCompanyNews = await fetch(
-    `https://sandbox.financialmodelingprep.com/stable/news/stock?symbols=${param.company.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`,
-    { next: { revalidate: 3600 } }
+    `https://financialmodelingprep.com/stable/news/stock?symbols=${param.company.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`,
+    { cache: "no-cache" }
   ).then((res) => res.json());
 
   let MinerMagData: {
@@ -410,4 +410,4 @@ export async function generateStaticParams() {
   return allCompany.map((company) => ({ company }));
 }
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
