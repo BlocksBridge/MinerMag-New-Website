@@ -215,9 +215,14 @@ function SearchResultsContent() {
                       />
                     </div>
                     <div className="p-6 md:w-3/4">
-                      <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                        {result.title?.rendered || result.title || "Untitled"}
-                      </h2>
+                      <h2
+                        className="text-xl font-semibold text-gray-900 mb-2"
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            result.title?.rendered ||
+                            result.title ||
+                            "Untitled",
+                        }}></h2>
                       {result._embedded?.self?.[0]?.excerpt?.rendered && (
                         <div
                           className="text-gray-600 mb-4 line-clamp-3"
