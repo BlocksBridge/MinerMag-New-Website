@@ -13,6 +13,7 @@ RUN npm install
 
 # Copy the app source code to the container  
 COPY . .  
+COPY .env ./
 
 # Build the Next.js app  
 ENV NEXT_TELEMETRY_DISABLED 1
@@ -36,7 +37,7 @@ COPY --from=builder /app/public ./public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-#COPY --from=builder /app/.env ./.env
+COPY --from=builder .env ./.env
 # Copy public directory and static files if they exist and are needed
 # The standalone output does NOT include public or .next/static by default.
 # If your app serves static assets from public or requires .next/static, uncomment
