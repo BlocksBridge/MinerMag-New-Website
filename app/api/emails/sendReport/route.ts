@@ -20,15 +20,15 @@ export async function POST(response: NextRequest, request: NextResponse) {
         body.email,
         `Here's Your Report From TheMinerMag's Article: ${body.postTitle}`,
         `<h4>Here's Your Report For ${body.postTitle}: <a href="${getPost[0].acf.upload_report}">Report</a></h4>`
-      ).then(async (item) => {
-        let sendNotification = await sendEmail(
-          "support@theminermag.com",
-          `${body.company} Downloaded Report From TheMinerMag's Article: ${body.postTitle}`,
-          `<h4>${body.company} Downloaded ${body.postTitle}: <a href="${getPost[0].acf.upload_report}">Report</a></h4>\n Email: ${body.email} \n Purpose: Report`
-        ); // <br><br><p>If you can't access the hyperlink above, here's a direct link: ${getPost[0].acf.upload_report}</p>
-      }); // <br><br><p>If you can't access the hyperlink above, here's a direct link: ${getPost[0].acf.upload_report}</p>
-      console.log(sendReportLink);
+      ); // <br><br><p>If you can't access the hyperlink above, here's a direct link: ${getPost[0].acf.upload_report}</p>
 
+      let sendNotification = await sendEmail(
+        "support@theminermag.com",
+        `${body.company} Downloaded Report From TheMinerMag's Article: ${body.postTitle}`,
+        `<h4>${body.company} Downloaded ${body.postTitle}: <a href="${getPost[0].acf.upload_report}">Report</a></h4>\n Email: ${body.email} \n Purpose: Report`
+      ); // <br><br><p>If you can't access the hyperlink above, here's a direct link: ${getPost[0].acf.upload_report}</p>
+
+      console.log(sendReportLink, sendNotification);
       return NextResponse.json({ error: null, status: 200 });
     }
   } else {
