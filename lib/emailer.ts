@@ -18,6 +18,7 @@ export async function sendEmail(receiverEmail, subject, body) {
       },
       (err, info) => {
         if (err) {
+          console.error(err);
           reject(err);
         } else {
           resolve(info);
