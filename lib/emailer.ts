@@ -7,24 +7,21 @@ export async function sendEmail(receiverEmail, subject, body) {
     secure: true,
     auth: { user: "no-reply@backend.theminermag.com", pass: "@3T5$M^Tsbwq" },
   });
-
-  let resp = await new Promise((resolve, reject) => {
-    transporter.sendMail(
-      {
-        from: "no-reply@backend.theminermag.com",
-        to: receiverEmail,
-        subject: subject,
-        html: body,
-      },
-      (err, info) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-        } else {
-          resolve(info);
-        }
+  let checkEmailSent = await transporter.sendMail(
+    {
+      from: "no-reply@backend.theminermag.com",
+      to: receiverEmail,
+      subject: subject,
+      html: body,
+    },
+    (err, info) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(info);
       }
-    );
-  });
-  return resp;
+    }
+  );
+
+  return checkEmailSent;
 }
