@@ -21,7 +21,7 @@ export default async function Page({
     }&_date=${Date.now()}`,
     { next: { revalidate: 3600 } }
   ).then((res) => res.json());
-  console.log(getPost);
+  // console.log(getPost);
   let allTags = getPost[0].tags;
   // console.log(allTags);
 

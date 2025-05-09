@@ -10,7 +10,7 @@ export async function POST(response: NextRequest, request: NextResponse) {
       company: body.company,
       purpose: "Report",
     });
-
+    console.log(saveEmail);
     if (saveEmail.error == null) {
       const getPost = await fetch(
         `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?acf_format=standard&slug=${body.postTitle}&date=${body.postDate}`
