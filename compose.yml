@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # Your Next.js application service
@@ -12,6 +12,8 @@ services:
     # We don't expose ports to the host here if Caddy is in the same network
     # ports:
     #   - "3000" # Only expose internally to the docker network
+    restart: "always"
+
     environment:
       - NODE_ENV=production
       - PORT=3000 # Ensure Next.js listens on this port
@@ -27,7 +29,7 @@ services:
       - caddy_data:/data # Caddy data for certificates etc.
       # Mount the same volume as the Next.js service to access the standalone output
       # The path here (/app/.next/standalone) should match the path used in the Caddyfile's root directives.
-#      - nextjs_standalone_data:/path/where/caddy/accesses/standalone
+    #      - nextjs_standalone_data:/path/where/caddy/accesses/standalone
     command: caddy run --config /etc/caddy/config/Caddyfile
 
     depends_on:
