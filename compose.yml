@@ -34,7 +34,17 @@ services:
 
     depends_on:
       - theminermag # Ensure Next.js service starts before Caddy
-
+  autoheal:
+    deploy:
+      replicas: 1
+    environment:
+      AUTOHEAL_CONTAINER_LABEL: all
+    image: willfarrell/autoheal:latest
+    network_mode: none
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
 # Define the volumes
 volumes:
   nextjs_standalone_data: # Volume to share Next.js standalone build output
