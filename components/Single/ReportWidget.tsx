@@ -29,21 +29,18 @@ const DownloadReport = ({
     e.preventDefault();
     setIsSubmitting(true);
 
-    let generateEmail = await fetch(
-      `${process.env.NEXT_PUBLIC_email_server}/api/emails/sendReport`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          company: formData.companyName,
-          postTitle: postTitle,
-          postDate: postDate,
-        }),
-      }
-    ).then((res) => res.json());
+    let generateEmail = await fetch(`/api/emails/sendReport`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        company: formData.companyName,
+        postTitle: postTitle,
+        postDate: postDate,
+      }),
+    }).then((res) => res.json());
     setIsEmailed(true);
     // closeDialog();
   };
