@@ -3,7 +3,7 @@ import HomePage from "@/components/Home/Home";
 export default async function Page() {
   const getPosts: [any] = await fetch(
     `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?acf_format=standard`,
-    { next: { revalidate: 3600 } }
+    { next: { revalidate: 3600, tags: ["posts"] } }
   ).then((res) => res.json());
 
   // console.log("par", getPosts[0]);
