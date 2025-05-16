@@ -16,7 +16,9 @@ www.theminermag.com, theminermag.com {
 	# file_server
 
 	# Another common task is to set up a reverse proxy:
-	reverse_proxy theminermag:3000
+	reverse_proxy theminermag:3000 {
+         lb_policy round_robin
+    }
 
 	# Or serve a PHP site through php-fpm:
 	# php_fastcgi localhost:9000
