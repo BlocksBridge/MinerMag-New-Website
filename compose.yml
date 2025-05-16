@@ -9,11 +9,13 @@ services:
     volumes:
       # Mount a volume to persist the standalone build output and make it accessible to Caddy
       - nextjs_standalone_data:/app/.next/standalone
+
     # We don't expose ports to the host here if Caddy is in the same network
     # ports:
     #   - "3000" # Only expose internally to the docker network
     restart: "always"
-
+    deploy:
+      replicas: 5
     environment:
       - NODE_ENV=production
       - PORT=3000 # Ensure Next.js listens on this port
