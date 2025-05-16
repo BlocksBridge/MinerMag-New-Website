@@ -27,7 +27,7 @@ services:
       - "80:80" # Standard HTTP port
       - "443:443" # Standard HTTPS port
     volumes:
-      - ./Caddyfile:/etc/caddy/config/Caddyfile # Mount your Caddyfile
+      - ./Caddyfile/Caddyfile:/etc/caddy/config/Caddyfile # Mount your Caddyfile
       - caddy_data:/data # Caddy data for certificates etc.
       # Mount the same volume as the Next.js service to access the standalone output
       # The path here (/app/.next/standalone) should match the path used in the Caddyfile's root directives.
