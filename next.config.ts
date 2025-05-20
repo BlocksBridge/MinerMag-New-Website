@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+const nextConfig: NextConfig = {output: 'standalone',
   experimental: { serverComponentsHmrCache: false },
+
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "backend.theminermag.com" },

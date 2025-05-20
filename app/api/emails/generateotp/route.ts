@@ -19,7 +19,7 @@ export async function POST(response: NextRequest, request: NextResponse) {
         "Authentication Password For Downloading Report",
         `OTP For Downloading Report: ${generatedCode}`
       );
-      console.log("Message sent: %s", checkEmailSent);
+      // console.log("Message sent: %s", checkEmailSent);
       return NextResponse.json({ error: null, status: "Success" });
     } else {
       return NextResponse.json({ error: "try again after sometime" });

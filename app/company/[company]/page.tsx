@@ -31,7 +31,8 @@ export default async function CompanyPage({
 
   // const [selectedPeriod, setSelectedPeriod] = useState("1M");
   let getAllTags = await fetch(
-    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/tags?per_page=100`
+    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/tags?per_page=100`,
+    { next: { revalidate: 3600 } }
   ).then((res) => res.json());
 
   let companyTag: Number | null = null;
@@ -41,16 +42,19 @@ export default async function CompanyPage({
     }
   });
   let getCompanyArticles = await fetch(
-    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?tags=${companyTag}&acf_format=standard`
+    `${process.env.NEXT_PUBLIC_backend_url}/wp-json/wp/v2/posts?tags=${companyTag}&acf_format=standard`,
+    { next: { revalidate: 3600 } }
   ).then((res) => res.json());
   let getCompanyInfo = await fetch(
     `${
       process.env.NEXT_PUBLIC_website_url
-    }/api/companyprofile?company=${param.company.toUpperCase()}`
+    }/api/companyprofile?company=${param.company.toUpperCase()}`,
+    { next: { revalidate: 3600 } }
   ).then((res) => res.json());
   // console.log(getCompanyInfo);
   let getCompanyNews = await fetch(
-    `https://sandbox.financialmodelingprep.com/stable/news/stock?symbols=${param.company.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`
+    `https://financialmodelingprep.com/stable/news/stock?symbols=${param.company.toUpperCase()}&apikey=lR21jz4oPnIf9rgJCON4bDDLyZJ2sTXb`,
+    { cache: "no-cache" }
   ).then((res) => res.json());
 
   let MinerMagData: {
@@ -58,9 +62,9 @@ export default async function CompanyPage({
     priceHashratio: any;
     bitcoinHoldings: { "Holdings (BTC)": any };
     realizationRate: any;
-  } = await fetch(`${process.env.NEXT_PUBLIC_website_url}/api/statistics`).then(
-    (res) => res.json()
-  );
+  } = await fetch(`${process.env.NEXT_PUBLIC_website_url}/api/statistics`, {
+    next: { revalidate: 3600 },
+  }).then((res) => res.json());
 
   let realizedHashRate = null;
   let realizedHashMonth = null;
@@ -406,5 +410,4 @@ export async function generateStaticParams() {
   return allCompany.map((company) => ({ company }));
 }
 
-export const dynamicParams = false;
 export const dynamic = "force-dynamic";

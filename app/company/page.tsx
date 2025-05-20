@@ -6,7 +6,8 @@ import { TabsContent } from "@radix-ui/react-tabs";
 import "./table.css";
 export default async function ConsolidatedCompanies() {
   const getNetworkData = await fetch(
-    `${process.env.NEXT_PUBLIC_website_url}/api/networkdata`
+    `${process.env.NEXT_PUBLIC_website_url}/api/networkdata`,
+    { next: { revalidate: 3600 } }
   )
     .then((res) => res.json())
     .then((data) => data.data);
@@ -92,4 +93,5 @@ export default async function ConsolidatedCompanies() {
   );
 }
 
+// export const revalidate = 3600;
 export const dynamic = "force-dynamic";

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   let params = request.nextUrl.searchParams;
-  console.log(params);
+  // console.log(params);
   if (params.has("company")) {
     let getChartsByCompany = await database
       .from("statistics")
