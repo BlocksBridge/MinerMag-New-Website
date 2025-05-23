@@ -72,6 +72,13 @@ export default function ComsDA({ data }) {
       filter: true,
     },
     {
+      field: "daysToCover",
+      headerName: "Days To Cover ( Short Interest )",
+      flex: 1,
+      minWidth: 90,
+      filter: true,
+    },
+    {
       field: "volume",
       headerName: "Volume",
       flex: 1,

@@ -19,7 +19,21 @@ export default async function CompanyTable() {
           process.env.NEXT_PUBLIC_website_url
         }/api/marketdata?company=${companySymbol.toUpperCase()}`
       ).then((res) => res.json());
-      return call.data[0];
+      let shortInt = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_website_url
+        }/api/shortinterest?company=${companySymbol.toUpperCase()}`
+      ).then((res) => res.json());
+
+      if (shortInt.data) {
+        return {
+          ...call.data[0],
+          daysToCover: JSON.parse(shortInt.data.data_points).rows[0]
+            .daysToCover,
+        };
+      } else {
+        return { ...call.data[0] };
+      }
     })
   );
 

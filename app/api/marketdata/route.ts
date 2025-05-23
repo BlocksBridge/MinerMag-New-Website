@@ -13,6 +13,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
       .from("marketdata")
       .select("")
       .eq("slug", `marketdata/${companySymbol.get("company")?.toUpperCase()}`);
+
     if (getMarketData.error || !getMarketData.data.length) {
       return NextResponse.json({ error: "Something went wrong" });
     } else {
