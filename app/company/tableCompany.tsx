@@ -139,8 +139,6 @@ export default function ComsDA({ data }) {
     const mobile = window.innerWidth < 768;
     setIsMobile(mobile);
     setColumnDefs(desktopColumns);
-
-    // Force grid to refresh with new columns
     if (gridRef.current && gridRef.current.api) {
       gridRef.current.api.setColumnDefs(
         mobile ? mobileColumns : desktopColumns
