@@ -12,11 +12,19 @@ export default async function ConsolidatedCompanies() {
     .then((res) => res.json())
     .then((data) => data.data);
 
+  const getMarketMetrics = await fetch(
+    `${process.env.NEXT_PUBLIC_website_url}/api/marketmetrics`,
+    { next: { revalidate: 3600 } }
+  ).then((res) => res.json());
+
   // console.log(getNetworkData, "data");
 
   const NetworkOverview = getNetworkData.networkOverview.data;
   const BlockReward = getNetworkData.blockReward.data;
   const NetworkDiff = getNetworkData.networkDiff.data;
+  const ConsolidatedHashrate = getMarketMetrics.totalhashrate;
+  const totalHolding = getMarketMetrics.totalholding;
+  const marketShareByProduction = getMarketMetrics.marketShareByProduction;
   return (
     <div className="my-10 m-auto flex justify-center flex-col items-center gap-8 w-5/6">
       <h1 className="font-bold text-2xl">
@@ -27,40 +35,50 @@ export default async function ConsolidatedCompanies() {
       <section className="flex justify-center items-centerm m-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
           {[
-            {
-              title: "Network Difficulty",
-              value: `${NetworkDiff[0]["difficulty"].toLocaleString(
-                "en-us",
-                {}
-              )}`,
+            // {
+            //   title: "Network Difficulty",
+            //   value: `${NetworkDiff[0]["difficulty"].toLocaleString(
+            //     "en-us",
+            //     {}
+            //   )}`,
 
-              lastUpdated: ` ${`Last Updated: ${new Date(
-                NetworkDiff[0].timestamp
-              ).toDateString()}`}`,
-            },
+            //   lastUpdated: ` ${`Last Updated: ${new Date(
+            //     NetworkDiff[0].timestamp
+            //   ).toDateString()}`}`,
+            // },
+            // {
+            //   title: "Network Hashrate",
+            //   value: `${NetworkOverview.networkHashrate7d.toLocaleString(
+            //     "en-us",
+            //     {
+            //       minimumFractionDigits: 0,
+            //     }
+            //   )} TH/s`,
+            //   // change: `Fees in Blocks (24h): ${NetworkOverview.feesBlocks24h} BTC`,
+            //   additional: `Est. Difficulty Adjustment: ${NetworkOverview.estDiffAdj}%`,
+            //   changeColor: "text-gray-500",
+            // },
             {
-              title: "Network Hashrate",
-              value: `${NetworkOverview.networkHashrate7d.toLocaleString(
-                "en-us",
-                {
-                  minimumFractionDigits: 0,
-                }
-              )} TH/s`,
-              // change: `Fees in Blocks (24h): ${NetworkOverview.feesBlocks24h} BTC`,
-              additional: `Est. Difficulty Adjustment: ${NetworkOverview.estDiffAdj}%`,
+              title: "Combined Realized Hashrate",
+              value: `${ConsolidatedHashrate} TH/s`,
+              change: `Last Updated: ${getMarketMetrics.updated}`,
               changeColor: "text-gray-500",
             },
             {
-              title: "Block Reward",
-              value: `${BlockReward[0].blockReward} BTC`,
-              change: `Last Updated: ${new Date(
-                BlockReward[0].timestamp
-              ).toDateString()}`,
+              title: "Total Bitcoin Holdings",
+              value: `${totalHolding} BTC`,
+              change: `Last Updated: ${getMarketMetrics.updated}`,
+              changeColor: "text-gray-500",
+            },
+            {
+              title: "Market Share By Production",
+              value: `${marketShareByProduction}`,
+              change: `Last Updated: ${getMarketMetrics.updated}`,
               changeColor: "text-gray-500",
             },
           ].map((item, index) => (
             <div key={index} className="bg-white p-4 rounded-lg shadow">
-              <h3 className="font-semibold mb-2">{item.title}</h3>
+              <h3 className="font-semibold mb-2 capitalize">{item.title}</h3>
               <div className="text-2xl font-bold">{item.value}</div>
               <div className={`text-sm ${item.changeColor}`}>{item.change}</div>
               {item.additional ? (
