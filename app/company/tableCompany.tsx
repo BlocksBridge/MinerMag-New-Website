@@ -138,7 +138,7 @@ export default function ComsDA({ data }) {
   const handleResize = useCallback(() => {
     const mobile = window.innerWidth < 768;
     setIsMobile(mobile);
-    setColumnDefs(mobile ? mobileColumns : desktopColumns);
+    setColumnDefs(desktopColumns);
 
     // Force grid to refresh with new columns
     if (gridRef.current && gridRef.current.api) {
@@ -169,13 +169,13 @@ export default function ComsDA({ data }) {
   }, []);
 
   return (
-    <div className="mt-5  w-full">
-      <div className="ag-theme-alpine ">
+    <div className="mt-5 h-[500px] w-full">
+      <div className="ag-theme-alpine h-[500px] w-full">
         <AgGridReact
           ref={gridRef}
           columnDefs={columnDefs}
           rowData={data}
-          domLayout="autoHeight"
+          domLayout="normal"
           onGridReady={onGridReady}
           defaultColDef={{
             resizable: true,
