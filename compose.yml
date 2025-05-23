@@ -6,6 +6,8 @@ services:
     build:
       context: . # Assuming your Dockerfile is in the same directory
       dockerfile: Dockerfile # Your Next.js Dockerfile
+    env_file:
+      - "/theminermag.env"
     volumes:
       # Mount a volume to persist the standalone build output and make it accessible to Caddy
       - nextjs_standalone_data:/app/.next/standalone
@@ -14,40 +16,10 @@ services:
     # ports:
     #   - "3000" # Only expose internally to the docker network
     restart: "always"
-    deploy:
-      replicas: 5
     environment:
       - NODE_ENV=production
       - PORT=3000 # Ensure Next.js listens on this port
 
-  # Your Caddy service
-  caddy:
-    image: caddy:latest
-    ports:
-      - "80:80" # Standard HTTP port
-      - "443:443" # Standard HTTPS port
-    volumes:
-      - ./Caddyfile:/etc/caddy/config/Caddyfile # Mount your Caddyfile
-      - caddy_data:/data # Caddy data for certificates etc.
-      # Mount the same volume as the Next.js service to access the standalone output
-      # The path here (/app/.next/standalone) should match the path used in the Caddyfile's root directives.
-    #      - nextjs_standalone_data:/path/where/caddy/accesses/standalone
-    command: caddy run --config /etc/caddy/config/Caddyfile
-
-    depends_on:
-      - theminermag # Ensure Next.js service starts before Caddy
-  autoheal:
-    deploy:
-      replicas: 1
-    environment:
-      AUTOHEAL_CONTAINER_LABEL: all
-    image: willfarrell/autoheal:latest
-    network_mode: none
-    restart: always
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock
 # Define the volumes
 volumes:
   nextjs_standalone_data: # Volume to share Next.js standalone build output
-  caddy_data: # Volume for Caddy data (certs, etc.)

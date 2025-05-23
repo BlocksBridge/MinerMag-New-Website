@@ -37,7 +37,6 @@ COPY --from=builder /app/public ./public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/.env ./.env
 # Copy public directory and static files if they exist and are needed
 # The standalone output does NOT include public or .next/static by default.
 # If your app serves static assets from public or requires .next/static, uncomment
