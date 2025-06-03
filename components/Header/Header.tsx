@@ -5,7 +5,7 @@ import { companies } from "@/app/companiesData";
 import Search from "./Search";
 import numeral from "numeral";
 import "./Header.css";
-import { ChevronDown, Building2, ChevronUp, Menu, X } from "lucide-react";
+import { ChevronDown, Building2, ChevronUp, Menu, X, Mail } from "lucide-react";
 import "@/app/company/[company]/tradingView.css";
 import TickerTape from "./StockTicker";
 import MobileHeader from "./MobileHeader";
@@ -196,15 +196,16 @@ export default async function Header() {
                   <p className="p-2 text-black">{datetime}</p>
                 </div>
               </div>
-              <Link
-                className="text-sm font-medium hover:text-blue-600"
-                href="/newsletter/login">
-                Newsletter
-              </Link>
+
               <Link
                 className="text-sm font-medium hover:text-blue-600"
                 href="/research">
                 RESEARCH
+              </Link>
+              <Link
+                className="text-sm font-medium hover:text-blue-600"
+                href="/newsletter/login">
+                <Mail className="w-5 h-5" /> {/* Use Mail icon here */}
               </Link>
               <Search />
             </nav>
