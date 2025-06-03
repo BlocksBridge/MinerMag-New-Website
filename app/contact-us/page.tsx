@@ -201,7 +201,7 @@ export default function AboutUs() {
                   industry.
                 </p>
                 <a
-                  href="#"
+                  href="https://blocksbridge.com"
                   className="inline-block bg-white text-black font-normal py-2 px-4 rounded hover:bg-gray-100 transition duration-300">
                   Visit BlocksBridge
                 </a>
