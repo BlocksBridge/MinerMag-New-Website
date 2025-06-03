@@ -90,8 +90,28 @@ export default function RegisterPage() {
       showToast("Please enter your email", "error");
       return false;
     }
+    // Enhanced password validation
     if (formData.password.length < 8) {
       showToast("Password must be at least 8 characters", "error");
+      return false;
+    }
+    if (!/[A-Z]/.test(formData.password)) {
+      showToast("Password must contain at least one uppercase letter", "error");
+      return false;
+    }
+    if (!/[a-z]/.test(formData.password)) {
+      showToast("Password must contain at least one lowercase letter", "error");
+      return false;
+    }
+    if (!/\d/.test(formData.password)) {
+      showToast("Password must contain at least one number", "error");
+      return false;
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+      showToast(
+        "Password must contain at least one special character",
+        "error"
+      );
       return false;
     }
     if (formData.password !== formData.confirmPassword) {
@@ -113,14 +133,14 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/register", {
+      const response = await fetch("/api/newsletter/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
+          name: formData.name.trim(),
+          email: formData.email.toLowerCase().trim(),
           password: formData.password,
         }),
       });
@@ -129,8 +149,16 @@ export default function RegisterPage() {
 
       if (response.ok) {
         showToast("Account created successfully! Redirecting to login...");
+        // Clear form
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+        setAgreedToTerms(false);
         setTimeout(() => {
-          window.location.href = "/login";
+          window.location.href = "/newsletter/login";
         }, 2000);
       } else {
         showToast(data.error || "Registration failed", "error");
@@ -297,11 +325,9 @@ export default function RegisterPage() {
                 htmlFor="agree-terms"
                 className="ml-2 block text-sm text-gray-900">
                 I agree to the{" "}
-                <a href="#" className="text-blue-600 hover:text-blue-500">
-                  Terms and Conditions
-                </a>{" "}
-                and{" "}
-                <a href="#" className="text-blue-600 hover:text-blue-500">
+                <a
+                  href="/privacy-policy"
+                  className="text-blue-600 hover:text-blue-500">
                   Privacy Policy
                 </a>
               </label>

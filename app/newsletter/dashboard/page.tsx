@@ -3,28 +3,7 @@
 import { useEffect, useState } from "react";
 import { Mail } from "lucide-react";
 import Link from "next/link";
-
-// Mock newsletter data
-const NEWSLETTERS = [
-  {
-    id: 1,
-    name: "Daily Digest",
-    description: "Top stories delivered every morning",
-    subscribed: true,
-  },
-  {
-    id: 2,
-    name: "Breaking News",
-    description: "Important updates as they happen",
-    subscribed: true,
-  },
-  {
-    id: 3,
-    name: "Weekly Roundup",
-    description: "A summary of the week's top stories",
-    subscribed: false,
-  },
-];
+import { logout } from "./logout";
 
 // Toast notification component
 function Toast({ message, onClose }) {
@@ -41,7 +20,25 @@ function Toast({ message, onClose }) {
     </div>
   );
 }
-
+// Reusable Modal Component
+function Modal({ children, title, onClose }) {
+  return (
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex justify-center items-center z-50">
+      <div className="bg-white rounded-lg shadow-xl max-w-sm w-full mx-4">
+        <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+          <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600">
+            <span className="sr-only">Close</span>
+            &times;
+          </button>
+        </div>
+        <div className="p-6">{children}</div>
+      </div>
+    </div>
+  );
+}
 // Custom Switch component
 function Switch({ checked, onChange }) {
   return (
@@ -74,15 +71,42 @@ function Checkbox({ checked, onChange, id }) {
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
-  const [newsletters, setNewsletters] = useState(NEWSLETTERS);
-  const [emailFrequency, setEmailFrequency] = useState("daily");
+  const [newsletters, setNewsletters] = useState(null);
   const [notifications, setNotifications] = useState(true);
   const [toast, setToast] = useState(null);
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [deletePassword, setDeletePassword] = useState(""); // Password for delete confirmation
+  const [deleteAccountError, setDeleteAccountError] = useState(""); // Specific error for delete account
 
   useEffect(() => {
     // Set a default user for public access
-    setUser({ email: "guest@example.com" });
+    (async () => {
+      let data = await fetch(`/api/newsletter`).then((res) => res.json());
+      console.log(data, data.email_preferences), "data";
+      setUser(data.email);
+      setNewsletters(data.email_preferences.newsletters);
+      setNotifications(data.email_preferences.email_paused);
+    })();
   }, []);
+  useEffect(() => {
+    (async () => {
+      if (user) {
+        await fetch(`/api/newsletter`, {
+          method: "POST",
+          body: JSON.stringify({
+            email_preferences: {
+              newsletters: newsletters,
+              email_paused: notifications,
+            },
+          }),
+        }).then((res) => res.json());
+      }
+    })();
+  }, [newsletters, notifications]);
 
   const showToast = (message) => {
     setToast(message);
@@ -103,9 +127,91 @@ export default function Dashboard() {
 
     showToast("Your newsletter preferences have been saved");
   };
+  const handlePasswordChange = async () => {
+    setPasswordError(""); // Clear previous errors
 
-  const handleDeleteAccount = () => {
-    showToast("You need to create an account to use this feature");
+    if (!newPassword || !confirmNewPassword) {
+      setPasswordError("Please fill in both password fields.");
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      setPasswordError("Passwords do not match.");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      // Example: minimum password length
+      setPasswordError("Password must be at least 8 characters long.");
+      return;
+    }
+
+    try {
+      // In a real application, you might also send the current password for verification
+      const res = await fetch(`/api/newsletter/reset`, {
+        // Using the same endpoint but with a different payload
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password: newPassword }),
+      });
+
+      if (res.ok) {
+        showToast("Your password has been changed successfully!");
+        setNewPassword("");
+        setConfirmNewPassword("");
+        setShowResetPasswordModal(false);
+      } else {
+        const errorData = await res.json();
+        showToast(errorData.message || "Failed to change password.");
+        setPasswordError(errorData.message || "Failed to change password.");
+      }
+    } catch (error) {
+      console.error("Error changing password:", error);
+      showToast("An error occurred while changing password.");
+      setPasswordError("An unexpected error occurred.");
+    }
+  };
+  const handleDeleteAccount = async () => {
+    setDeleteAccountError(""); // Clear previous errors
+
+    if (!deletePassword) {
+      setDeleteAccountError("Please enter your password to confirm.");
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/newsletter/delete`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password: deletePassword }), // Send the entered password
+      });
+
+      if (res.ok) {
+        showToast("Your account has been successfully deleted.");
+        logout(); // Log the user out after deletion
+      } else {
+        const errorData = await res.json();
+        setDeleteAccountError(
+          errorData.message ||
+            "Failed to delete account. Please check your password."
+        );
+        showToast(errorData.message || "Failed to delete account.");
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      showToast("An error occurred during account deletion.");
+      setDeleteAccountError("An unexpected error occurred.");
+    } finally {
+      // Don't close the modal on error, let the user see the error message
+      // Only close on success or explicit cancel
+      if (res && res.ok) {
+        setShowDeleteAccountModal(false);
+      }
+    }
   };
 
   if (!user) {
@@ -121,15 +227,16 @@ export default function Dashboard() {
             TheMinerMag Newsletter
           </h1>
           <div className="flex items-center gap-4">
-            <a
-              href="/login"
+            <button
+              onClick={async () => {
+                logout();
+              }}
               className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
               Log Out
-            </a>
+            </button>
           </div>
         </div>
       </header>
-
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid gap-8 md:grid-cols-3">
@@ -175,57 +282,9 @@ export default function Dashboard() {
                 <h2 className="text-lg font-medium text-gray-900">
                   Email Preferences
                 </h2>
-                <p className="text-sm text-gray-500">
-                  Customize how and when you receive our emails
-                </p>
               </div>
               <div className="px-6 py-4 space-y-6">
                 <div className="space-y-4">
-                  <h3 className="text-sm font-medium text-gray-900">
-                    Email Frequency
-                  </h3>
-                  <div className="grid gap-2">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="daily"
-                        checked={emailFrequency === "daily"}
-                        onChange={() => setEmailFrequency("daily")}
-                      />
-                      <label htmlFor="daily" className="text-sm text-gray-900">
-                        Daily (Recommended)
-                      </label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="weekly"
-                        checked={emailFrequency === "weekly"}
-                        onChange={() => setEmailFrequency("weekly")}
-                      />
-                      <label htmlFor="weekly" className="text-sm text-gray-900">
-                        Weekly digest
-                      </label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="monthly"
-                        checked={emailFrequency === "monthly"}
-                        onChange={() => setEmailFrequency("monthly")}
-                      />
-                      <label
-                        htmlFor="monthly"
-                        className="text-sm text-gray-900">
-                        Monthly summary
-                      </label>
-                    </div>
-                  </div>
-                </div>
-
-                <hr className="border-gray-200" />
-
-                <div className="space-y-4">
-                  <h3 className="text-sm font-medium text-gray-900">
-                    Notification Settings
-                  </h3>
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
                       <div className="text-sm text-gray-900">Pause Emails</div>
@@ -262,16 +321,16 @@ export default function Dashboard() {
                 </p>
 
                 <div className="flex flex-col gap-2">
-                  <a
-                    href="/login"
+                  <button
+                    onClick={() => setShowResetPasswordModal(true)}
                     className="inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                     Change Password
-                  </a>
-                  <a
-                    href="/login"
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteAccountModal(true)}
                     className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                     Delete Account
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
@@ -300,9 +359,109 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
-
       {/* Toast Notification */}
       {toast && <Toast message={toast} onClose={hideToast} />}
+      {/* Reset Password Modal */}
+      {/* Change Password Modal */}
+      {showResetPasswordModal && (
+        <Modal
+          title="Change Password"
+          onClose={() => setShowResetPasswordModal(false)}>
+          <div className="space-y-4">
+            <div>
+              <label
+                htmlFor="new-password"
+                className="block text-sm font-medium text-gray-700">
+                New Password
+              </label>
+              <input
+                type="password"
+                id="new-password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="Enter new password"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="confirm-new-password"
+                className="block text-sm font-medium text-gray-700">
+                Confirm New Password
+              </label>
+              <input
+                type="password"
+                id="confirm-new-password"
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="Confirm new password"
+              />
+            </div>
+            {passwordError && (
+              <p className="text-sm text-red-600">{passwordError}</p>
+            )}
+          </div>
+          <div className="mt-6 flex justify-end gap-2">
+            <button
+              onClick={() => setShowResetPasswordModal(false)}
+              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+              Cancel
+            </button>
+            <button
+              onClick={handlePasswordChange}
+              className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+              Set New Password
+            </button>
+          </div>
+        </Modal>
+      )}
+      {/* Delete Account Modal */}
+      {showDeleteAccountModal && (
+        <Modal
+          title="Delete Account"
+          onClose={() => setShowDeleteAccountModal(false)}>
+          <div className="space-y-4">
+            <p className="text-sm text-red-700">
+              Are you sure you want to delete your account? This action cannot
+              be undone. All your data will be permanently removed.
+            </p>
+            <p className="text-sm text-gray-700">
+              Please enter your password to confirm:
+            </p>
+            <div>
+              <label htmlFor="delete-password" className="sr-only">
+                {" "}
+                {/* Screen reader only label */}
+                Your Password
+              </label>
+              <input
+                type="password"
+                id="delete-password"
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
+                placeholder="Enter your password"
+              />
+            </div>
+            {deleteAccountError && (
+              <p className="text-sm text-red-600">{deleteAccountError}</p>
+            )}
+          </div>
+          <div className="mt-6 flex justify-end gap-2">
+            <button
+              onClick={() => setShowDeleteAccountModal(false)}
+              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+              Cancel
+            </button>
+            <button
+              onClick={handleDeleteAccount}
+              className="px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-red-600 hover:bg-red-700">
+              Confirm Delete
+            </button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
