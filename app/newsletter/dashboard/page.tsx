@@ -332,9 +332,11 @@ export default function Dashboard() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <div className="text-sm text-gray-900">Pause Emails</div>
+                      <div className="text-sm text-gray-900">
+                        Unsubscribe Emails
+                      </div>
                       <div className="text-xs text-gray-500">
-                        Temporarily Pause Receiving Emails
+                        Pause Receiving Emails
                       </div>
                     </div>
                     <Switch
