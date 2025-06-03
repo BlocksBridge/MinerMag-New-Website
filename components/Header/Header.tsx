@@ -198,6 +198,11 @@ export default async function Header() {
               </div>
               <Link
                 className="text-sm font-medium hover:text-blue-600"
+                href="/newsletter/login">
+                Newsletter
+              </Link>
+              <Link
+                className="text-sm font-medium hover:text-blue-600"
                 href="/research">
                 RESEARCH
               </Link>
