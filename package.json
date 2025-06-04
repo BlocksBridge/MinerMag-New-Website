@@ -11,6 +11,8 @@
   "dependencies": {
     "@next/third-parties": "^15.3.2",
     "@radix-ui/react-tabs": "^1.1.11",
+    "@react-email/components": "^0.0.41",
+    "@react-email/render": "^1.1.2",
     "@supabase/supabase-js": "^2.49.4",
     "ag-grid-community": "^33.3.0",
     "ag-grid-react": "^33.3.0",
@@ -32,6 +34,7 @@
     "numeral": "^2.0.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-email": "^4.0.16",
     "react-resizable-panels": "^2.1.9",
     "react-ts-tradingview-widgets": "^1.2.8",
     "remark": "^15.0.1",
