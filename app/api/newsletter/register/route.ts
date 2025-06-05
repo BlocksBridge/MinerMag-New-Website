@@ -5,8 +5,8 @@ import { cookies } from "next/headers"; // Import cookies from next/headers
 
 // Initialize Supabase client
 const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_ANON_KEY! // Use service role key for admin operations
+  process.env.SUPABASE_URL!!,
+  process.env.SUPABASE_ANON_KEY!! // Use service role key for admin operations
 );
 
 // Helper function to validate email format

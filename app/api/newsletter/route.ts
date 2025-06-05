@@ -4,8 +4,8 @@ import { createClient } from "@supabase/supabase-js";
 
 // Initialize Supabase client
 const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_ANON_KEY! // Use service role key for admin operations
+  process.env.SUPABASE_URL!!,
+  process.env.SUPABASE_ANON_KEY!! // Use service role key for admin operations
 );
 export async function GET(request: NextRequest, response: NextResponse) {
   const cookieStore = await cookies();
