@@ -5,8 +5,8 @@ import { count } from "console";
 export async function GET(req: NextRequest, res: NextResponse) {
   let secFilling = req.nextUrl.searchParams;
   const supabase = createClient(
-    "https://supabase.theminermag.com",
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc0Nzk5Nzg4MCwiZXhwIjo0OTAzNjcxNDgwLCJyb2xlIjoiYW5vbiJ9.1TWq_0FwQFabvEbW3EgaIpQoxaSs97FdpYfmU-8ikew"
+    "process.env.SUPABASE_URL",
+    "process.env.SUPABASE_ANON_KEY"
   );
 
   if ((secFilling.has("cik"), secFilling.has("date"))) {
@@ -34,8 +34,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
   let secFilling = req.nextUrl.searchParams;
   let body = await req.json();
   const supabase = createClient(
-    "https://supabase.theminermag.com",
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc0Nzk5Nzg4MCwiZXhwIjo0OTAzNjcxNDgwLCJyb2xlIjoiYW5vbiJ9.1TWq_0FwQFabvEbW3EgaIpQoxaSs97FdpYfmU-8ikew"
+    "process.env.SUPABASE_URL",
+    "process.env.SUPABASE_ANON_KEY"
   );
   if (secFilling.has("cik") && secFilling.has("date") && body["summary"]) {
     let setSECData = await supabase

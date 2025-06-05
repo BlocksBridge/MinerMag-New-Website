@@ -4,8 +4,8 @@ import { companies } from "../../companiesData";
 
 export async function GET(req: NextRequest, res: NextResponse) {
   const supabase = createClient(
-    "https://supabase.theminermag.com",
-    "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTc0Nzk5Nzg4MCwiZXhwIjo0OTAzNjcxNDgwLCJyb2xlIjoiYW5vbiJ9.1TWq_0FwQFabvEbW3EgaIpQoxaSs97FdpYfmU-8ikew"
+    "process.env.SUPABASE_URL",
+    "process.env.SUPABASE_ANON_KEY"
   );
   let companyFilter = Object.fromEntries(companies.map((i) => [i, i]));
   let companyProfile = await supabase.from("marketdata").select("");
