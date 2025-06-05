@@ -4,8 +4,8 @@ import { NormaliseMinerMagData } from "@/lib/utils";
 export async function GET(req: NextRequest, res: NextResponse) {
   let companySymbol = req.nextUrl.searchParams;
   const supabase = createClient(
-    "process.env.SUPABASE_URL",
-    "process.env.SUPABASE_ANON_KEY"
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!
   );
 
   if (companySymbol.has("company")) {

@@ -4,8 +4,8 @@ import { companies } from "../../companiesData";
 
 export async function GET(req: NextRequest, res: NextResponse) {
   const supabase = createClient(
-    "process.env.SUPABASE_URL",
-    "process.env.SUPABASE_ANON_KEY"
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!
   );
   let companyFilter = Object.fromEntries(companies.map((i) => [i, i]));
   let companyProfile = await supabase.from("marketdata").select("");

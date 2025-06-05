@@ -5,8 +5,8 @@ import { count } from "console";
 export async function GET(req: NextRequest, res: NextResponse) {
   let secFilling = req.nextUrl.searchParams;
   const supabase = createClient(
-    "process.env.SUPABASE_URL",
-    "process.env.SUPABASE_ANON_KEY"
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!
   );
 
   if ((secFilling.has("cik"), secFilling.has("date"))) {
@@ -34,8 +34,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
   let secFilling = req.nextUrl.searchParams;
   let body = await req.json();
   const supabase = createClient(
-    "process.env.SUPABASE_URL",
-    "process.env.SUPABASE_ANON_KEY"
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!
   );
   if (secFilling.has("cik") && secFilling.has("date") && body["summary"]) {
     let setSECData = await supabase

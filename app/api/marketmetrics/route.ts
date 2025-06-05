@@ -4,8 +4,8 @@ import { NormaliseMinerMagData } from "@/lib/utils";
 import { access } from "node:fs";
 export async function GET(req: NextRequest, res: NextResponse) {
   const supabase = createClient(
-    "process.env.SUPABASE_URL",
-    "process.env.SUPABASE_ANON_KEY"
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!
   );
 
   let getHashrate = await supabase

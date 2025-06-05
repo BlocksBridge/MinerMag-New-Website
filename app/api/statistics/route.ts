@@ -4,8 +4,8 @@ import { NormaliseMinerMagData } from "@/lib/utils";
 export async function GET(req: NextRequest, res: NextResponse) {
   // Create a single supabase client for interacting with your database
   const supabase = createClient(
-    "process.env.SUPABASE_URL",
-    "process.env.SUPABASE_ANON_KEY"
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!
   );
   let getRealizedData = await supabase
     .from("statistics")
