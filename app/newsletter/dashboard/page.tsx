@@ -81,6 +81,7 @@ export default function Dashboard() {
   const [passwordError, setPasswordError] = useState("");
   const [deletePassword, setDeletePassword] = useState(""); // Password for delete confirmation
   const [deleteAccountError, setDeleteAccountError] = useState(""); // Specific error for delete account
+  const [emailVerified, setEmailVerified] = useState(true);
 
   useEffect(() => {
     // Set a default user for public access
@@ -90,6 +91,7 @@ export default function Dashboard() {
       setUser(data.email);
       setNewsletters(data.email_preferences.newsletters);
       setNotifications(data.email_preferences.email_paused);
+      setEmailVerified(data.email_verified); // Set email verification status
     })();
   }, []);
   useEffect(() => {
@@ -213,18 +215,39 @@ export default function Dashboard() {
       }
     }
   };
+  const handleSendVerificationEmail = async () => {
+    try {
+      const res = await fetch(`/api/newsletter/verify`, {
+        method: "POST",
+      });
 
+      if (res.ok) {
+        console.log(res);
+        showToast("Verification email sent! Please check your inbox.");
+      } else {
+        const errorData = await res.json();
+        showToast(
+          errorData.message ||
+            "Failed to send verification email. Please try again."
+        );
+      }
+    } catch (error) {
+      console.error("Error sending verification email:", error);
+      showToast("An error occurred while sending verification email.");
+    }
+  };
   if (!user) {
     return null;
   }
+  const isContentDisabled = !emailVerified;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className=" bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <h1 className="text-xl font-bold text-gray-900">
-            TheMinerMag Newsletter
+            TheMinerMag Account
           </h1>
           <div className="flex items-center gap-4">
             <button
@@ -239,7 +262,29 @@ export default function Dashboard() {
       </header>
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid gap-8 md:grid-cols-3">
+        {!emailVerified && (
+          <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-md">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Mail className="h-5 w-5 mr-3" />
+                <p className="font-bold">Email Not Verified</p>
+              </div>
+              <button
+                onClick={handleSendVerificationEmail}
+                className="ml-4 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
+                Send Verification Email
+              </button>
+            </div>
+            <p className="text-sm mt-2">
+              Please verify your email address to unlock all features and save
+              your preferences.
+            </p>
+          </div>
+        )}
+        <div
+          className={`grid gap-8 md:grid-cols-3 ${
+            isContentDisabled ? "opacity-50 pointer-events-none" : ""
+          }`}>
           {/* Left Column */}
           <div className="md:col-span-2 space-y-6">
             {/* Newsletter Subscriptions Card */}
@@ -287,9 +332,11 @@ export default function Dashboard() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <div className="text-sm text-gray-900">Pause Emails</div>
+                      <div className="text-sm text-gray-900">
+                        Unsubscribe Emails
+                      </div>
                       <div className="text-xs text-gray-500">
-                        Temporarily Pause Receiving Emails
+                        Pause Receiving Emails
                       </div>
                     </div>
                     <Switch
