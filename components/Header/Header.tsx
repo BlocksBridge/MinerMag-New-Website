@@ -209,11 +209,11 @@ export default async function Header() {
                 href="/research">
                 RESEARCH
               </Link>
-              <Link
+              {/* <Link
                 className="text-sm font-medium hover:text-blue-600"
                 href="/newsletter/login">
-                <CircleUser className="w-5 h-5" /> {/* Use Mail icon here */}
-              </Link>
+                <CircleUser className="w-5 h-5" />
+              </Link> */}
               <Search />
             </nav>
             <MobileHeader />
