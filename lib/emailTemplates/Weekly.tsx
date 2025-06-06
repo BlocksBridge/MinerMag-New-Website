@@ -1,3 +1,4 @@
+"use client";
 // emails/WeeklyNewsletterTemplate.jsx
 import * as React from "react";
 import {

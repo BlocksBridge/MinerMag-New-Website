@@ -10,6 +10,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     .from("marketdata")
     .select("")
     .eq("slug", `network`);
+  console.log(getNetworkData);
   if (getNetworkData.error || !getNetworkData.data.length) {
     return NextResponse.json({ error: "Something went wrong" });
   } else {

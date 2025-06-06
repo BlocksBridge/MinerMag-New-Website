@@ -1,3 +1,4 @@
+"use client";
 // emails/NewArticleTemplate.jsx
 import * as React from "react";
 import {
