@@ -5,7 +5,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_ANON_KEY!
   );
-
+  console.log(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
   let getNetworkData = await supabase
     .from("marketdata")
     .select("")
