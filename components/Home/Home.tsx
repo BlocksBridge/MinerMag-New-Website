@@ -134,6 +134,8 @@ export default async function HomePage({
                   className="object-cover"
                   fill
                   src={getPosts[0].acf.main_image}
+                  fetchPriority="high"
+                  loading="lazy"
                 />
               </div>
               <div className="p-6">

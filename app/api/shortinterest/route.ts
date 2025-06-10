@@ -14,7 +14,7 @@ export async function POST() {
   let shortInterest = await Promise.all(
     allcompany.map(async (i) => {
       let getData = await fetch(
-        ` https://api.nasdaq.com/api/quote/${i}/short-interest?assetClass=stocks`
+        `https://api.nasdaq.com/api/quote/${i}/short-interest?assetClass=stocks`
       ).then((res) => res.json());
       const { data, error } = await supabase
         .from("marketdata")
