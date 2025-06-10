@@ -3,6 +3,20 @@ import { generatePostsSitepmap } from "../lib/utils";
 import { companies } from "./companiesData";
 export default async function sitemap(): MetadataRoute.Sitemap {
   let getPosts = await generatePostsSitepmap();
+  let filteredPosts = getPosts.filter((i: { link: string }) => {
+    if (!i.link.includes("/data/")) {
+      if (
+        i.link.includes("/news/") ||
+        i.link.includes("/research/") ||
+        i.link.includes("/home/")
+      ) {
+        let newLink = i.link.replace("/home/", "/news/");
+        return { ...i, link: newLink };
+      }
+    } else {
+      return false;
+    }
+  });
   let staticPages = [
     {
       url: process.env.NEXT_PUBLIC_website_url!,
@@ -21,7 +35,7 @@ export default async function sitemap(): MetadataRoute.Sitemap {
       url: process.env.NEXT_PUBLIC_website_url + "/contact-us",
     },
   ];
-  let postsForSitemap = getPosts.map((item) => {
+  let postsForSitemap = filteredPosts.map((item) => {
     return {
       priority: 0.7,
       lastModified: new Date(item.modified).toISOString(),

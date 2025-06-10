@@ -37,6 +37,7 @@ export async function generatePostsSitepmap() {
         process.env.NEXT_PUBLIC_backend_url || "https://theminermag.com"
       }/wp-json/wp/v2/posts?per_page=100&page=${currPage}&timestamp=${timestamp}`
     ).then((res) => res.json());
+
     if (getPostsFromWordpress?.code !== undefined) {
       shouldRun = false;
     } else {
