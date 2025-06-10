@@ -5,6 +5,12 @@ export default async function sitemap(): MetadataRoute.Sitemap {
   let getPosts = await generatePostsSitepmap();
   let staticPages = [
     {
+      url: process.env.NEXT_PUBLIC_website_url!,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 1.0,
+    },
+    {
       priority: 0.6,
       changeFrequency: "yearly",
       url: process.env.NEXT_PUBLIC_website_url + "/privacy-policy",
@@ -35,5 +41,3 @@ export default async function sitemap(): MetadataRoute.Sitemap {
 }
 
 export const revalidate = 86400;
-export const dynamic = "force-dynamic";
-export const fetchCache = "default-no-store";
