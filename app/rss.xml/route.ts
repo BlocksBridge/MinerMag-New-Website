@@ -68,8 +68,8 @@ export async function GET() {
   const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Your Website Name</title>
-    <description>Your website description</description>
+    <title>TheMinerMag - Bitcoin Mining Stocks, Data, Research and Analysis</title>
+    <description>TheMinerMag is a bitcoin mining news and research platform brought to you by BlocksBridge Consulting, a public relations firm dedicated to the bitcoin mining industry. TheMinerMag operates with full editorial independence, delivering accurate, data-driven insights and unbiased analysis on industry trends.</description>
     <link>${process.env.NEXT_PUBLIC_website_url}</link>
     <language>en-us</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
