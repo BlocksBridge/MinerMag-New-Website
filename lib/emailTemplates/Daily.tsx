@@ -1,62 +1,53 @@
 "use client";
 // emails/NewArticleTemplate.jsx
-import * as React from "react";
+// import { useEffect, useState } from "react";
+
 import {
-  Html,
-  Head,
   Body,
-  Container,
-  Section,
-  Row,
-  Column,
-  Heading,
-  Text,
-  Link,
-  Img,
   Button,
-  Hr,
+  Column,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Img,
+  Link,
+  Row,
+  Section,
+  Text,
 } from "@react-email/components";
-import { useEffect, useState } from "react";
-export default function NewArticleTemplate() {
-  const currentDate = new Date();
-  const publishDate = currentDate.toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-  const publishTime = currentDate.toLocaleTimeString("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZoneName: "short",
-  });
 
-  const [article, setArticle] = useState("");
+export default function BreakingNewsletter({ getPosts, networkData }) {
+  console.log(getPosts);
+  if (getPosts.length) {
+    const three = getPosts.slice(0, 4).map((item) => {
+      return {
+        //   image: "/placeholder.svg?height=200&width=400",
+        image: item.acf.main_image,
+        date: item.date,
+        title: item.title.rendered,
+        excerpt: item.acf.sub_title,
+        link: item.link,
+      };
+    });
+    const publishDate = new Date().toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const publishTime = new Date().toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZoneName: "short",
+    });
+    const NetworkOverview = networkData.networkOverview.data;
 
-  useEffect(() => {
-    (async () => {
-      const getPosts: [any] = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_backend_url
-        }/wp-json/wp/v2/posts?acf_format=standard&_=${Date.now()}`,
-        { next: { revalidate: 3600 } }
-      ).then((res) => res.json());
-      const three = getPosts.slice(0, 4).map((item) => {
-        return {
-          //   image: "/placeholder.svg?height=200&width=400",
-          image: item.acf.main_image,
-          date: item.date,
-          title: item.title.rendered,
-          excerpt: item.acf.sub_title,
-          link: item.link,
-        };
-      });
-      setArticle(three);
-    })();
-    return () => {};
-  }, []);
-  if (article.length) {
-    console.log(article);
+    const BlockReward = networkData.blockReward.data;
+    const NetworkDiff = networkData.networkDiff.data;
+    const BitcoinPrice = networkData.bitcoinPrice.data[0].closePrice;
+    const NetworkHashrate = networkData.networkOverview.data.networkHashrate7d;
+
     return (
       <Html>
         <Head />
@@ -66,7 +57,6 @@ export default function NewArticleTemplate() {
             style={{
               maxWidth: "600px",
               margin: "0 auto",
-
               backgroundColor: "#ffffff",
               padding: "10px",
             }}>
@@ -74,7 +64,6 @@ export default function NewArticleTemplate() {
             <Section
               style={{
                 backgroundColor: "#2563eb",
-
                 borderRadius: "8px 8px 0 0",
               }}>
               <Row>
@@ -93,22 +82,16 @@ export default function NewArticleTemplate() {
                             height: "24px",
                             width: "24px",
                             backgroundColor: "white",
-                            // borderRadius: "50%",
-
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
                           }}>
-                          <Img src={"/favicon.png"} width={24} height={24} />
-                          {/* <Text
-                          style={{
-                            color: "#ffffff",
-                            fontWeight: "bold",
-                            fontSize: "14px",
-                            margin: 0,
-                          }}>
-                          M
-                        </Text> */}
+                          <Img
+                            src={"https://theminermag.com/favicon.png"}
+                            width={24}
+                            height={24}
+                            alt="Logo"
+                          />
                         </div>
                       </div>
                     </Column>
@@ -133,7 +116,7 @@ export default function NewArticleTemplate() {
                   }}>
                   <Text
                     style={{ color: "#ffffff", fontSize: "14px", margin: 0 }}>
-                    🔔 New Article
+                    🔔 Breaking News
                   </Text>
                 </Column>
               </Row>
@@ -171,40 +154,18 @@ export default function NewArticleTemplate() {
                     margin: 0,
                     display: "inline",
                   }}>
-                  {publishTime}
+                  {publishDate}
                 </Text>
               </div>
             </Section>
 
-            {/* Article Content */}
+            {/* Main Article Content */}
             <Section
               style={{
                 padding: "24px",
-
                 border: "1px solid #e5e7eb",
                 borderTop: "none",
               }}>
-              {/* Publication Info */}
-              <Row
-                style={{
-                  marginBottom: "16px",
-
-                  width: "95%",
-                }}>
-                <Column style={{ width: "50%" }}>
-                  <Text
-                    style={{ fontSize: "14px", color: "#6b7280", margin: 0 }}>
-                    📅 {publishDate}
-                  </Text>
-                </Column>
-                <Column style={{ width: "50%", textAlign: "right" }}>
-                  <Text
-                    style={{ fontSize: "14px", color: "#6b7280", margin: 0 }}>
-                    ⏱️ 5 min read
-                  </Text>
-                </Column>
-              </Row>
-
               {/* Article Title */}
               <Heading
                 style={{
@@ -217,32 +178,31 @@ export default function NewArticleTemplate() {
                   padding: "0 0 0 10px",
                   lineHeight: "1.3",
                 }}>
-                {article[0].title}
+                {three[0].title}
               </Heading>
 
-              {/* Article Image Placeholder */}
+              {/* Article Image */}
               <Section
                 style={{
-                  height: "200px",
-                  width: "100%",
                   marginBottom: "16px",
-                  borderRadius: "8px",
-                  backgroundColor: "#f3f4f6",
-                  border: "1px solid #e5e7eb",
+                  margin: "auto",
                   textAlign: "center",
-                  padding: "60px 0",
                 }}>
-                <Img src={article[0].image} />
+                <Img
+                  src={three[0].image}
+                  width={"100%"}
+                  height={"auto"}
+                  alt="Article image"
+                />
               </Section>
 
-              {/* Article Summary */}
+              {/* Article Excerpt */}
               <Section
                 style={{
                   backgroundColor: "#eff6ff",
                   borderLeft: "4px solid #3b82f6",
                   padding: "16px",
                   marginBottom: "24px",
-
                   width: "95%",
                 }}>
                 <Heading
@@ -261,113 +221,10 @@ export default function NewArticleTemplate() {
                     fontSize: "14px",
                     lineHeight: "1.5",
                     paddingLeft: "5px",
-
                     margin: 0,
                   }}>
-                  {article[0].excerpt}
+                  {three[0].excerpt}
                 </Text>
-              </Section>
-
-              {/* Key Points */}
-              <Section style={{ marginBottom: "24px" }}>
-                <Heading
-                  style={{
-                    fontWeight: "bold",
-                    color: "#111827",
-                    marginBottom: "12px",
-                    fontSize: "16px",
-                  }}>
-                  💡 Key Highlights
-                </Heading>
-
-                <Text
-                  style={{
-                    fontSize: "14px",
-                    color: "#374151",
-                    margin: "8px 0",
-                    lineHeight: "1.5",
-                  }}>
-                  ✓ $352M sale approved to fund massive hashrate expansion
-                </Text>
-                <Text
-                  style={{
-                    fontSize: "14px",
-                    color: "#374151",
-                    margin: "8px 0",
-                    lineHeight: "1.5",
-                  }}>
-                  ✓ 18 EH/s addition planned for July deployment
-                </Text>
-                <Text
-                  style={{
-                    fontSize: "14px",
-                    color: "#374151",
-                    margin: "8px 0",
-                    lineHeight: "1.5",
-                  }}>
-                  ✓ Energy rate of $0.0758/kWh indicates competitive positioning
-                </Text>
-                <Text
-                  style={{
-                    fontSize: "14px",
-                    color: "#374151",
-                    margin: "8px 0",
-                    lineHeight: "1.5",
-                  }}>
-                  ✓ Significant impact expected on global Bitcoin network
-                  hashrate
-                </Text>
-              </Section>
-
-              {/* Market Impact */}
-              <Section
-                style={{
-                  backgroundColor: "#f9fafb",
-                  padding: "16px",
-                  borderRadius: "8px",
-                  marginBottom: "24px",
-                }}>
-                <Heading
-                  style={{
-                    fontWeight: "bold",
-                    color: "#111827",
-                    marginBottom: "12px",
-                    fontSize: "16px",
-                  }}>
-                  📈 Market Impact
-                </Heading>
-                <Row>
-                  <Column style={{ width: "50%", textAlign: "center" }}>
-                    <Text
-                      style={{
-                        fontSize: "18px",
-                        fontWeight: "bold",
-                        color: "#2563eb",
-                        margin: "0 0 4px 0",
-                      }}>
-                      +3.5%
-                    </Text>
-                    <Text
-                      style={{ fontSize: "12px", color: "#6b7280", margin: 0 }}>
-                      Expected Hashrate Increase
-                    </Text>
-                  </Column>
-                  <Column style={{ width: "50%", textAlign: "center" }}>
-                    <Text
-                      style={{
-                        fontSize: "18px",
-                        fontWeight: "bold",
-                        color: "#059669",
-                        margin: "0 0 4px 0",
-                      }}>
-                      $352M
-                    </Text>
-                    <Text
-                      style={{ fontSize: "12px", color: "#6b7280", margin: 0 }}>
-                      Investment Amount
-                    </Text>
-                  </Column>
-                </Row>
               </Section>
 
               {/* Call to Action */}
@@ -387,85 +244,10 @@ export default function NewArticleTemplate() {
                   }}>
                   Read Full Article →
                 </Button>
-                <Text
-                  style={{
-                    fontSize: "12px",
-                    color: "#6b7280",
-                    margin: "8px 0 0 0",
-                  }}>
-                  Get the complete analysis and expert insights
-                </Text>
-              </Section>
-
-              {/* Social Sharing */}
-              <Hr
-                style={{
-                  border: "none",
-                  borderTop: "1px solid #e5e7eb",
-                  margin: "16px 0",
-                }}
-              />
-              <Section style={{ textAlign: "center", marginBottom: "24px" }}>
-                <Heading
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    color: "#374151",
-                    marginBottom: "12px",
-                  }}>
-                  Share This Article
-                </Heading>
-                <Row>
-                  <Column style={{ width: "33.33%", textAlign: "center" }}>
-                    <Link
-                      href="#"
-                      style={{
-                        backgroundColor: "#3b82f6",
-                        color: "#ffffff",
-                        padding: "8px 16px",
-                        borderRadius: "4px",
-                        textDecoration: "none",
-                        fontSize: "14px",
-                        display: "inline-block",
-                      }}>
-                      📘 Facebook
-                    </Link>
-                  </Column>
-                  <Column style={{ width: "33.33%", textAlign: "center" }}>
-                    <Link
-                      href="#"
-                      style={{
-                        backgroundColor: "#60a5fa",
-                        color: "#ffffff",
-                        padding: "8px 16px",
-                        borderRadius: "4px",
-                        textDecoration: "none",
-                        fontSize: "14px",
-                        display: "inline-block",
-                      }}>
-                      🐦 Twitter
-                    </Link>
-                  </Column>
-                  <Column style={{ width: "33.33%", textAlign: "center" }}>
-                    <Link
-                      href="#"
-                      style={{
-                        backgroundColor: "#1d4ed8",
-                        color: "#ffffff",
-                        padding: "8px 16px",
-                        borderRadius: "4px",
-                        textDecoration: "none",
-                        fontSize: "14px",
-                        display: "inline-block",
-                      }}>
-                      💼 LinkedIn
-                    </Link>
-                  </Column>
-                </Row>
               </Section>
             </Section>
 
-            {/* Related Articles */}
+            {/* Bitcoin Metrics */}
             <Section
               style={{
                 padding: "16px",
@@ -480,115 +262,143 @@ export default function NewArticleTemplate() {
                   marginBottom: "12px",
                   fontSize: "16px",
                 }}>
-                📚 You Might Also Like
+                ₿ Bitcoin Network Stats
               </Heading>
-              {article.slice(1).map((item) => {
-                return (
-                  <Section
+              {/* Bitcoin Price */}
+              <Row style={{ marginBottom: "12px" }}>
+                <Column style={{ width: "40%", padding: "4px" }}>
+                  <Text
                     style={{
-                      backgroundColor: "#ffffff",
-                      padding: "12px",
-                      borderRadius: "4px",
-                      border: "1px solid #e5e7eb",
-                      marginBottom: "12px",
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      color: "#111827",
+                      margin: 0,
                     }}>
-                    <Heading
-                      style={{
-                        fontWeight: "bold",
-                        fontSize: "14px",
-                        color: "#111827",
-                        marginBottom: "4px",
-                      }}>
-                      {item.title}
-                    </Heading>
-                    <Row>
-                      <Column style={{ width: "50%" }}>
-                        <Text
-                          style={{
-                            fontSize: "12px",
-                            color: "#6b7280",
-                            margin: 0,
-                          }}>
-                          May 14, 2025
-                        </Text>
-                      </Column>
-                      <Column style={{ width: "50%", textAlign: "right" }}>
-                        <Text
-                          style={{
-                            fontSize: "12px",
-                            color: "#6b7280",
-                            margin: 0,
-                          }}>
-                          3 min read
-                        </Text>
-                      </Column>
-                    </Row>
-                  </Section>
-                );
-              })}
-              <Section
-                style={{
-                  backgroundColor: "#ffffff",
-                  padding: "12px",
-                  borderRadius: "4px",
-                  border: "1px solid #e5e7eb",
-                  marginBottom: "12px",
-                }}>
-                <Heading
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "14px",
-                    color: "#111827",
-                    marginBottom: "4px",
-                  }}>
-                  HIVE Targets 16 EH/s with Bitcoin-Backed Miner Purchases
-                </Heading>
-                <Row>
-                  <Column style={{ width: "50%" }}>
-                    <Text
-                      style={{ fontSize: "12px", color: "#6b7280", margin: 0 }}>
-                      May 14, 2025
-                    </Text>
-                  </Column>
-                  <Column style={{ width: "50%", textAlign: "right" }}>
-                    <Text
-                      style={{ fontSize: "12px", color: "#6b7280", margin: 0 }}>
-                      3 min read
-                    </Text>
-                  </Column>
-                </Row>
-              </Section>
+                    Bitcoin Price:
+                  </Text>
+                </Column>
+                <Column style={{ width: "60%", padding: "4px" }}>
+                  <Text
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      color: BitcoinPrice ? "#059669" : "#dc2626",
+                      margin: 0,
+                    }}>
+                    {BitcoinPrice}
+                  </Text>
+                </Column>
+              </Row>
+              {/* Network Hashrate */}
+              <Row style={{ marginBottom: "12px" }}>
+                <Column style={{ width: "40%", padding: "4px" }}>
+                  <Text
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      color: "#111827",
+                      margin: 0,
+                    }}>
+                    Network Hashrate:
+                  </Text>
+                </Column>
+                <Column style={{ width: "60%", padding: "4px" }}>
+                  <Text
+                    style={{
+                      fontSize: "14px",
+                      color: "#374151",
+                      margin: 0,
+                    }}>
+                    {NetworkHashrate}
+                  </Text>
+                </Column>
+              </Row>
+              {/* Network Difficulty
+              <Row style={{ marginBottom: "12px" }}>
+                <Column style={{ width: "40%", padding: "4px" }}>
+                  <Text
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      color: "#111827",
+                      margin: 0,
+                    }}>
+                    Network Difficulty:
+                  </Text>
+                </Column>
+                <Column style={{ width: "60%", padding: "4px" }}>
+                  <Text
+                    style={{
+                      fontSize: "14px",
+                      color: "#374151",
+                      margin: 0,
+                    }}>
+                    diffi 04&
+                  </Text>
+                </Column>
+              </Row> */}
             </Section>
 
-            {/* Newsletter Signup */}
+            {/* Recent Articles */}
             <Section
               style={{
                 padding: "16px",
-                backgroundColor: "#eff6ff",
+                backgroundColor: "white",
                 border: "1px solid #e5e7eb",
                 borderTop: "none",
-                textAlign: "center",
               }}>
               <Heading
                 style={{
                   fontWeight: "bold",
-                  color: "#1e3a8a",
-                  marginBottom: "8px",
+                  color: "#111827",
+                  marginBottom: "12px",
                   fontSize: "16px",
                 }}>
-                Stay Updated
+                📚 Recent Articles
               </Heading>
-              <Text
-                style={{
-                  fontSize: "14px",
-                  color: "#1e40af",
-                  marginBottom: "12px",
-                }}>
-                Get the latest crypto mining news delivered to your inbox
-              </Text>
-              <Text style={{ fontSize: "14px", color: "#1e40af", margin: 0 }}>
-                Subscribe at our website to stay informed!
-              </Text>
+              {three.slice(1).map((article, index) => (
+                <Section
+                  key={index}
+                  style={{
+                    backgroundColor: "#ffffff",
+                    padding: "12px",
+                    width: "95%",
+                    borderRadius: "4px",
+                    border: "0.5px solid #e5e7eb",
+                    marginBottom: "12px",
+                  }}>
+                  <Row>
+                    <Column style={{ width: "30%" }}>
+                      <Img
+                        src={article.image}
+                        width={"100%"}
+                        height={"auto"}
+                        alt={`Image for ${article.title}`}
+                        style={{ borderRadius: "4px" }}
+                      />
+                    </Column>
+                    <Column style={{ width: "70%", padding: "0 0 0 12px" }}>
+                      <Heading
+                        style={{
+                          fontWeight: "bold",
+                          fontSize: "14px",
+                          color: "#111827",
+                          margin: "0 0 4px 0",
+                        }}>
+                        {article.title}
+                      </Heading>
+                      <Text
+                        style={{
+                          fontSize: "12px",
+                          color: "#6b7280",
+                          margin: "0 0 4px 0",
+                        }}>
+                        {article.date}
+                      </Text>
+                    </Column>
+                  </Row>
+                </Section>
+              ))}
             </Section>
 
             {/* Footer */}
@@ -600,15 +410,6 @@ export default function NewArticleTemplate() {
                 borderRadius: "0 0 8px 8px",
                 textAlign: "center",
               }}>
-              <Heading
-                style={{
-                  fontWeight: "500",
-                  color: "#1f2937",
-                  marginBottom: "4px",
-                  fontSize: "16px",
-                }}>
-                TheMinerMag
-              </Heading>
               <Text
                 style={{
                   fontSize: "12px",
@@ -617,51 +418,6 @@ export default function NewArticleTemplate() {
                 }}>
                 Your trusted source for cryptocurrency mining news and analysis
               </Text>
-
-              <Row style={{ marginBottom: "12px" }}>
-                <Column style={{ width: "33.33%", textAlign: "center" }}>
-                  <Link
-                    href="#"
-                    style={{
-                      color: "#2563eb",
-                      fontSize: "12px",
-                      textDecoration: "underline",
-                    }}>
-                    Visit Website
-                  </Link>
-                </Column>
-                <Column style={{ width: "33.33%", textAlign: "center" }}>
-                  <Link
-                    href="#"
-                    style={{
-                      color: "#2563eb",
-                      fontSize: "12px",
-                      textDecoration: "underline",
-                    }}>
-                    All Articles
-                  </Link>
-                </Column>
-                <Column style={{ width: "33.33%", textAlign: "center" }}>
-                  <Link
-                    href="#"
-                    style={{
-                      color: "#2563eb",
-                      fontSize: "12px",
-                      textDecoration: "underline",
-                    }}>
-                    Market Data
-                  </Link>
-                </Column>
-              </Row>
-
-              <Hr
-                style={{
-                  border: "none",
-                  borderTop: "1px solid #d1d5db",
-                  margin: "12px 0",
-                }}
-              />
-
               <Text
                 style={{
                   marginBottom: "8px",
@@ -672,9 +428,9 @@ export default function NewArticleTemplate() {
               </Text>
 
               <Row>
-                <Column style={{ width: "33.33%", textAlign: "center" }}>
+                <Column style={{ width: "50%", textAlign: "center" }}>
                   <Link
-                    href="#"
+                    href="https://theminermag.com/newsletter/login"
                     style={{
                       color: "#2563eb",
                       fontSize: "12px",
@@ -683,20 +439,9 @@ export default function NewArticleTemplate() {
                     Unsubscribe
                   </Link>
                 </Column>
-                <Column style={{ width: "33.33%", textAlign: "center" }}>
+                <Column style={{ width: "50%", textAlign: "center" }}>
                   <Link
-                    href="#"
-                    style={{
-                      color: "#2563eb",
-                      fontSize: "12px",
-                      textDecoration: "underline",
-                    }}>
-                    Preferences
-                  </Link>
-                </Column>
-                <Column style={{ width: "33.33%", textAlign: "center" }}>
-                  <Link
-                    href="#"
+                    href="https://theminermag.com/privacy-policy"
                     style={{
                       color: "#2563eb",
                       fontSize: "12px",

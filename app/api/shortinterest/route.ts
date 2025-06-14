@@ -16,24 +16,28 @@ export async function POST() {
       let getData = await fetch(
         `https://api.nasdaq.com/api/quote/${i}/short-interest?assetClass=stocks`
       ).then((res) => res.json());
-      const { data, error } = await supabase
-        .from("marketdata")
-        .upsert({
+      if (getData?.data?.shortInterestTable) {
+        const { data, error } = await supabase
+          .from("marketdata")
+          .upsert({
+            slug: `shortInterest/${i}`,
+            name: `shortInterest/${i}`,
+            last_updated: new Date().toISOString,
+            data_points: JSON.stringify(getData.data.shortInterestTable),
+          })
+          .eq("slug", `shortInterest/${i}`);
+        return {
           slug: `shortInterest/${i}`,
           name: `shortInterest/${i}`,
           last_updated: new Date().toISOString,
           data_points: JSON.stringify(getData.data.shortInterestTable),
-        })
-        .eq("slug", `shortInterest/${i}`);
-      console.log(getData.data);
-      return {
-        slug: `shortInterest/${i}`,
-        name: `shortInterest/${i}`,
-        last_updated: new Date().toISOString,
-        data_points: JSON.stringify(getData.data.shortInterestTable),
-      };
+        };
+      } else {
+        return { error: "Data Not Working" };
+      }
     })
   );
+  console.log(shortInterest);
   return NextResponse.json(shortInterest);
 }
 
