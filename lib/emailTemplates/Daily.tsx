@@ -1,4 +1,3 @@
-"use client";
 // emails/NewArticleTemplate.jsx
 // import { useEffect, useState } from "react";
 

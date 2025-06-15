@@ -46,3 +46,30 @@ export async function sendEmail(receiverEmail, subject, body) {
     return err;
   }
 }
+
+export function NewsletterfilterEmails(
+  emails: {
+    email: string;
+    email_preferences: {
+      newsletters: { name: string; subscribed: boolean }[]; // Corrected: Array of objects
+    };
+  }[], // Corrected: Array of email objects
+  newsletterType: string
+): string[] {
+  return emails
+    .filter((user) => {
+      let checkSubscribed = false;
+      for (let x = 0; x < user.email_preferences.newsletters.length; x++) {
+        let newsletter = user.email_preferences.newsletters[x];
+        if (
+          newsletter.name == newsletterType &&
+          newsletter.subscribed == true
+        ) {
+          checkSubscribed = true;
+          break;
+        }
+      }
+      return checkSubscribed;
+    })
+    .map((item) => item.email);
+}
