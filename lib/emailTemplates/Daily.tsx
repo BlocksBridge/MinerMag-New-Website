@@ -239,7 +239,7 @@ export default function BreakingNewsletter({
                     paddingLeft: "5px",
                     margin: 0,
                   }}>
-                  {three[0].rank_math_description}
+                  {three[0].excerpt}
                 </Text>
               </Section>
 

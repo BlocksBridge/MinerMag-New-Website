@@ -192,7 +192,7 @@ export default function WeeklyNewsletterTemplate({
                 marginBottom: "8px",
                 color: "#111827",
               }}>
-              Cango Set to Add 18 EH/s Bitcoin Hashrate by July
+              {allMapped[0].title}
             </Heading>
             <Text
               style={{
@@ -201,12 +201,10 @@ export default function WeeklyNewsletterTemplate({
                 marginBottom: "12px",
                 lineHeight: "1.5",
               }}>
-              In a major development this week, Cango has approved a $352M sale
-              to fund a significant hashrate expansion, implying Bitmain's
-              energy rate of $0.0758/kWh.
+              {allMapped[0].excerpt}
             </Text>
             <Link
-              href="#"
+              href={allMapped[0].link}
               style={{
                 color: "#2563eb",
                 fontSize: "14px",
