@@ -21,7 +21,7 @@ export default async function HomePage({
       image: item.acf.main_image,
       date: item.date,
       title: item.title.rendered,
-      excerpt: item.acf.sub_title,
+      excerpt: item.rank_math_description,
       link: item.link,
     };
   });
@@ -152,7 +152,7 @@ export default async function HomePage({
                     __html: getPosts[0].title.rendered,
                   }}></h1>
                 <p className="text-gray-600 mb-4">
-                  {getPosts[0].acf.sub_title}
+                  {getPosts[0].rank_math_description}
                 </p>
                 <Link href={getPosts[0].link.split(".com")[1]} target="_blank">
                   <button className="px-4 py-2 border border-zinc-200 border-blue-600 text-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors dark:border-zinc-800">

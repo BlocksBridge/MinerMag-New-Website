@@ -16,8 +16,23 @@ import {
   Text,
 } from "@react-email/components";
 
-export default function BreakingNewsletter({ getPosts, networkData }) {
-  console.log(getPosts);
+export default function BreakingNewsletter({
+  getPosts,
+  networkData,
+  backendUrl,
+  frontendUrl,
+}: {
+  getPosts: {
+    title: { rendered: string };
+    date: Date;
+    rank_math_description: string;
+    link: string;
+    acf: { main_image: string; sub_title: string };
+  }[];
+  networkData: any;
+  backendUrl: string;
+  frontendUrl: string;
+}) {
   if (getPosts.length) {
     const three = getPosts.slice(0, 4).map((item) => {
       return {
@@ -25,8 +40,10 @@ export default function BreakingNewsletter({ getPosts, networkData }) {
         image: item.acf.main_image,
         date: item.date,
         title: item.title.rendered,
-        excerpt: item.acf.sub_title,
-        link: item.link,
+        excerpt: item.rank_math_description
+          ? item.rank_math_description
+          : item.acf.sub_title,
+        link: item.link.replace(backendUrl, frontendUrl),
       };
     });
     const publishDate = new Date().toLocaleDateString("en-US", {
@@ -222,14 +239,14 @@ export default function BreakingNewsletter({ getPosts, networkData }) {
                     paddingLeft: "5px",
                     margin: 0,
                   }}>
-                  {three[0].excerpt}
+                  {three[0].rank_math_description}
                 </Text>
               </Section>
 
               {/* Call to Action */}
               <Section style={{ textAlign: "center", marginBottom: "24px" }}>
                 <Button
-                  href="#"
+                  href={three[0].link}
                   style={{
                     backgroundColor: "#2563eb",
                     color: "#ffffff",
@@ -356,47 +373,49 @@ export default function BreakingNewsletter({ getPosts, networkData }) {
                 📚 Recent Articles
               </Heading>
               {three.slice(1).map((article, index) => (
-                <Section
-                  key={index}
-                  style={{
-                    backgroundColor: "#ffffff",
-                    padding: "12px",
-                    width: "95%",
-                    borderRadius: "4px",
-                    border: "0.5px solid #e5e7eb",
-                    marginBottom: "12px",
-                  }}>
-                  <Row>
-                    <Column style={{ width: "30%" }}>
-                      <Img
-                        src={article.image}
-                        width={"100%"}
-                        height={"auto"}
-                        alt={`Image for ${article.title}`}
-                        style={{ borderRadius: "4px" }}
-                      />
-                    </Column>
-                    <Column style={{ width: "70%", padding: "0 0 0 12px" }}>
-                      <Heading
-                        style={{
-                          fontWeight: "bold",
-                          fontSize: "14px",
-                          color: "#111827",
-                          margin: "0 0 4px 0",
-                        }}>
-                        {article.title}
-                      </Heading>
-                      <Text
-                        style={{
-                          fontSize: "12px",
-                          color: "#6b7280",
-                          margin: "0 0 4px 0",
-                        }}>
-                        {article.date}
-                      </Text>
-                    </Column>
-                  </Row>
-                </Section>
+                <Link href={article.link}>
+                  <Section
+                    key={index}
+                    style={{
+                      backgroundColor: "#ffffff",
+                      padding: "12px",
+                      width: "95%",
+                      borderRadius: "4px",
+                      border: "0.5px solid #e5e7eb",
+                      marginBottom: "12px",
+                    }}>
+                    <Row>
+                      <Column style={{ width: "30%" }}>
+                        <Img
+                          src={article.image}
+                          width={"100%"}
+                          height={"auto"}
+                          alt={`Image for ${article.title}`}
+                          style={{ borderRadius: "4px" }}
+                        />
+                      </Column>
+                      <Column style={{ width: "70%", padding: "0 0 0 12px" }}>
+                        <Heading
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: "14px",
+                            color: "#111827",
+                            margin: "0 0 4px 0",
+                          }}>
+                          {article.title}
+                        </Heading>
+                        <Text
+                          style={{
+                            fontSize: "12px",
+                            color: "#6b7280",
+                            margin: "0 0 4px 0",
+                          }}>
+                          {article.date}
+                        </Text>
+                      </Column>
+                    </Row>
+                  </Section>
+                </Link>
               ))}
             </Section>
 

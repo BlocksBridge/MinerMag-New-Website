@@ -5,12 +5,11 @@ export async function GET(req: NextRequest, res: NextResponse) {
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_ANON_KEY!
   );
-  console.log(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
   let getNetworkData = await supabase
     .from("marketdata")
     .select("")
     .eq("slug", `network`);
-  console.log(getNetworkData);
+
   if (getNetworkData.error || !getNetworkData.data.length) {
     return NextResponse.json({ error: "Something went wrong" });
   } else {

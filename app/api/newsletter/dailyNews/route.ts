@@ -36,7 +36,12 @@ export async function POST(req: NextRequest) {
 
   if (getData.error == null && getData.data) {
     const emailHTML = await render(
-      DailyDigest({ getPosts, networkData: getNetworkData })
+      DailyDigest({
+        getPosts,
+        networkData: getNetworkData,
+        backendUrl: process.env.NEXT_PUBLIC_backend_url!,
+        frontendUrl: process.env.NEXT_PUBLIC_website_url!,
+      })
     );
     const users = NewsletterfilterEmails(getData.data, "Daily Digest");
     await Promise.resolve(

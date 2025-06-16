@@ -135,6 +135,7 @@ export default async function Page({
       getPost[0].title.rendered,
       getPost[0].acf.sub_title,
       ...getPost[0].title.rendered?.split(" "),
+      ...getPost[0].excerpt.rendered?.split(" "),
       ...getPost[0].acf.sub_title.split(" "),
     ],
   };
@@ -216,7 +217,6 @@ export async function generateMetadata({
   let metaDesc = metaDataToAdd?.description
     ? metaDataToAdd.description
     : getInfoAboutPost[0].excerpt.rendered;
-
   // let getMeta = await getMetaData(getInfoAboutPost[0].link);
   let getMeta = await parser(getInfoAboutPost[0].link);
 
@@ -246,6 +246,7 @@ export async function generateMetadata({
       ...getTags,
       getMeta.meta.title,
       getInfoAboutPost[0].acf.sub_title,
+      metaDesc,
       ...getMeta.meta.title?.split(" "),
       ...getInfoAboutPost[0].acf.sub_title.split(" "),
     ],

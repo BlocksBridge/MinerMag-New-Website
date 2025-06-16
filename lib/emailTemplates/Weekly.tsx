@@ -12,22 +12,55 @@ import {
   Heading,
   Text,
   Link,
+  Img,
   Hr,
 } from "@react-email/components";
 
-export default function WeeklyNewsletterTemplate() {
+export default function WeeklyNewsletterTemplate({
+  posts,
+  networkData,
+  startWeek,
+  endWeek,
+  backendUrl,
+  frontendUrl,
+}: {
+  posts: {
+    title: { rendered: string };
+    date: Date;
+    rank_math_description: string;
+    link: string;
+    acf: { main_image: string; sub_title: string };
+  }[];
+  networkData: any;
+  startWeek: Date;
+  endWeek: Date;
+  backendUrl: string;
+  frontendUrl: string;
+}) {
   // Get current week number and date range
-  const currentDate = new Date();
-  const startOfWeek = new Date(currentDate);
-  startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
-  const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6);
 
-  const formatDate = (date) => {
+  const startOfWeek = startWeek;
+
+  const endOfWeek = endWeek;
+
+  const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   };
 
   const weekRange = `${formatDate(startOfWeek)} - ${formatDate(endOfWeek)}`;
+
+  let allMapped = posts.map((item) => {
+    return {
+      //   image: "/placeholder.svg?height=200&width=400",
+      image: item.acf.main_image,
+      date: item.date,
+      title: item.title.rendered,
+      excerpt: item.rank_math_description,
+      link: item.link.replace(backendUrl, frontendUrl),
+    };
+  });
+
+  console.log(allMapped);
 
   return (
     <Html>
@@ -68,15 +101,12 @@ export default function WeeklyNewsletterTemplate() {
                           alignItems: "center",
                           justifyContent: "center",
                         }}>
-                        <Text
-                          style={{
-                            color: "#ffffff",
-                            fontWeight: "bold",
-                            fontSize: "14px",
-                            margin: 0,
-                          }}>
-                          M
-                        </Text>
+                        <Img
+                          src={"https://theminermag.com/favicon.png"}
+                          width={24}
+                          height={24}
+                          alt="Logo"
+                        />
                       </div>
                     </div>
                   </Column>
@@ -153,7 +183,7 @@ export default function WeeklyNewsletterTemplate() {
                 borderRadius: "4px",
                 marginBottom: "8px",
               }}>
-              BREAKING
+              Trending
             </div>
             <Heading
               style={{
